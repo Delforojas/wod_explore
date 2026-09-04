@@ -27,7 +27,7 @@ export function WorkoutHistoryItem({ entry, wod, onDelete }: WorkoutHistoryItemP
               {wod ? (
                 <Link
                   to={`/wods/${wod.id}`}
-                  className="rounded-md hover:text-orange-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400 focus-visible:ring-2 focus-visible:ring-orange-400/40"
+                  className="inline-flex min-h-11 items-center touch-manipulation rounded-md hover:text-orange-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400 focus-visible:ring-2 focus-visible:ring-orange-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
                 >
                   {wod.name}
                 </Link>

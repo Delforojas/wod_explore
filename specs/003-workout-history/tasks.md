@@ -216,7 +216,7 @@
 
   - existen tests para este escenario.
 
-- [ ] T11. Revisión responsive y de accesibilidad del historial.
+- [x] T11. Revisión responsive y de accesibilidad del historial.
 
   (RNF-7, RNF-8, RNF-9)
 

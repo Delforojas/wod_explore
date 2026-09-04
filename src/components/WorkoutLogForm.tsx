@@ -119,7 +119,7 @@ export function WorkoutLogForm({ wodId, addWorkout }: WorkoutLogFormProps) {
         <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
           <button
             type="submit"
-            className="inline-flex min-h-11 items-center justify-center rounded-md bg-orange-400 px-4 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-orange-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-300 focus-visible:ring-2 focus-visible:ring-orange-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+            className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-md bg-orange-400 px-4 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-orange-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-300 focus-visible:ring-2 focus-visible:ring-orange-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
           >
             Guardar entrenamiento
           </button>
