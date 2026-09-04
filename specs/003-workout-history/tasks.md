@@ -198,7 +198,7 @@
 
   - existen tests del comportamiento.
 
-- [ ] T10. Gestionar registros asociados a WODs inexistentes.
+- [x] T10. Gestionar registros asociados a WODs inexistentes.
 
   (RF-18, RF-28)
 

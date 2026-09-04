@@ -141,6 +141,84 @@ describe('HistoryPage', () => {
     expect(screen.getByRole('link', { name: fran.name }).getAttribute('href')).toBe('/wods/fran')
   })
 
+  it('muestra un registro cuyo WOD ya no existe sin romper el historial', () => {
+    renderHistory([
+      {
+        id: 'history-missing-wod',
+        wodId: 'missing-wod',
+        date: '2026-09-04',
+        result: '7 rondas',
+        notes: 'Registro conservado.',
+      },
+    ])
+
+    const article = screen.getByRole('article')
+    expect(within(article).getByRole('heading', { name: 'WOD no disponible' })).toBeTruthy()
+    expect(within(article).getByText('No disponible')).toBeTruthy()
+    expect(within(article).getByRole('time').getAttribute('datetime')).toBe('2026-09-04')
+    expect(within(article).getByText('7 rondas')).toBeTruthy()
+    expect(within(article).getByText('Registro conservado.')).toBeTruthy()
+  })
+
+  it('muestra juntos los registros con WOD existente y WOD inexistente', () => {
+    renderHistory([
+      {
+        id: 'history-existing-wod',
+        wodId: 'fran',
+        date: '2026-09-03',
+      },
+      {
+        id: 'history-missing-wod',
+        wodId: 'missing-wod',
+        date: '2026-09-04',
+      },
+    ])
+
+    expect(screen.getAllByRole('article')).toHaveLength(2)
+    expect(screen.getByRole('link', { name: fran.name }).getAttribute('href')).toBe('/wods/fran')
+    expect(screen.getByRole('heading', { name: 'WOD no disponible' })).toBeTruthy()
+  })
+
+  it('no crea un enlace al detalle de un WOD inexistente', () => {
+    renderHistory([
+      {
+        id: 'history-missing-link',
+        wodId: 'missing-wod',
+        date: '2026-09-04',
+      },
+    ])
+
+    expect(screen.queryByRole('link', { name: 'WOD no disponible' })).toBeNull()
+    expect(screen.queryByRole('link', { name: /missing-wod/ })).toBeNull()
+  })
+
+  it('permite eliminar manualmente un registro huérfano y conserva los demás', () => {
+    const remainingEntry: WorkoutHistory[number] = {
+      id: 'history-existing-wod',
+      wodId: 'fran',
+      date: '2026-09-03',
+    }
+    const orphanEntry: WorkoutHistory[number] = {
+      id: 'history-missing-wod',
+      wodId: 'missing-wod',
+      date: '2026-09-04',
+    }
+    renderHistory([remainingEntry, orphanEntry])
+
+    expect(screen.getByRole('heading', { name: 'WOD no disponible' })).toBeTruthy()
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: 'Eliminar registro de WOD no disponible del 2026-09-04',
+      }),
+    )
+
+    expect(screen.queryByRole('heading', { name: 'WOD no disponible' })).toBeNull()
+    expect(screen.getByRole('heading', { name: fran.name })).toBeTruthy()
+    expect(JSON.parse(localStorage.getItem(WORKOUT_HISTORY_STORAGE_KEY) ?? 'null')).toEqual([
+      remainingEntry,
+    ])
+  })
+
   it('elimina una entrada individual y actualiza la interfaz inmediatamente', () => {
     renderHistory([
       {
