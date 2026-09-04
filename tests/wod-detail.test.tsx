@@ -1,12 +1,14 @@
 /** @vitest-environment jsdom */
 
-import { cleanup, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { afterEach, describe, expect, it } from 'vitest'
 import { WodCard } from '../src/components/WodCard'
 import { WodDetailPage } from '../src/pages/WodDetailPage'
 import { AppRoutes } from '../src/App'
+import { FAVORITES_STORAGE_KEY } from '../src/lib/favoritesStorage'
 import { loadWods } from '../src/lib/loadWods'
+import { emptyFavorites } from './favorites-fixtures'
 
 const loadedWods = loadWods()
 
@@ -22,13 +24,14 @@ if (!fran) {
 
 afterEach(() => {
   cleanup()
+  localStorage.clear()
 })
 
 function renderDetail(path: string) {
   return render(
     <MemoryRouter initialEntries={[path]}>
       <Routes>
-        <Route path="/wods/:id" element={<WodDetailPage />} />
+        <Route path="/wods/:id" element={<WodDetailPage favorites={emptyFavorites} />} />
       </Routes>
     </MemoryRouter>,
   )
@@ -63,6 +66,36 @@ describe('WOD detail', () => {
     )
 
     expect(screen.getByRole('heading', { name: 'Fran' })).toBeTruthy()
+  })
+
+  it('comparte el estado entre el catálogo y el detalle', () => {
+    render(
+      <MemoryRouter initialEntries={['/wods']}>
+        <AppRoutes />
+      </MemoryRouter>,
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Añadir Fran a favoritos' }))
+    fireEvent.click(screen.getByRole('link', { name: 'Ver detalle de Fran' }))
+
+    expect(screen.getByRole('button', { name: 'Quitar Fran de favoritos' })).toBeTruthy()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Quitar Fran de favoritos' }))
+    fireEvent.click(screen.getByRole('link', { name: 'Volver al catálogo de WODs' }))
+
+    expect(screen.getByRole('button', { name: 'Añadir Fran a favoritos' })).toBeTruthy()
+  })
+
+  it('refleja en el detalle un favorito persistido desde el catálogo', () => {
+    localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(['fran']))
+
+    render(
+      <MemoryRouter initialEntries={['/wods/fran']}>
+        <AppRoutes />
+      </MemoryRouter>,
+    )
+
+    expect(screen.getByRole('button', { name: 'Quitar Fran de favoritos' })).toBeTruthy()
   })
 
   it('enlaza una tarjeta con el detalle de su WOD', () => {

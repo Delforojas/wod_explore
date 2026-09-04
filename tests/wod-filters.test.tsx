@@ -6,6 +6,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { WodsPage } from '../src/pages/WodsPage'
 import { loadWods } from '../src/lib/loadWods'
 import type { Wod } from '../src/types/wod'
+import { emptyFavorites } from './favorites-fixtures'
 
 const loadedWods = loadWods()
 
@@ -18,7 +19,7 @@ const wods = loadedWods.data
 function renderWodsPage(testWods: Wod[]) {
   return render(
     <MemoryRouter>
-      <WodsPage wods={testWods} />
+      <WodsPage wods={testWods} favorites={emptyFavorites} />
     </MemoryRouter>,
   )
 }

@@ -5,6 +5,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { afterEach, describe, expect, it } from 'vitest'
 import { WodsPage } from '../src/pages/WodsPage'
 import { loadWods } from '../src/lib/loadWods'
+import { emptyFavorites } from './favorites-fixtures'
 
 const loadedWods = loadWods()
 
@@ -21,7 +22,7 @@ afterEach(() => {
 function renderWodsCatalog() {
   return render(
     <MemoryRouter>
-      <WodsPage wods={wods} />
+      <WodsPage wods={wods} favorites={emptyFavorites} />
     </MemoryRouter>,
   )
 }

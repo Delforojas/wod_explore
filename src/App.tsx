@@ -1,15 +1,24 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { Header } from './components/Header'
+import { useFavorites } from './hooks/useFavorites'
+import { loadWods } from './lib/loadWods'
 import { ExercisesPage } from './pages/ExercisesPage'
 import { WodDetailPage } from './pages/WodDetailPage'
 import { WodsPage } from './pages/WodsPage'
+import type { Wod } from './types/wod'
+
+const EMPTY_WODS: Wod[] = []
 
 export function AppRoutes() {
+  const result = loadWods()
+  const availableWods = result.success ? result.data : EMPTY_WODS
+  const favorites = useFavorites(availableWods)
+
   return (
     <Routes>
-      <Route path="/" element={<WodsPage />} />
-      <Route path="/wods" element={<WodsPage />} />
-      <Route path="/wods/:id" element={<WodDetailPage />} />
+      <Route path="/" element={<WodsPage favorites={favorites} />} />
+      <Route path="/wods" element={<WodsPage favorites={favorites} />} />
+      <Route path="/wods/:id" element={<WodDetailPage favorites={favorites} />} />
       <Route path="/exercises" element={<ExercisesPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

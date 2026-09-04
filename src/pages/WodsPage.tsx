@@ -3,18 +3,17 @@ import { EmptyState } from '../components/EmptyState'
 import { WodCard } from '../components/WodCard'
 import { WodFilters } from '../components/WodFilters'
 import { WodSearch } from '../components/WodSearch'
-import { useFavorites } from '../hooks/useFavorites'
+import type { UseFavoritesResult } from '../hooks/useFavorites'
 import { filterWods, type WodFilter } from '../lib/filterWods'
 import { loadWods } from '../lib/loadWods'
 import type { Wod } from '../types/wod'
 
-const EMPTY_WODS: Wod[] = []
-
 interface WodsPageProps {
+  favorites: UseFavoritesResult
   wods?: Wod[]
 }
 
-export function WodsPage({ wods }: WodsPageProps = {}) {
+export function WodsPage({ favorites, wods }: WodsPageProps) {
   const [selectedFilter, setSelectedFilter] = useState<WodFilter>('All')
   const [search, setSearch] = useState('')
   const [favoritesOnly, setFavoritesOnly] = useState(false)
@@ -25,8 +24,7 @@ export function WodsPage({ wods }: WodsPageProps = {}) {
           success: true as const,
         data: wods,
       }
-  const availableWods = result.success ? result.data : EMPTY_WODS
-  const { favoriteIds, isFavorite, toggleFavorite } = useFavorites(availableWods)
+  const { favoriteIds, isFavorite, toggleFavorite } = favorites
   const filteredWods = result.success
     ? filterWods(result.data, selectedFilter, search, {
         favoritesOnly,

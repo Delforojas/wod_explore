@@ -6,6 +6,7 @@ import { EmptyState } from '../src/components/EmptyState'
 import { WodCard } from '../src/components/WodCard'
 import { WodsPage } from '../src/pages/WodsPage'
 import { loadWods } from '../src/lib/loadWods'
+import { emptyFavorites } from './favorites-fixtures'
 
 describe('WOD catalog', () => {
   it('muestra los campos principales de un WOD', () => {
@@ -32,7 +33,7 @@ describe('WOD catalog', () => {
   it('muestra todos los WODs validados', () => {
     const markup = renderToStaticMarkup(
       <MemoryRouter>
-        <WodsPage />
+        <WodsPage favorites={emptyFavorites} />
       </MemoryRouter>,
     )
 
@@ -44,7 +45,7 @@ describe('WOD catalog', () => {
   it('muestra el estado vacío con un mensaje accesible', () => {
     const markup = renderToStaticMarkup(
       <MemoryRouter>
-        <WodsPage wods={[]} />
+        <WodsPage wods={[]} favorites={emptyFavorites} />
       </MemoryRouter>,
     )
 

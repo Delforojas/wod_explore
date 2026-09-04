@@ -3,17 +3,8 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, describe, expect, it } from 'vitest'
-import { WodsPage } from '../src/pages/WodsPage'
+import { AppRoutes } from '../src/App'
 import { FAVORITES_STORAGE_KEY } from '../src/lib/favoritesStorage'
-import { loadWods } from '../src/lib/loadWods'
-
-const loadedWods = loadWods()
-
-if (!loadedWods.success) {
-  throw new Error('Los WODs locales deben ser válidos para ejecutar estos tests.')
-}
-
-const wods = loadedWods.data
 
 afterEach(() => {
   cleanup()
@@ -23,7 +14,7 @@ afterEach(() => {
 function renderWodsCatalog() {
   return render(
     <MemoryRouter>
-      <WodsPage wods={wods} />
+      <AppRoutes />
     </MemoryRouter>,
   )
 }

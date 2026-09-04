@@ -1,9 +1,15 @@
 import { Link, useParams } from 'react-router-dom'
 import { ErrorState } from '../components/ErrorState'
+import { FavoriteButton } from '../components/FavoriteButton'
+import type { UseFavoritesResult } from '../hooks/useFavorites'
 import { findWodById } from '../lib/findWodById'
 import { loadWods } from '../lib/loadWods'
 
-export function WodDetailPage() {
+interface WodDetailPageProps {
+  favorites: UseFavoritesResult
+}
+
+export function WodDetailPage({ favorites }: WodDetailPageProps) {
   const { id } = useParams<{ id: string }>()
   const result = loadWods()
   const wod = result.success ? findWodById(result.data, id) : undefined
@@ -20,13 +26,22 @@ export function WodDetailPage() {
         Volver al catálogo de WODs
       </Link>
 
-      <header className="mt-10 max-w-2xl">
-        <p className="text-sm font-medium uppercase tracking-[0.2em] text-slate-400">
-          Detalle del entrenamiento
-        </p>
-        <h1 className="mt-4 break-words text-balance text-3xl font-bold leading-tight tracking-tight text-white sm:text-5xl">
-          {wod?.name ?? 'WOD no encontrado'}
-        </h1>
+      <header className="mt-10 flex max-w-2xl flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+        <div className="min-w-0">
+          <p className="text-sm font-medium uppercase tracking-[0.2em] text-slate-400">
+            Detalle del entrenamiento
+          </p>
+          <h1 className="mt-4 break-words text-balance text-3xl font-bold leading-tight tracking-tight text-white sm:text-5xl">
+            {wod?.name ?? 'WOD no encontrado'}
+          </h1>
+        </div>
+        {wod ? (
+          <FavoriteButton
+            isFavorite={favorites.isFavorite(wod.id)}
+            onToggle={() => favorites.toggleFavorite(wod.id)}
+            wodName={wod.name}
+          />
+        ) : null}
       </header>
 
       <section className="mt-10">
