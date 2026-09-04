@@ -54,4 +54,37 @@ describe('filterWods', () => {
   it('devuelve una lista vacía cuando no encuentra el nombre', () => {
     expect(filterWods(wods, 'All', 'Murph')).toEqual([])
   })
+
+  it('combina All con una búsqueda sin limitar por tipo', () => {
+    expect(filterWods(wods, 'All', 'n').map((wod) => wod.name)).toEqual([
+      'Fran',
+      'Cindy',
+      'EMOM Strength',
+    ])
+  })
+
+  it('combina For Time con una búsqueda por nombre', () => {
+    expect(filterWods(wods, 'For Time', 'fr').map((wod) => wod.name)).toEqual(['Fran'])
+  })
+
+  it('combina AMRAP con una búsqueda por nombre', () => {
+    expect(filterWods(wods, 'AMRAP', 'cin').map((wod) => wod.name)).toEqual(['Cindy'])
+  })
+
+  it('combina EMOM con una búsqueda por nombre', () => {
+    expect(filterWods(wods, 'EMOM', 'strength').map((wod) => wod.name)).toEqual([
+      'EMOM Strength',
+    ])
+  })
+
+  it('devuelve una lista vacía cuando búsqueda y tipo no coinciden', () => {
+    expect(filterWods(wods, 'For Time', 'Cindy')).toEqual([])
+  })
+
+  it('conserva el término al cambiar el filtro de tipo', () => {
+    const search = 'n'
+
+    expect(filterWods(wods, 'For Time', search).map((wod) => wod.name)).toEqual(['Fran'])
+    expect(filterWods(wods, 'AMRAP', search).map((wod) => wod.name)).toEqual(['Cindy'])
+  })
 })

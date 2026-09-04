@@ -9,7 +9,7 @@
   - una búsqueda sin resultados devuelve una lista vacía;
   - existen tests para todos estos casos.
 
-- [ ] T2. Combinar búsqueda con los filtros de tipo existentes.
+- [x] T2. Combinar búsqueda con los filtros de tipo existentes.
   (RF-5, RF-6, RF-7)
   Hecho cuando:
   - búsqueda y filtro de tipo pueden aplicarse simultáneamente;
