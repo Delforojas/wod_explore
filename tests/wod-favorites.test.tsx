@@ -4,6 +4,7 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, describe, expect, it } from 'vitest'
 import { AppRoutes } from '../src/App'
+import wodsData from '../src/data/wods.json'
 import { FAVORITES_STORAGE_KEY } from '../src/lib/favoritesStorage'
 
 afterEach(() => {
@@ -42,5 +43,27 @@ describe('WOD favorite integration', () => {
 
     expect(screen.getByRole('button', { name: 'Quitar Cindy de favoritos' })).toBeTruthy()
     expect(screen.getByRole('button', { name: 'Añadir Fran a favoritos' })).toBeTruthy()
+  })
+
+  it.each([
+    ['JSON corrupto', '{invalid-json'],
+    ['estructura inválida', JSON.stringify({ favorites: ['fran'] })],
+  ])('mantiene el catálogo cuando localStorage contiene %s', (_description, storedValue) => {
+    localStorage.setItem(FAVORITES_STORAGE_KEY, storedValue)
+
+    renderWodsCatalog()
+
+    expect(screen.getByRole('heading', { name: 'Fran' })).toBeTruthy()
+    expect(screen.queryByRole('alert')).toBeNull()
+  })
+
+  it('no modifica los datos locales al marcar o desmarcar favoritos', () => {
+    const originalWods = JSON.stringify(wodsData)
+    renderWodsCatalog()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Añadir Fran a favoritos' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Quitar Fran de favoritos' }))
+
+    expect(JSON.stringify(wodsData)).toBe(originalWods)
   })
 })

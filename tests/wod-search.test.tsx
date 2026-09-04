@@ -71,6 +71,17 @@ describe('WOD search', () => {
     expect(screen.queryByRole('heading', { name: 'EMOM Strength' })).toBeNull()
   })
 
+  it('conserva la búsqueda al cambiar el filtro de tipo', () => {
+    renderWodsCatalog()
+
+    const input = getSearchInput()
+    fireEvent.change(input, { target: { value: 'n' } })
+    fireEvent.click(screen.getByRole('button', { name: 'AMRAP' }))
+
+    expect(input.value).toBe('n')
+    expect(screen.getByRole('heading', { name: 'Cindy' })).toBeTruthy()
+  })
+
   it('muestra el estado vacío cuando la búsqueda no tiene coincidencias', () => {
     renderWodsCatalog()
 
