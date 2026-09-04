@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { Header } from './components/Header'
 import { ExercisesPage } from './pages/ExercisesPage'
 import { WodDetailPage } from './pages/WodDetailPage'
 import { WodsPage } from './pages/WodsPage'
@@ -26,13 +27,7 @@ function App() {
           Saltar al contenido principal
         </a>
 
-        <header className="border-b border-slate-800">
-          <div className="mx-auto max-w-6xl px-6 py-5 sm:px-8">
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-orange-400">
-              WOD Explorer
-            </p>
-          </div>
-        </header>
+        <Header />
 
         <AppRoutes />
       </div>

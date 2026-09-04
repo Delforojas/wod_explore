@@ -42,7 +42,7 @@
 
   Hecho cuando: se muestran nombre, categoría y descripción de cada ejercicio.
 
-- [ ] T8. Navegación principal: Inicio, WODs y Ejercicios.  
+- [x] T8. Navegación principal: Inicio, WODs y Ejercicios.
 
   (RF-18, RF-19)  
 
