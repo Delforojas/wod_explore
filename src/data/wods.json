@@ -1,0 +1,64 @@
+[
+  {
+    "id": "fran",
+    "name": "Fran",
+    "type": "For Time",
+    "level": "Intermediate",
+    "structure": "21-15-9",
+    "description": "Completa todas las repeticiones lo más rápido posible.",
+    "exercises": [
+      {
+        "exerciseId": "thruster",
+        "repetitions": "21-15-9"
+      },
+      {
+        "exerciseId": "pull-up",
+        "repetitions": "21-15-9"
+      }
+    ]
+  },
+  {
+    "id": "cindy",
+    "name": "Cindy",
+    "type": "AMRAP",
+    "level": "Beginner",
+    "structure": "20 minutos",
+    "description": "Completa tantas rondas como sea posible en 20 minutos.",
+    "exercises": [
+      {
+        "exerciseId": "pull-up",
+        "repetitions": "5"
+      },
+      {
+        "exerciseId": "push-up",
+        "repetitions": "10"
+      },
+      {
+        "exerciseId": "air-squat",
+        "repetitions": "15"
+      }
+    ]
+  },
+  {
+    "id": "emom-strength",
+    "name": "EMOM Strength",
+    "type": "EMOM",
+    "level": "Advanced",
+    "structure": "12 minutos, alterna cada minuto",
+    "description": "Realiza el trabajo indicado al inicio de cada minuto y descansa el tiempo restante.",
+    "exercises": [
+      {
+        "exerciseId": "deadlift",
+        "repetitions": "8"
+      },
+      {
+        "exerciseId": "hang-power-clean",
+        "repetitions": "6"
+      },
+      {
+        "exerciseId": "push-jerk",
+        "repetitions": "4"
+      }
+    ]
+  }
+]

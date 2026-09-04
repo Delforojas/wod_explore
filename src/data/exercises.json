@@ -1,0 +1,44 @@
+[
+  {
+    "id": "thruster",
+    "name": "Thruster",
+    "category": "Weightlifting",
+    "description": "Sentadilla frontal seguida de un press por encima de la cabeza."
+  },
+  {
+    "id": "pull-up",
+    "name": "Pull-up",
+    "category": "Gymnastics",
+    "description": "Elevación del cuerpo hasta superar la barra con la barbilla."
+  },
+  {
+    "id": "push-up",
+    "name": "Push-up",
+    "category": "Gymnastics",
+    "description": "Flexión de brazos manteniendo el cuerpo alineado."
+  },
+  {
+    "id": "air-squat",
+    "name": "Air Squat",
+    "category": "Gymnastics",
+    "description": "Sentadilla con el peso corporal y profundidad controlada."
+  },
+  {
+    "id": "deadlift",
+    "name": "Deadlift",
+    "category": "Weightlifting",
+    "description": "Levantamiento de la carga desde el suelo hasta la extensión completa."
+  },
+  {
+    "id": "hang-power-clean",
+    "name": "Hang Power Clean",
+    "category": "Weightlifting",
+    "description": "Recepción de la barra sobre los hombros desde una posición colgante."
+  },
+  {
+    "id": "push-jerk",
+    "name": "Push Jerk",
+    "category": "Weightlifting",
+    "description": "Impulso de la barra sobre la cabeza con una recepción parcial."
+  }
+]

@@ -6,7 +6,7 @@
 
   Hecho cuando: `npm run build` y `npm run lint` se ejecutan sin errores.
 
-- [ ] T2. Datos locales: crear `wods.json` y `exercises.json` con datos de ejemplo válidos.  
+- [x] T2. Datos locales: crear `wods.json` y `exercises.json` con datos de ejemplo válidos.
 
   (RF-14, RF-15)  
 
