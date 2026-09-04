@@ -54,7 +54,7 @@
 
   Hecho cuando: la interfaz funciona correctamente en móvil y escritorio, utiliza HTML semántico y los controles principales son accesibles mediante teclado.
 
-- [ ] T10. Tests de lógica, datos y componentes principales.  
+- [x] T10. Tests de lógica, datos y componentes principales.
 
   (RF-1..RF-19)  
 
