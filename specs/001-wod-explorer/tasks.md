@@ -12,7 +12,7 @@
 
   Hecho cuando: ambos archivos existen, contienen datos coherentes y pueden importarse desde la aplicación.
 
-- [ ] T3. Schemas y validación con Zod para WODs y ejercicios.  
+- [x] T3. Schemas y validación con Zod para WODs y ejercicios.
 
   (RF-16, RF-17)  
 
