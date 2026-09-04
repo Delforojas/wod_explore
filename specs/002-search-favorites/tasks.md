@@ -101,7 +101,7 @@
   - no se testean detalles internos innecesarios;
   - todos los tests pasan.
 
-- [ ] T11. Validación final de la Spec 002 y actualización del README.
+- [x] T11. Validación final de la Spec 002 y actualización del README.
   (Todos)
   Hecho cuando:
   - todos los RF están implementados;

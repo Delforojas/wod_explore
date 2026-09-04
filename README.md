@@ -1,8 +1,8 @@
 # WOD Explorer
 
-WOD Explorer es una aplicacion web estatica para consultar WODs y ejercicios de
+WOD Explorer es una aplicación web estática para consultar WODs y ejercicios de
 CrossFit. El MVP utiliza exclusivamente datos locales en JSON y no requiere
-backend, autenticacion, base de datos ni APIs externas.
+backend, autenticación, base de datos ni APIs externas.
 
 ## Stack
 
@@ -14,7 +14,7 @@ backend, autenticacion, base de datos ni APIs externas.
 - Zod
 - Vitest y Testing Library
 
-## Instalacion
+## Instalación
 
 Requiere Node.js y npm.
 
@@ -28,7 +28,7 @@ npm install
 npm run dev
 ```
 
-Vite mostrara la URL local para abrir la aplicacion en el navegador.
+Vite mostrará la URL local para abrir la aplicación en el navegador.
 
 ## Tests
 
@@ -36,8 +36,8 @@ Vite mostrara la URL local para abrir la aplicacion en el navegador.
 npm test
 ```
 
-La suite cubre validacion de datos, filtros, busqueda de WODs, estados vacios y
-de error, catalogos, detalle y navegacion.
+La suite cubre validación de datos, filtros, búsqueda de WODs, favoritos,
+persistencia local, estados vacíos y de error, catálogos, detalle y navegación.
 
 ## Build
 
@@ -45,18 +45,32 @@ de error, catalogos, detalle y navegacion.
 npm run build
 ```
 
-Tambien estan disponibles `npm run lint` para revisar el codigo y el tipado
+También está disponible `npm run lint` para revisar el código. El tipado
 TypeScript se comprueba durante el build.
 
 ## Funcionalidades del MVP
 
 - Consulta de WODs desde `src/data/wods.json`.
-- Filtros por `All`, `For Time`, `AMRAP` y `EMOM`.
-- Vista de detalle de cada WOD.
-- Catalogo de ejercicios por categoria.
-- Navegacion interna entre Inicio, WODs y Ejercicios.
-- Estados vacios y errores controlados.
+- Búsqueda por nombre con coincidencias parciales, exactas y sin distinguir mayúsculas.
+- Combinación de búsqueda con los filtros `All`, `For Time`, `AMRAP` y `EMOM`.
+- Marcado y desmarcado de favoritos desde las tarjetas y el detalle de cada WOD.
+- Filtro `Solo favoritos`, compatible con búsqueda y filtros de tipo.
+- Vista de detalle de cada WOD con acceso desde los favoritos.
+- Catálogo de ejercicios por categoría.
+- Navegación interna entre Inicio, WODs y Ejercicios.
+- Estados vacíos diferenciados y errores controlados.
 - Interfaz responsive y accesible mediante teclado.
+
+## Favoritos locales
+
+Los favoritos se guardan en el navegador mediante `localStorage`, usando la
+clave estable `wod-explorer:favorites`. Solo se almacenan los identificadores
+de los WODs, nunca los objetos completos.
+
+Al recuperar los datos, la aplicación valida el contenido, elimina IDs
+duplicados y descarta IDs que ya no existan en el catálogo. Si el almacenamiento
+está vacío, corrupto o tiene una estructura inválida, la aplicación continúa
+funcionando y utiliza una lista vacía.
 
 ## Rutas
 
@@ -71,9 +85,10 @@ TypeScript se comprueba durante el build.
 src/
   components/   Componentes de interfaz reutilizables
   data/         Datos locales JSON
-  lib/          Carga, validacion y utilidades
-  pages/        Paginas y vistas de rutas
-  schemas/      Schemas de validacion Zod
+  hooks/        Estado reutilizable de React
+  lib/          Carga, validación y utilidades
+  pages/        Páginas y vistas de rutas
+  schemas/      Schemas de validación Zod
   types/        Tipos TypeScript
-tests/          Tests de logica, datos y componentes
+tests/          Tests de lógica, datos y componentes
 ```

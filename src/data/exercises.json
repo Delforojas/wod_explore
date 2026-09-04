@@ -40,5 +40,167 @@
     "name": "Push Jerk",
     "category": "Weightlifting",
     "description": "Impulso de la barra sobre la cabeza con una recepción parcial."
+  },
+  {
+    "id": "snatch",
+    "name": "Snatch",
+    "category": "Weightlifting",
+    "description": "Levantamiento de la barra desde el suelo hasta una recepción sobre la cabeza en un solo movimiento."
+  },
+  {
+    "id": "power-snatch",
+    "name": "Power Snatch",
+    "category": "Weightlifting",
+    "description": "Variante del snatch con recepción de la barra por encima de la sentadilla profunda."
+  },
+  {
+    "id": "clean-and-jerk",
+    "name": "Clean and Jerk",
+    "category": "Weightlifting",
+    "description": "Levantamiento olímpico compuesto por una cargada y un impulso final sobre la cabeza."
+  },
+  {
+    "id": "front-squat",
+    "name": "Front Squat",
+    "category": "Weightlifting",
+    "description": "Sentadilla con la barra apoyada en la parte frontal de los hombros."
+  },
+  {
+    "id": "back-squat",
+    "name": "Back Squat",
+    "category": "Weightlifting",
+    "description": "Sentadilla con la barra apoyada sobre la espalda y control de la profundidad."
+  },
+  {
+    "id": "overhead-squat",
+    "name": "Overhead Squat",
+    "category": "Weightlifting",
+    "description": "Sentadilla realizada manteniendo la carga estable por encima de la cabeza."
+  },
+  {
+    "id": "kettlebell-swing",
+    "name": "Kettlebell Swing",
+    "category": "Weightlifting",
+    "description": "Balanceo explosivo de una kettlebell desde las piernas hasta la altura de los ojos o sobre la cabeza."
+  },
+  {
+    "id": "sumo-deadlift-high-pull",
+    "name": "Sumo Deadlift High Pull",
+    "category": "Weightlifting",
+    "description": "Tirón desde una posición de peso muerto sumo hasta la parte alta del pecho."
+  },
+  {
+    "id": "wall-ball",
+    "name": "Wall Ball",
+    "category": "Weightlifting",
+    "description": "Sentadilla seguida de un lanzamiento de balón medicinal hacia un objetivo elevado."
+  },
+  {
+    "id": "push-press",
+    "name": "Push Press",
+    "category": "Weightlifting",
+    "description": "Impulso de la barra sobre la cabeza usando una ligera flexión y extensión de piernas."
+  },
+  {
+    "id": "toes-to-bar",
+    "name": "Toes-to-Bar",
+    "category": "Gymnastics",
+    "description": "Movimiento colgado en el que los pies tocan la barra con control."
+  },
+  {
+    "id": "handstand-push-up",
+    "name": "Handstand Push-up",
+    "category": "Gymnastics",
+    "description": "Flexión vertical realizada en posición invertida con apoyo de los pies en la pared si es necesario."
+  },
+  {
+    "id": "handstand-hold",
+    "name": "Handstand Hold",
+    "category": "Gymnastics",
+    "description": "Mantenimiento de una posición invertida con los brazos extendidos y el cuerpo alineado."
+  },
+  {
+    "id": "pistol-squat",
+    "name": "Pistol Squat",
+    "category": "Gymnastics",
+    "description": "Sentadilla unilateral con la pierna libre extendida hacia delante."
+  },
+  {
+    "id": "box-jump",
+    "name": "Box Jump",
+    "category": "Gymnastics",
+    "description": "Salto desde el suelo hasta una caja estable con recepción controlada."
+  },
+  {
+    "id": "burpee",
+    "name": "Burpee",
+    "category": "Gymnastics",
+    "description": "Descenso al suelo, extensión del cuerpo y salto final con control."
+  },
+  {
+    "id": "ring-dip",
+    "name": "Ring Dip",
+    "category": "Gymnastics",
+    "description": "Flexión de brazos en anillas manteniendo los hombros estables."
+  },
+  {
+    "id": "muscle-up",
+    "name": "Muscle-up",
+    "category": "Gymnastics",
+    "description": "Transición desde una posición colgada hasta el apoyo por encima de la barra o las anillas."
+  },
+  {
+    "id": "sit-up",
+    "name": "Sit-up",
+    "category": "Gymnastics",
+    "description": "Elevación del tronco desde el suelo hasta una posición sentada con rango completo."
+  },
+  {
+    "id": "walking-lunge",
+    "name": "Walking Lunge",
+    "category": "Gymnastics",
+    "description": "Desplazamiento mediante zancadas alternas con la rodilla trasera cerca del suelo."
+  },
+  {
+    "id": "run",
+    "name": "Run",
+    "category": "Cardio",
+    "description": "Carrera continua a una intensidad ajustada a la distancia y al objetivo del entrenamiento."
+  },
+  {
+    "id": "row",
+    "name": "Row",
+    "category": "Cardio",
+    "description": "Trabajo cardiovascular en remoergómetro coordinando piernas, tronco y brazos."
+  },
+  {
+    "id": "double-under",
+    "name": "Double-under",
+    "category": "Cardio",
+    "description": "Salto a la comba en el que la cuerda pasa dos veces bajo los pies en cada salto."
+  },
+  {
+    "id": "bike",
+    "name": "Bike",
+    "category": "Cardio",
+    "description": "Trabajo de pedaleo en bicicleta estática manteniendo una cadencia sostenida."
+  },
+  {
+    "id": "ski-erg",
+    "name": "Ski Erg",
+    "category": "Cardio",
+    "description": "Tirones alternos en SkiErg para simular el gesto de esquí y elevar la frecuencia cardíaca."
+  },
+  {
+    "id": "swim",
+    "name": "Swim",
+    "category": "Cardio",
+    "description": "Nado continuo con una técnica adaptada a la distancia y al nivel del atleta."
+  },
+  {
+    "id": "shuttle-run",
+    "name": "Shuttle Run",
+    "category": "Cardio",
+    "description": "Carreras cortas de ida y vuelta entre dos marcas con cambios de dirección controlados."
   }
 ]
