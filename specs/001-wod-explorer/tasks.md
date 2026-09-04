@@ -18,7 +18,7 @@
 
   Hecho cuando: los datos válidos pasan la validación y los datos inválidos producen un error controlado.
 
-- [ ] T4. Catálogo de WODs: mostrar todos los WODs mediante componentes reutilizables.  
+- [x] T4. Catálogo de WODs: mostrar todos los WODs mediante componentes reutilizables.
 
   (RF-1, RF-2, RF-3)  
 
