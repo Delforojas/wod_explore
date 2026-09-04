@@ -1,4 +1,5 @@
 import { renderToStaticMarkup } from 'react-dom/server'
+import { MemoryRouter } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
 import wodsData from '../src/data/wods.json'
 import { EmptyState } from '../src/components/EmptyState'
@@ -16,7 +17,11 @@ describe('WOD catalog', () => {
     const wod = result.data[0]
     if (!wod) throw new Error('Se esperaba al menos un WOD local.')
 
-    const markup = renderToStaticMarkup(<WodCard wod={wod} />)
+    const markup = renderToStaticMarkup(
+      <MemoryRouter>
+        <WodCard wod={wod} />
+      </MemoryRouter>,
+    )
 
     expect(markup).toContain(wod.name)
     expect(markup).toContain(wod.type)
@@ -25,7 +30,11 @@ describe('WOD catalog', () => {
   })
 
   it('muestra todos los WODs validados', () => {
-    const markup = renderToStaticMarkup(<WodsPage />)
+    const markup = renderToStaticMarkup(
+      <MemoryRouter>
+        <WodsPage />
+      </MemoryRouter>,
+    )
 
     for (const wod of wodsData) {
       expect(markup).toContain(wod.name)
@@ -34,7 +43,9 @@ describe('WOD catalog', () => {
 
   it('muestra el estado vacío con un mensaje accesible', () => {
     const markup = renderToStaticMarkup(
-      <WodsPage wods={[]} />,
+      <MemoryRouter>
+        <WodsPage wods={[]} />
+      </MemoryRouter>,
     )
 
     expect(markup).toContain('role="status"')

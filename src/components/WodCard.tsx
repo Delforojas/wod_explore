@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import type { Wod } from '../types/wod'
 
 interface WodCardProps {
@@ -45,6 +46,13 @@ export function WodCard({ wod }: WodCardProps) {
       </div>
 
       <p className="mt-5 flex-1 text-sm leading-6 text-slate-300">{wod.description}</p>
+
+      <Link
+        to={`/wods/${wod.id}`}
+        className="mt-6 inline-flex self-start rounded-md text-sm font-semibold text-orange-300 hover:text-orange-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400"
+      >
+        Ver detalle de {wod.name}
+      </Link>
     </article>
   )
 }

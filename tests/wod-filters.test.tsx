@@ -1,9 +1,11 @@
 /** @vitest-environment jsdom */
 
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { afterEach, describe, expect, it } from 'vitest'
 import { WodsPage } from '../src/pages/WodsPage'
 import { loadWods } from '../src/lib/loadWods'
+import type { Wod } from '../src/types/wod'
 
 const loadedWods = loadWods()
 
@@ -13,13 +15,21 @@ if (!loadedWods.success) {
 
 const wods = loadedWods.data
 
+function renderWodsPage(testWods: Wod[]) {
+  return render(
+    <MemoryRouter>
+      <WodsPage wods={testWods} />
+    </MemoryRouter>,
+  )
+}
+
 afterEach(() => {
   cleanup()
 })
 
 describe('WodsPage filters', () => {
   it('muestra los cuatro filtros y todos los WODs por defecto', () => {
-    render(<WodsPage wods={wods} />)
+    renderWodsPage(wods)
 
     expect(
       screen.getByRole('button', { name: 'All' }).getAttribute('aria-pressed'),
@@ -37,7 +47,7 @@ describe('WodsPage filters', () => {
     ['AMRAP', 'Cindy', 'Fran'],
     ['EMOM', 'EMOM Strength', 'Fran'],
   ] as const)('filtra WODs con %s', (filter, visibleWod, hiddenWod) => {
-    render(<WodsPage wods={wods} />)
+    renderWodsPage(wods)
 
     fireEvent.click(screen.getByRole('button', { name: filter }))
 
@@ -49,7 +59,7 @@ describe('WodsPage filters', () => {
   })
 
   it('vuelve a mostrar todos los WODs con All', () => {
-    render(<WodsPage wods={wods} />)
+    renderWodsPage(wods)
 
     fireEvent.click(screen.getByRole('button', { name: 'AMRAP' }))
     fireEvent.click(screen.getByRole('button', { name: 'All' }))
@@ -61,7 +71,7 @@ describe('WodsPage filters', () => {
 
   it('muestra el estado sin resultados cuando el filtro no coincide', () => {
     const forTimeWods = wods.filter((wod) => wod.type === 'For Time')
-    render(<WodsPage wods={forTimeWods} />)
+    renderWodsPage(forTimeWods)
 
     fireEvent.click(screen.getByRole('button', { name: 'AMRAP' }))
 

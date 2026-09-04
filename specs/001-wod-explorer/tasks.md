@@ -30,7 +30,7 @@
 
   Hecho cuando: cada filtro muestra únicamente los WODs correspondientes y el estado sin resultados funciona.
 
-- [ ] T6. Detalle de WOD: implementar navegación y vista `/wods/:id`.  
+- [x] T6. Detalle de WOD: implementar navegación y vista `/wods/:id`.
 
   (RF-8, RF-9, RF-10)  
 
