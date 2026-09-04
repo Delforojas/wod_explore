@@ -24,7 +24,7 @@
 
   Hecho cuando: se muestran los WODs disponibles y existe estado vacío si no hay datos.
 
-- [ ] T5. Filtros de WODs: `All`, `For Time`, `AMRAP` y `EMOM`.  
+- [x] T5. Filtros de WODs: `All`, `For Time`, `AMRAP` y `EMOM`.
 
   (RF-4, RF-5, RF-6, RF-7)  
 

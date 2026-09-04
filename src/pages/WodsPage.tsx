@@ -1,5 +1,8 @@
+import { useState } from 'react'
 import { EmptyState } from '../components/EmptyState'
 import { WodCard } from '../components/WodCard'
+import { WodFilters } from '../components/WodFilters'
+import { filterWods, type WodFilter } from '../lib/filterWods'
 import { loadWods } from '../lib/loadWods'
 import type { Wod } from '../types/wod'
 
@@ -8,6 +11,7 @@ interface WodsPageProps {
 }
 
 export function WodsPage({ wods }: WodsPageProps = {}) {
+  const [selectedFilter, setSelectedFilter] = useState<WodFilter>('All')
   const result =
     wods === undefined
       ? loadWods()
@@ -15,6 +19,9 @@ export function WodsPage({ wods }: WodsPageProps = {}) {
           success: true as const,
           data: wods,
         }
+  const filteredWods = result.success
+    ? filterWods(result.data, selectedFilter)
+    : []
 
   return (
     <main
@@ -49,11 +56,26 @@ export function WodsPage({ wods }: WodsPageProps = {}) {
             message="Todavía no hay WODs para mostrar. Vuelve a intentarlo más adelante."
           />
         ) : (
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {result.data.map((wod) => (
-              <WodCard key={wod.id} wod={wod} />
-            ))}
-          </div>
+          <>
+            <WodFilters
+              selectedFilter={selectedFilter}
+              onFilterChange={setSelectedFilter}
+            />
+            {filteredWods.length === 0 ? (
+              <div className="mt-8">
+                <EmptyState
+                  title="No hay resultados"
+                  message="No hay WODs que coincidan con el tipo de entrenamiento seleccionado."
+                />
+              </div>
+            ) : (
+              <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {filteredWods.map((wod) => (
+                  <WodCard key={wod.id} wod={wod} />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </section>
     </main>
