@@ -3,9 +3,12 @@ import { EmptyState } from '../components/EmptyState'
 import { WodCard } from '../components/WodCard'
 import { WodFilters } from '../components/WodFilters'
 import { WodSearch } from '../components/WodSearch'
+import { useFavorites } from '../hooks/useFavorites'
 import { filterWods, type WodFilter } from '../lib/filterWods'
 import { loadWods } from '../lib/loadWods'
 import type { Wod } from '../types/wod'
+
+const EMPTY_WODS: Wod[] = []
 
 interface WodsPageProps {
   wods?: Wod[]
@@ -19,8 +22,10 @@ export function WodsPage({ wods }: WodsPageProps = {}) {
       ? loadWods()
       : {
           success: true as const,
-          data: wods,
-        }
+        data: wods,
+      }
+  const availableWods = result.success ? result.data : EMPTY_WODS
+  const { isFavorite, toggleFavorite } = useFavorites(availableWods)
   const filteredWods = result.success
     ? filterWods(result.data, selectedFilter, search)
     : []
@@ -76,7 +81,12 @@ export function WodsPage({ wods }: WodsPageProps = {}) {
             ) : (
               <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
                 {filteredWods.map((wod) => (
-                  <WodCard key={wod.id} wod={wod} />
+                  <WodCard
+                    key={wod.id}
+                    wod={wod}
+                    isFavorite={isFavorite(wod.id)}
+                    onToggleFavorite={() => toggleFavorite(wod.id)}
+                  />
                 ))}
               </div>
             )}

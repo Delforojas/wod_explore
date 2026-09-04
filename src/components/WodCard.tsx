@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom'
+import { FavoriteButton } from './FavoriteButton'
 import type { Wod } from '../types/wod'
 
 interface WodCardProps {
   wod: Wod
+  isFavorite: boolean
+  onToggleFavorite: () => void
 }
 
-export function WodCard({ wod }: WodCardProps) {
+export function WodCard({ wod, isFavorite, onToggleFavorite }: WodCardProps) {
   const titleId = `wod-${wod.id}-title`
 
   return (
@@ -22,9 +25,16 @@ export function WodCard({ wod }: WodCardProps) {
             {wod.name}
           </h2>
         </div>
-        <span className="shrink-0 rounded-full border border-slate-700 px-3 py-1 text-xs font-medium text-slate-300">
-          {wod.level}
-        </span>
+        <div className="flex shrink-0 items-center gap-2">
+          <FavoriteButton
+            isFavorite={isFavorite}
+            onToggle={onToggleFavorite}
+            wodName={wod.name}
+          />
+          <span className="rounded-full border border-slate-700 px-3 py-1 text-xs font-medium text-slate-300">
+            {wod.level}
+          </span>
+        </div>
       </header>
 
       <dl className="mt-6 grid grid-cols-2 gap-4 border-y border-slate-800 py-4">

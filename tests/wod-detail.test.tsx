@@ -68,7 +68,7 @@ describe('WOD detail', () => {
   it('enlaza una tarjeta con el detalle de su WOD', () => {
     render(
       <MemoryRouter>
-        <WodCard wod={fran} />
+        <WodCard wod={fran} isFavorite={false} onToggleFavorite={() => {}} />
       </MemoryRouter>,
     )
 

@@ -19,7 +19,7 @@ describe('WOD catalog', () => {
 
     const markup = renderToStaticMarkup(
       <MemoryRouter>
-        <WodCard wod={wod} />
+        <WodCard wod={wod} isFavorite={false} onToggleFavorite={() => {}} />
       </MemoryRouter>,
     )
 
