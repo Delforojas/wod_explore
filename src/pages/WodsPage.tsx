@@ -17,6 +17,7 @@ interface WodsPageProps {
 export function WodsPage({ wods }: WodsPageProps = {}) {
   const [selectedFilter, setSelectedFilter] = useState<WodFilter>('All')
   const [search, setSearch] = useState('')
+  const [favoritesOnly, setFavoritesOnly] = useState(false)
   const result =
     wods === undefined
       ? loadWods()
@@ -25,9 +26,12 @@ export function WodsPage({ wods }: WodsPageProps = {}) {
         data: wods,
       }
   const availableWods = result.success ? result.data : EMPTY_WODS
-  const { isFavorite, toggleFavorite } = useFavorites(availableWods)
+  const { favoriteIds, isFavorite, toggleFavorite } = useFavorites(availableWods)
   const filteredWods = result.success
-    ? filterWods(result.data, selectedFilter, search)
+    ? filterWods(result.data, selectedFilter, search, {
+        favoritesOnly,
+        favoriteIds,
+      })
     : []
 
   return (
@@ -67,11 +71,20 @@ export function WodsPage({ wods }: WodsPageProps = {}) {
             <WodSearch value={search} onChange={setSearch} />
             <div className="mt-8">
               <WodFilters
+                favoritesOnly={favoritesOnly}
+                onFavoritesOnlyChange={setFavoritesOnly}
                 selectedFilter={selectedFilter}
                 onFilterChange={setSelectedFilter}
               />
             </div>
-            {filteredWods.length === 0 ? (
+            {favoritesOnly && favoriteIds.length === 0 ? (
+              <div className="mt-8">
+                <EmptyState
+                  title="No tienes favoritos"
+                  message="Marca algún WOD como favorito para encontrarlo aquí."
+                />
+              </div>
+            ) : filteredWods.length === 0 ? (
               <div className="mt-8">
                 <EmptyState
                   title="No hay resultados"

@@ -9,14 +9,26 @@ export const WOD_FILTERS = [
   'EMOM',
 ] as const satisfies readonly WodFilter[]
 
-export function filterWods(wods: Wod[], filter: WodFilter, search = ''): Wod[] {
+export interface WodFilterOptions {
+  favoritesOnly?: boolean
+  favoriteIds?: readonly string[]
+}
+
+export function filterWods(
+  wods: readonly Wod[],
+  filter: WodFilter,
+  search = '',
+  options: WodFilterOptions = {},
+): Wod[] {
   const normalizedSearch = search.trim().toLocaleLowerCase()
+  const favoriteIds = new Set(options.favoriteIds ?? [])
 
   return wods.filter((wod) => {
     const matchesFilter = filter === 'All' || wod.type === filter
     const matchesSearch =
       normalizedSearch === '' || wod.name.toLocaleLowerCase().includes(normalizedSearch)
+    const matchesFavorites = !options.favoritesOnly || favoriteIds.has(wod.id)
 
-    return matchesFilter && matchesSearch
+    return matchesFilter && matchesSearch && matchesFavorites
   })
 }
