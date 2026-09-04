@@ -36,7 +36,7 @@
 
   Hecho cuando: un WOD existente muestra toda su información y un ID inexistente muestra un estado de error controlado.
 
-- [ ] T7. Catálogo de ejercicios: mostrar ejercicios y sus categorías.  
+- [x] T7. Catálogo de ejercicios: mostrar ejercicios y sus categorías.
 
   (RF-11, RF-12, RF-13)  
 
