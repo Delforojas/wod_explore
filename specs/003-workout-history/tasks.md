@@ -84,7 +84,7 @@
 
   - existen tests de persistencia y recuperación.
 
-- [ ] T5. Implementar orden y eliminación del historial.
+- [x] T5. Implementar orden y eliminación del historial.
 
   (RF-16, RF-19, RF-20, RF-21, RF-22)
 

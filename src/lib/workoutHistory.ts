@@ -28,3 +28,25 @@ export function createWorkoutHistoryEntry(
     ...(notes === undefined ? {} : { notes }),
   })
 }
+
+export function sortWorkoutHistory(
+  entries: readonly WorkoutHistoryEntry[],
+): WorkoutHistoryEntry[] {
+  return entries
+    .map((entry, index) => ({ entry, index }))
+    .sort((left, right) => {
+      if (left.entry.date === right.entry.date) {
+        return left.index - right.index
+      }
+
+      return left.entry.date > right.entry.date ? -1 : 1
+    })
+    .map(({ entry }) => entry)
+}
+
+export function deleteWorkoutEntry(
+  entries: readonly WorkoutHistoryEntry[],
+  entryId: string,
+): WorkoutHistoryEntry[] {
+  return entries.filter((entry) => entry.id !== entryId)
+}
