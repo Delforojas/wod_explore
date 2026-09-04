@@ -106,7 +106,7 @@
 
   - existen tests para orden y eliminación.
 
-- [ ] T6. Crear la lógica reutilizable de historial para React.
+- [x] T6. Crear la lógica reutilizable de historial para React.
 
   (RF-2, RF-19, RF-22, RF-23, RF-25)
 
