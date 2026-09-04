@@ -4,6 +4,7 @@ import { useFavorites } from './hooks/useFavorites'
 import { useWorkoutHistory } from './hooks/useWorkoutHistory'
 import { loadWods } from './lib/loadWods'
 import { ExercisesPage } from './pages/ExercisesPage'
+import { HistoryPage } from './pages/HistoryPage'
 import { WodDetailPage } from './pages/WodDetailPage'
 import { WodsPage } from './pages/WodsPage'
 import type { Wod } from './types/wod'
@@ -25,6 +26,10 @@ export function AppRoutes() {
         element={<WodDetailPage favorites={favorites} workoutHistory={workoutHistory} />}
       />
       <Route path="/exercises" element={<ExercisesPage />} />
+      <Route
+        path="/history"
+        element={<HistoryPage workoutHistory={workoutHistory} wods={availableWods} />}
+      />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )

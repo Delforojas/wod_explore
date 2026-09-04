@@ -152,7 +152,7 @@
 
   - existen tests del formulario.
 
-- [ ] T8. Crear la página de historial y añadir navegación.
+- [x] T8. Crear la página de historial y añadir navegación.
 
   (RF-14, RF-15, RF-16, RF-17, RF-18)
 

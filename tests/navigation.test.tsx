@@ -20,7 +20,7 @@ function renderNavigation(initialPath = '/') {
 }
 
 describe('main navigation', () => {
-  it('expone enlaces internos para Inicio, WODs y Ejercicios', () => {
+  it('expone enlaces internos para las secciones principales', () => {
     renderNavigation()
 
     const navigation = screen.getByRole('navigation', { name: 'Navegación principal' })
@@ -31,11 +31,13 @@ describe('main navigation', () => {
       'Inicio',
       'WODs',
       'Ejercicios',
+      'Historial',
     ])
     expect(navigationLinks.map((link) => link.getAttribute('href'))).toEqual([
       '/',
       '/wods',
       '/exercises',
+      '/history',
     ])
   })
 
@@ -48,6 +50,10 @@ describe('main navigation', () => {
 
     fireEvent.click(screen.getByRole('link', { name: 'WODs' }))
     expect(screen.getByRole('heading', { name: 'WODs para cada sesión.' })).toBeTruthy()
+    expect(window.location.pathname).toBe('/')
+
+    fireEvent.click(screen.getByRole('link', { name: 'Historial' }))
+    expect(screen.getByRole('heading', { name: 'Historial de entrenamientos.' })).toBeTruthy()
     expect(window.location.pathname).toBe('/')
 
     fireEvent.click(screen.getByRole('link', { name: 'Inicio' }))

@@ -4,6 +4,7 @@ const navigationItems = [
   { label: 'Inicio', path: '/' },
   { label: 'WODs', path: '/wods' },
   { label: 'Ejercicios', path: '/exercises' },
+  { label: 'Historial', path: '/history' },
 ]
 
 export function Header() {
