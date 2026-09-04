@@ -5,6 +5,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { WorkoutLogForm } from '../src/components/WorkoutLogForm'
 import { AppRoutes } from '../src/App'
+import { Header } from '../src/components/Header'
 import { createWorkoutHistoryEntry } from '../src/lib/workoutHistory'
 import {
   WORKOUT_HISTORY_STORAGE_KEY,
@@ -143,6 +144,25 @@ describe('WorkoutLogForm en el detalle de WOD', () => {
     expect(JSON.parse(localStorage.getItem(WORKOUT_HISTORY_STORAGE_KEY) ?? 'null')).toEqual([
       expect.objectContaining({ wodId: 'fran', date: today, result: '05:42' }),
     ])
+  })
+
+  it('muestra en el historial el registro guardado desde el detalle', () => {
+    render(
+      <MemoryRouter initialEntries={['/wods/fran']}>
+        <Header />
+        <AppRoutes />
+      </MemoryRouter>,
+    )
+
+    fireEvent.change(screen.getByLabelText('Resultado (opcional)'), {
+      target: { value: 'Completed' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Guardar entrenamiento' }))
+    fireEvent.click(screen.getByRole('link', { name: 'Historial' }))
+
+    expect(screen.getByRole('heading', { name: 'Fran' })).toBeTruthy()
+    expect(screen.getByRole('time').getAttribute('datetime')).toBe(today)
+    expect(screen.getByText('Completed')).toBeTruthy()
   })
 
   it('mantiene funcionando el favorito del WOD', () => {

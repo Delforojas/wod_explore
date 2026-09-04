@@ -234,7 +234,7 @@
 
   - no se añaden funcionalidades nuevas.
 
-- [ ] T12. Completar la cobertura de tests y regresión.
+- [x] T12. Completar la cobertura de tests y regresión.
 
   (RF-1..RF-28, RNF-10, RNF-11)
 

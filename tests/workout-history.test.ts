@@ -76,6 +76,20 @@ describe('createWorkoutHistoryEntry', () => {
     expect(entry.notes).toBe('Thrusters sin cortar.')
   })
 
+  it.each(['7 rondas + 12 reps', '100 kg', 'Completed'])(
+    'conserva un resultado textual con formato %s',
+    (result) => {
+      const entry = createWorkoutHistoryEntry({
+        wodId: 'fran',
+        date: today,
+        result,
+        today,
+      })
+
+      expect(entry.result).toBe(result)
+    },
+  )
+
   it('omite result y notes cuando solo contienen espacios', () => {
     const entry = createWorkoutHistoryEntry({
       wodId: 'fran',
