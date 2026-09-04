@@ -46,6 +46,7 @@ export function HistoryPage({ workoutHistory, wods }: HistoryPageProps) {
                 key={entry.id}
                 entry={entry}
                 wod={findWodById(wods, entry.wodId)}
+                onDelete={workoutHistory.deleteWorkout}
               />
             ))}
           </ol>

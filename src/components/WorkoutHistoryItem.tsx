@@ -1,13 +1,15 @@
 import { Link } from 'react-router-dom'
+import { DeleteWorkoutButton } from './DeleteWorkoutButton'
 import type { WorkoutHistoryEntry } from '../types/workoutHistory'
 import type { Wod } from '../types/wod'
 
 interface WorkoutHistoryItemProps {
   entry: WorkoutHistoryEntry
   wod: Wod | undefined
+  onDelete: (entryId: string) => void
 }
 
-export function WorkoutHistoryItem({ entry, wod }: WorkoutHistoryItemProps) {
+export function WorkoutHistoryItem({ entry, wod, onDelete }: WorkoutHistoryItemProps) {
   const titleId = `workout-history-${entry.id}-title`
 
   return (
@@ -62,6 +64,15 @@ export function WorkoutHistoryItem({ entry, wod }: WorkoutHistoryItemProps) {
             <p className="mt-2 break-words text-sm leading-6 text-slate-300">{entry.notes}</p>
           </div>
         ) : null}
+
+        <div className="mt-6 border-t border-slate-800 pt-4">
+          <DeleteWorkoutButton
+            entryId={entry.id}
+            wodName={wod?.name ?? 'WOD no disponible'}
+            date={entry.date}
+            onDelete={onDelete}
+          />
+        </div>
       </article>
     </li>
   )

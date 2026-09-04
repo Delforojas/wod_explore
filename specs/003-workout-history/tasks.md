@@ -176,7 +176,7 @@
 
   - no se realizan peticiones de red.
 
-- [ ] T9. Integrar eliminación de registros en la interfaz.
+- [x] T9. Integrar eliminación de registros en la interfaz.
 
   (RF-19, RF-20, RF-21, RF-22)
 
