@@ -30,4 +30,28 @@ describe('filterWods', () => {
 
     expect(filterWods(forTimeWods, 'AMRAP')).toEqual([])
   })
+
+  it('devuelve todos los WODs cuando la búsqueda está vacía', () => {
+    expect(filterWods(wods, 'All', '')).toEqual(wods)
+  })
+
+  it('ignora una búsqueda compuesta únicamente por espacios', () => {
+    expect(filterWods(wods, 'All', '   ')).toEqual(wods)
+  })
+
+  it('encuentra una coincidencia exacta por nombre', () => {
+    expect(filterWods(wods, 'All', 'Fran').map((wod) => wod.name)).toEqual(['Fran'])
+  })
+
+  it('encuentra coincidencias parciales por nombre', () => {
+    expect(filterWods(wods, 'All', 'fr').map((wod) => wod.name)).toEqual(['Fran'])
+  })
+
+  it('ignora mayúsculas y minúsculas en la búsqueda', () => {
+    expect(filterWods(wods, 'All', 'fRaN').map((wod) => wod.name)).toEqual(['Fran'])
+  })
+
+  it('devuelve una lista vacía cuando no encuentra el nombre', () => {
+    expect(filterWods(wods, 'All', 'Murph')).toEqual([])
+  })
 })

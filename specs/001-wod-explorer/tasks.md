@@ -60,7 +60,7 @@
 
   Hecho cuando: existen tests para validación de JSON, filtros, búsqueda de WOD, estados vacíos y componentes principales.
 
-- [ ] T11. Validación final de la Spec 001 + README breve.  
+- [x] T11. Validación final de la Spec 001 + README breve.
 
   (Todos)  
 
