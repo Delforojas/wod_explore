@@ -128,7 +128,7 @@
 
   - existen tests cuando corresponda.
 
-- [ ] T7. Crear `WorkoutLogForm` e integrarlo en el detalle de WOD.
+- [x] T7. Crear `WorkoutLogForm` e integrarlo en el detalle de WOD.
 
   (RF-1, RF-5, RF-6, RF-7, RF-8, RF-9, RF-10, RF-12)
 

@@ -1,15 +1,18 @@
 import { Link, useParams } from 'react-router-dom'
 import { ErrorState } from '../components/ErrorState'
 import { FavoriteButton } from '../components/FavoriteButton'
+import { WorkoutLogForm } from '../components/WorkoutLogForm'
 import type { UseFavoritesResult } from '../hooks/useFavorites'
+import type { UseWorkoutHistoryResult } from '../hooks/useWorkoutHistory'
 import { findWodById } from '../lib/findWodById'
 import { loadWods } from '../lib/loadWods'
 
 interface WodDetailPageProps {
   favorites: UseFavoritesResult
+  workoutHistory: UseWorkoutHistoryResult
 }
 
-export function WodDetailPage({ favorites }: WodDetailPageProps) {
+export function WodDetailPage({ favorites, workoutHistory }: WodDetailPageProps) {
   const { id } = useParams<{ id: string }>()
   const result = loadWods()
   const wod = result.success ? findWodById(result.data, id) : undefined
@@ -113,6 +116,11 @@ export function WodDetailPage({ favorites }: WodDetailPageProps) {
                 {wod.description}
               </p>
             </section>
+
+            <WorkoutLogForm
+              wodId={wod.id}
+              addWorkout={workoutHistory.addWorkout}
+            />
           </article>
         )}
       </section>

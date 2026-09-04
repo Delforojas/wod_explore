@@ -7,7 +7,9 @@ import { WodCard } from '../src/components/WodCard'
 import { WodDetailPage } from '../src/pages/WodDetailPage'
 import { AppRoutes } from '../src/App'
 import { FAVORITES_STORAGE_KEY } from '../src/lib/favoritesStorage'
+import { createWorkoutHistoryEntry } from '../src/lib/workoutHistory'
 import { loadWods } from '../src/lib/loadWods'
+import type { UseWorkoutHistoryResult } from '../src/hooks/useWorkoutHistory'
 import { emptyFavorites } from './favorites-fixtures'
 
 const loadedWods = loadWods()
@@ -22,6 +24,12 @@ if (!fran) {
   throw new Error('Se esperaba encontrar el WOD Fran en los datos locales.')
 }
 
+const emptyWorkoutHistory: UseWorkoutHistoryResult = {
+  entries: [],
+  addWorkout: createWorkoutHistoryEntry,
+  deleteWorkout: () => {},
+}
+
 afterEach(() => {
   cleanup()
   localStorage.clear()
@@ -31,7 +39,15 @@ function renderDetail(path: string) {
   return render(
     <MemoryRouter initialEntries={[path]}>
       <Routes>
-        <Route path="/wods/:id" element={<WodDetailPage favorites={emptyFavorites} />} />
+        <Route
+          path="/wods/:id"
+          element={
+            <WodDetailPage
+              favorites={emptyFavorites}
+              workoutHistory={emptyWorkoutHistory}
+            />
+          }
+        />
       </Routes>
     </MemoryRouter>,
   )
