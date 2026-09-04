@@ -92,6 +92,24 @@ describe('workoutHistorySchema', () => {
     expect(result.success).toBe(false)
   })
 
+  it('rechaza IDs duplicados dentro del historial', () => {
+    const result = workoutHistorySchema.safeParse([
+      validEntry,
+      { ...validEntry, date: '2026-09-03' },
+    ])
+
+    expect(result.success).toBe(false)
+  })
+
+  it('rechaza campos opcionales compuestos únicamente por espacios', () => {
+    const result = workoutHistoryEntrySchema.safeParse({
+      ...validEntry,
+      notes: '   ',
+    })
+
+    expect(result.success).toBe(false)
+  })
+
   it('rechaza una estructura que no sea un array', () => {
     const result = workoutHistorySchema.safeParse(validEntry)
 

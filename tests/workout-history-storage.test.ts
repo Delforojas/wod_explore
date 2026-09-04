@@ -45,6 +45,18 @@ describe('workoutHistoryStorage', () => {
   it.each([
     ['un objeto', JSON.stringify({ history: validHistory })],
     ['un array con una entrada inválida', JSON.stringify([{ id: 'invalid' }])],
+    [
+      'un historial con IDs duplicados',
+      JSON.stringify([validHistory[0], { ...validHistory[0], date: '2026-09-03' }]),
+    ],
+    [
+      'un historial con fecha futura',
+      JSON.stringify([{ ...validHistory[0], date: '2999-01-01' }]),
+    ],
+    [
+      'un historial con texto opcional vacío',
+      JSON.stringify([{ ...validHistory[0], notes: '   ' }]),
+    ],
     ['un valor nulo', JSON.stringify(null)],
   ])('devuelve un array vacío para %s', (_description, storedValue) => {
     localStorage.setItem(WORKOUT_HISTORY_STORAGE_KEY, storedValue)
@@ -84,6 +96,17 @@ describe('workoutHistoryStorage', () => {
       } as WorkoutHistory[number],
     ])
 
+    expect(localStorage.getItem(WORKOUT_HISTORY_STORAGE_KEY)).toBeNull()
+  })
+
+  it('no persiste fechas futuras ni IDs duplicados', () => {
+    const futureEntry = { ...validHistory[0], date: '2999-01-01' } as WorkoutHistory[number]
+    const duplicatedEntries = [validHistory[0], { ...validHistory[0], date: '2026-09-03' }]
+
+    saveWorkoutHistory([futureEntry])
+    expect(localStorage.getItem(WORKOUT_HISTORY_STORAGE_KEY)).toBeNull()
+
+    saveWorkoutHistory(duplicatedEntries)
     expect(localStorage.getItem(WORKOUT_HISTORY_STORAGE_KEY)).toBeNull()
   })
 })

@@ -262,7 +262,7 @@
 
   - no se testean detalles internos innecesarios.
 
-- [ ] T13. Validación final de la Spec 003 y actualización del README.
+- [x] T13. Validación final de la Spec 003 y actualización del README.
 
   (Todos)
 
