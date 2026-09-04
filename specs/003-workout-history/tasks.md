@@ -60,7 +60,7 @@
 
   - existen tests de creación e IDs.
 
-- [ ] T4. Implementar almacenamiento del historial en `localStorage`.
+- [x] T4. Implementar almacenamiento del historial en `localStorage`.
 
   (RF-23, RF-24, RF-25, RF-26, RF-27, RF-28)
 
