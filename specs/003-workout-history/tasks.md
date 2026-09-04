@@ -18,7 +18,7 @@
 
   - no se utiliza `any`.
 
-- [ ] T2. Implementar validación y normalización de fechas, resultado y notas.
+- [x] T2. Implementar validación y normalización de fechas, resultado y notas.
 
   (RF-5, RF-6, RF-7, RF-8, RF-9, RF-10, RF-11, RF-12, RF-13)
 
