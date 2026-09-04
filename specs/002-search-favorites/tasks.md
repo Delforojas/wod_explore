@@ -17,7 +17,7 @@
   - cambiar el tipo no elimina el texto de búsqueda;
   - existen tests de combinaciones entre búsqueda y filtros.
 
-- [ ] T3. Crear el componente `WodSearch` e integrarlo en el catálogo.
+- [x] T3. Crear el componente `WodSearch` e integrarlo en el catálogo.
   (RF-1, RF-3, RF-4)
   Hecho cuando:
   - existe un campo de búsqueda visible;

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { EmptyState } from '../components/EmptyState'
 import { WodCard } from '../components/WodCard'
 import { WodFilters } from '../components/WodFilters'
+import { WodSearch } from '../components/WodSearch'
 import { filterWods, type WodFilter } from '../lib/filterWods'
 import { loadWods } from '../lib/loadWods'
 import type { Wod } from '../types/wod'
@@ -12,6 +13,7 @@ interface WodsPageProps {
 
 export function WodsPage({ wods }: WodsPageProps = {}) {
   const [selectedFilter, setSelectedFilter] = useState<WodFilter>('All')
+  const [search, setSearch] = useState('')
   const result =
     wods === undefined
       ? loadWods()
@@ -20,7 +22,7 @@ export function WodsPage({ wods }: WodsPageProps = {}) {
           data: wods,
         }
   const filteredWods = result.success
-    ? filterWods(result.data, selectedFilter)
+    ? filterWods(result.data, selectedFilter, search)
     : []
 
   return (
@@ -57,15 +59,18 @@ export function WodsPage({ wods }: WodsPageProps = {}) {
           />
         ) : (
           <>
-            <WodFilters
-              selectedFilter={selectedFilter}
-              onFilterChange={setSelectedFilter}
-            />
+            <WodSearch value={search} onChange={setSearch} />
+            <div className="mt-8">
+              <WodFilters
+                selectedFilter={selectedFilter}
+                onFilterChange={setSelectedFilter}
+              />
+            </div>
             {filteredWods.length === 0 ? (
               <div className="mt-8">
                 <EmptyState
                   title="No hay resultados"
-                  message="No hay WODs que coincidan con el tipo de entrenamiento seleccionado."
+                  message="No hay WODs que coincidan con los criterios seleccionados."
                 />
               </div>
             ) : (
