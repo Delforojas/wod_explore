@@ -27,7 +27,7 @@
   - el control tiene etiqueta accesible;
   - existen tests del comportamiento principal.
 
-- [ ] T4. Implementar persistencia de favoritos en `localStorage`.
+- [x] T4. Implementar persistencia de favoritos en `localStorage`.
   (RF-16, RF-17, RF-18, RF-19)
   Hecho cuando:
   - existe una única clave `wod-explorer:favorites`;
