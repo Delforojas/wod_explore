@@ -11,11 +11,11 @@ export function WodDetailPage() {
   return (
     <main
       id="main-content"
-      className="mx-auto min-h-[calc(100vh-81px)] max-w-4xl px-6 py-12 sm:px-8 sm:py-16"
+      className="mx-auto max-w-4xl px-4 py-10 sm:px-8 sm:py-16"
     >
       <Link
         to="/wods"
-        className="inline-flex rounded-md text-sm font-medium text-orange-300 hover:text-orange-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400"
+        className="inline-flex min-h-11 items-center touch-manipulation rounded-md py-2 text-sm font-medium text-orange-300 hover:text-orange-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400"
       >
         Volver al catálogo de WODs
       </Link>
@@ -24,7 +24,7 @@ export function WodDetailPage() {
         <p className="text-sm font-medium uppercase tracking-[0.2em] text-slate-400">
           Detalle del entrenamiento
         </p>
-        <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">
+        <h1 className="mt-4 break-words text-balance text-3xl font-bold leading-tight tracking-tight text-white sm:text-5xl">
           {wod?.name ?? 'WOD no encontrado'}
         </h1>
       </header>
@@ -46,25 +46,31 @@ export function WodDetailPage() {
               Información de {wod.name}
             </h2>
 
-            <dl className="grid gap-5 rounded-2xl border border-slate-800 bg-slate-900 p-6 sm:grid-cols-3">
-              <div>
-                <dt className="text-xs uppercase tracking-[0.14em] text-slate-500">Tipo</dt>
-                <dd className="mt-2 text-base font-semibold text-orange-300">{wod.type}</dd>
+            <dl className="grid gap-5 rounded-2xl border border-slate-800 bg-slate-900 p-5 sm:grid-cols-3 sm:p-6">
+              <div className="min-w-0">
+                <dt className="text-xs uppercase tracking-[0.14em] text-slate-400">Tipo</dt>
+                <dd className="mt-2 break-words text-base font-semibold text-orange-300">
+                  {wod.type}
+                </dd>
               </div>
-              <div>
-                <dt className="text-xs uppercase tracking-[0.14em] text-slate-500">Nivel</dt>
-                <dd className="mt-2 text-base font-semibold text-slate-100">{wod.level}</dd>
+              <div className="min-w-0">
+                <dt className="text-xs uppercase tracking-[0.14em] text-slate-400">Nivel</dt>
+                <dd className="mt-2 break-words text-base font-semibold text-slate-100">
+                  {wod.level}
+                </dd>
               </div>
-              <div>
-                <dt className="text-xs uppercase tracking-[0.14em] text-slate-500">
+              <div className="min-w-0">
+                <dt className="text-xs uppercase tracking-[0.14em] text-slate-400">
                   Estructura / duración
                 </dt>
-                <dd className="mt-2 text-base font-semibold text-slate-100">{wod.structure}</dd>
+                <dd className="mt-2 break-words text-base font-semibold text-slate-100">
+                  {wod.structure}
+                </dd>
               </div>
             </dl>
 
             <section aria-labelledby="exercise-list-title" className="mt-8">
-              <h2 id="exercise-list-title" className="text-2xl font-semibold text-white">
+              <h2 id="exercise-list-title" className="text-balance text-2xl font-semibold text-white">
                 Ejercicios y formato
               </h2>
               <ul className="mt-4 divide-y divide-slate-800 rounded-2xl border border-slate-800 bg-slate-900">
@@ -73,7 +79,9 @@ export function WodDetailPage() {
                     key={`${exercise.exerciseId}-${exercise.repetitions}-${index}`}
                     className="flex flex-col gap-2 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
                   >
-                    <span className="font-medium text-slate-100">{exercise.exerciseId}</span>
+                    <span className="break-words font-medium text-slate-100">
+                      {exercise.exerciseId}
+                    </span>
                     <span className="text-sm text-slate-400">
                       Repeticiones / formato: {exercise.repetitions}
                     </span>
@@ -83,10 +91,10 @@ export function WodDetailPage() {
             </section>
 
             <section aria-labelledby="description-title" className="mt-8">
-              <h2 id="description-title" className="text-2xl font-semibold text-white">
+              <h2 id="description-title" className="text-balance text-2xl font-semibold text-white">
                 Descripción
               </h2>
-              <p className="mt-4 rounded-2xl border border-slate-800 bg-slate-900 p-6 text-base leading-7 text-slate-300">
+              <p className="mt-4 rounded-2xl border border-slate-800 bg-slate-900 p-5 text-base leading-7 text-pretty text-slate-300 sm:p-6">
                 {wod.description}
               </p>
             </section>

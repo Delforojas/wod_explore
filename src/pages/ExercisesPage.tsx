@@ -20,21 +20,21 @@ export function ExercisesPage({ exercises }: ExercisesPageProps = {}) {
   return (
     <main
       id="main-content"
-      className="mx-auto min-h-[calc(100vh-81px)] max-w-6xl px-6 py-12 sm:px-8 sm:py-16"
+      className="mx-auto max-w-6xl px-4 py-10 sm:px-8 sm:py-16"
     >
       <header className="max-w-2xl">
         <p className="text-sm font-medium uppercase tracking-[0.2em] text-slate-400">
           Biblioteca de movimientos
         </p>
-        <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">
+        <h1 className="mt-4 text-balance text-3xl font-bold leading-tight tracking-tight text-white sm:text-5xl">
           Ejercicios de CrossFit.
         </h1>
-        <p className="mt-5 text-lg leading-8 text-slate-300">
+        <p className="mt-5 text-pretty text-lg leading-8 text-slate-300">
           Consulta los movimientos disponibles y conoce la categoría de cada ejercicio.
         </p>
       </header>
 
-      <section aria-labelledby="exercises-heading" className="mt-12">
+      <section aria-labelledby="exercises-heading" className="mt-10 sm:mt-12">
         <h2 id="exercises-heading" className="sr-only">
           Lista de ejercicios
         </h2>
@@ -50,7 +50,7 @@ export function ExercisesPage({ exercises }: ExercisesPageProps = {}) {
             message="Todavía no hay ejercicios para mostrar. Vuelve a intentarlo más adelante."
           />
         ) : (
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
             {result.data.map((exercise) => (
               <ExerciseCard key={exercise.id} exercise={exercise} />
             ))}

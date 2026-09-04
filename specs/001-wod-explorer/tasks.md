@@ -48,7 +48,7 @@
 
   Hecho cuando: el usuario puede navegar entre las páginas sin peticiones a backend ni recargas innecesarias.
 
-- [ ] T9. Responsive, UI y accesibilidad.  
+- [x] T9. Responsive, UI y accesibilidad.
 
   (RNF-2, RNF-4, RNF-5)  
 

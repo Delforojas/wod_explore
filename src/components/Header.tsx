@@ -9,21 +9,21 @@ const navigationItems = [
 export function Header() {
   return (
     <header className="border-b border-slate-800">
-      <div className="mx-auto flex max-w-6xl flex-col gap-5 px-6 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+      <div className="mx-auto flex max-w-6xl flex-col items-start gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-8 sm:py-5">
         <Link
           to="/"
-          className="w-fit text-sm font-semibold uppercase tracking-[0.24em] text-orange-400 transition-colors hover:text-orange-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400"
+          className="inline-flex min-h-11 w-fit items-center touch-manipulation rounded-md text-sm font-semibold uppercase tracking-[0.24em] text-orange-400 transition-colors hover:text-orange-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400"
         >
           WOD Explorer
         </Link>
 
-        <nav aria-label="Navegación principal">
-          <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium text-slate-300">
+        <nav className="w-full sm:w-auto" aria-label="Navegación principal">
+          <ul className="flex flex-wrap gap-1 text-sm font-medium text-slate-300 sm:gap-x-2">
             {navigationItems.map((item) => (
               <li key={item.path}>
                 <Link
                   to={item.path}
-                  className="inline-flex rounded-md py-1 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400"
+                  className="inline-flex min-h-11 items-center touch-manipulation rounded-md px-2.5 py-2 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400"
                 >
                   {item.label}
                 </Link>
