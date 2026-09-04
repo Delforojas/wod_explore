@@ -40,7 +40,7 @@
 
   - existen tests para todos estos casos.
 
-- [ ] T3. Implementar la lógica pura para crear registros de entrenamiento.
+- [x] T3. Implementar la lógica pura para crear registros de entrenamiento.
 
   (RF-1, RF-2, RF-3, RF-4)
 
