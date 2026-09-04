@@ -35,6 +35,7 @@ describe('WodsPage filters', () => {
     expect(
       screen.getByRole('button', { name: 'All' }).getAttribute('aria-pressed'),
     ).toBe('true')
+    expect(screen.getByRole('button', { name: 'All' }).className).toContain('focus-visible:ring-2')
     expect(screen.getByRole('button', { name: 'For Time' })).toBeTruthy()
     expect(screen.getByRole('button', { name: 'AMRAP' })).toBeTruthy()
     expect(screen.getByRole('button', { name: 'EMOM' })).toBeTruthy()

@@ -16,7 +16,7 @@ export function WodCard({ wod, isFavorite, onToggleFavorite }: WodCardProps) {
       aria-labelledby={titleId}
       className="flex h-full min-w-0 flex-col rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-lg shadow-slate-950/20"
     >
-      <header className="flex min-w-0 items-start justify-between gap-4">
+      <header className="flex min-w-0 flex-wrap items-start justify-between gap-4">
         <div className="min-w-0">
           <p className="text-sm font-semibold uppercase tracking-[0.16em] text-orange-400">
             {wod.type}
@@ -25,7 +25,7 @@ export function WodCard({ wod, isFavorite, onToggleFavorite }: WodCardProps) {
             {wod.name}
           </h2>
         </div>
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="flex max-w-full shrink-0 flex-wrap items-center gap-2">
           <FavoriteButton
             isFavorite={isFavorite}
             onToggle={onToggleFavorite}
@@ -61,7 +61,7 @@ export function WodCard({ wod, isFavorite, onToggleFavorite }: WodCardProps) {
 
       <Link
         to={`/wods/${wod.id}`}
-        className="mt-6 inline-flex min-h-11 items-center touch-manipulation self-start rounded-md py-2 text-sm font-semibold text-orange-300 hover:text-orange-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400"
+        className="mt-6 inline-flex min-h-11 items-center touch-manipulation self-start rounded-md py-2 text-sm font-semibold text-orange-300 hover:text-orange-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400 focus-visible:ring-2 focus-visible:ring-orange-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
       >
         Ver detalle de {wod.name}
       </Link>

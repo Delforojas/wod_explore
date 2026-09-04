@@ -22,7 +22,7 @@ export function FavoriteButton({
       aria-label={label}
       aria-pressed={isFavorite}
       onClick={onToggle}
-      className={`inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-md border p-2 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400 ${stateClasses}`}
+      className={`inline-flex min-h-11 min-w-11 shrink-0 self-start items-center justify-center rounded-md border p-2 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400 focus-visible:ring-2 focus-visible:ring-orange-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 sm:self-auto ${stateClasses}`}
     >
       <svg
         aria-hidden="true"

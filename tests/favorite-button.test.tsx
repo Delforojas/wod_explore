@@ -16,6 +16,7 @@ describe('FavoriteButton', () => {
 
     expect(button.getAttribute('aria-pressed')).toBe('false')
     expect(button.className).toContain('border-slate-700')
+    expect(button.className).toContain('focus-visible:ring-2')
   })
 
   it('muestra el estado favorito con una etiqueta accesible', () => {

@@ -39,6 +39,7 @@ describe('WOD search', () => {
 
     expect(input.getAttribute('name')).toBe('wod-search')
     expect(input.value).toBe('')
+    expect(input.className).toContain('focus-visible:ring-2')
   })
 
   it('actualiza el valor controlado al escribir', () => {

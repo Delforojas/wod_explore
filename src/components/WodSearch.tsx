@@ -17,7 +17,7 @@ export function WodSearch({ value, onChange }: WodSearchProps) {
         onChange={(event) => onChange(event.target.value)}
         placeholder="Ej.: Fran…"
         autoComplete="off"
-        className="mt-2 min-h-11 w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-2.5 text-base text-slate-100 placeholder:text-slate-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400"
+        className="mt-2 min-h-11 w-full rounded-xl border border-slate-700 bg-slate-900 px-4 py-2.5 text-base text-slate-100 placeholder:text-slate-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400 focus-visible:ring-2 focus-visible:ring-orange-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
       />
     </div>
   )

@@ -21,7 +21,7 @@ export function WodDetailPage({ favorites }: WodDetailPageProps) {
     >
       <Link
         to="/wods"
-        className="inline-flex min-h-11 items-center touch-manipulation rounded-md py-2 text-sm font-medium text-orange-300 hover:text-orange-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400"
+        className="inline-flex min-h-11 items-center touch-manipulation rounded-md py-2 text-sm font-medium text-orange-300 hover:text-orange-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400 focus-visible:ring-2 focus-visible:ring-orange-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
       >
         Volver al catálogo de WODs
       </Link>
