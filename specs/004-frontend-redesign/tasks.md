@@ -65,7 +65,7 @@
   - la página funciona correctamente en móvil y escritorio;
   - no se modifica la lógica de negocio.
 
-- [ ] T7. Rediseñar el catálogo de ejercicios.
+- [x] T7. Rediseñar el catálogo de ejercicios.
   (RF-7)
   Hecho cuando:
   - cada ejercicio muestra claramente nombre, categoría y descripción;

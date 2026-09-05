@@ -172,6 +172,30 @@ body {
     @apply text-balance text-2xl font-bold tracking-[-0.02em] text-board-text;
   }
 
+  .exercise-grid {
+    @apply mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:mt-8 lg:grid-cols-3;
+  }
+
+  .exercise-card-header {
+    @apply min-w-0;
+  }
+
+  .exercise-category {
+    @apply inline-flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 border border-board-line px-2.5 py-1.5 text-xs font-semibold uppercase tracking-label;
+  }
+
+  .exercise-category-label {
+    @apply text-board-muted;
+  }
+
+  .exercise-category-value {
+    @apply break-words text-board-accent;
+  }
+
+  .exercise-card-description {
+    @apply mt-6 flex-1 max-w-prose break-words text-sm leading-6 text-pretty text-board-muted;
+  }
+
   .card-surface {
     @apply rounded-panel border border-board-line bg-board-900;
   }
