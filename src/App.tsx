@@ -5,6 +5,7 @@ import { useWorkoutHistory } from './hooks/useWorkoutHistory'
 import { loadWods } from './lib/loadWods'
 import { ExercisesPage } from './pages/ExercisesPage'
 import { HistoryPage } from './pages/HistoryPage'
+import { HomePage } from './pages/HomePage'
 import { WodDetailPage } from './pages/WodDetailPage'
 import { WodsPage } from './pages/WodsPage'
 import type { Wod } from './types/wod'
@@ -19,7 +20,7 @@ export function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/" element={<WodsPage favorites={favorites} />} />
+      <Route path="/" element={<HomePage />} />
       <Route path="/wods" element={<WodsPage favorites={favorites} />} />
       <Route
         path="/wods/:id"

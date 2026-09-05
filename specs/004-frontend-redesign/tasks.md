@@ -33,7 +33,7 @@
   - no provoca recargas completas;
   - el layout global mantiene ancho y spacing consistentes.
 
-- [ ] T4. Rediseñar la página de inicio.
+- [x] T4. Rediseñar la página de inicio.
   (RF-2)
   Hecho cuando:
   - el propósito de WOD Explorer se entiende rápidamente;

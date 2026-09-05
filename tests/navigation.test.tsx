@@ -57,7 +57,7 @@ describe('main navigation', () => {
     expect(window.location.pathname).toBe('/')
 
     fireEvent.click(screen.getByRole('link', { name: 'Inicio' }))
-    expect(screen.getByRole('heading', { name: 'WODs para cada sesión.' })).toBeTruthy()
+    expect(screen.getByRole('heading', { name: 'Encuentra tu próximo WOD.' })).toBeTruthy()
   })
 
   it('indica la sección activa también en rutas anidadas', () => {

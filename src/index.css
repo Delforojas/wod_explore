@@ -115,6 +115,27 @@ body {
     @apply mt-10 sm:mt-12;
   }
 
+  .home-hero {
+    @apply relative overflow-hidden rounded-panel border border-board-accent/40 bg-board-900 px-5 py-8 sm:px-10 sm:py-12 lg:px-14 lg:py-16;
+  }
+
+  .home-hero::before {
+    content: '';
+    @apply absolute left-5 top-0 h-1 w-16 bg-board-accent sm:left-10 lg:left-14;
+  }
+
+  .home-hero-copy {
+    @apply relative max-w-3xl;
+  }
+
+  .home-actions {
+    @apply mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center;
+  }
+
+  .home-actions a {
+    @apply w-full sm:w-auto;
+  }
+
   .card-surface {
     @apply rounded-panel border border-board-line bg-board-900;
   }

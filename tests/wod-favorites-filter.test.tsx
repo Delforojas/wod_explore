@@ -17,7 +17,7 @@ afterEach(() => {
 
 function renderWodsCatalog() {
   return render(
-    <MemoryRouter>
+    <MemoryRouter initialEntries={['/wods']}>
       <AppRoutes />
     </MemoryRouter>,
   )
