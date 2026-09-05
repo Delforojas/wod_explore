@@ -59,4 +59,19 @@ describe('main navigation', () => {
     fireEvent.click(screen.getByRole('link', { name: 'Inicio' }))
     expect(screen.getByRole('heading', { name: 'WODs para cada sesión.' })).toBeTruthy()
   })
+
+  it('indica la sección activa también en rutas anidadas', () => {
+    renderNavigation('/')
+
+    expect(screen.getByRole('link', { name: 'Inicio' }).getAttribute('aria-current')).toBe('page')
+    expect(screen.getByRole('link', { name: 'Inicio' }).className).toContain('nav-link-active')
+    expect(screen.getByRole('link', { name: 'WODs' }).getAttribute('aria-current')).toBeNull()
+
+    cleanup()
+    renderNavigation('/wods/fran')
+
+    expect(screen.getByRole('link', { name: 'WODs' }).getAttribute('aria-current')).toBe('page')
+    expect(screen.getByRole('link', { name: 'WODs' }).className).toContain('nav-link-active')
+    expect(screen.getByRole('link', { name: 'Inicio' }).getAttribute('aria-current')).toBeNull()
+  })
 })

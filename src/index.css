@@ -2,12 +2,29 @@
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --color-ink-950: #0b1014;
+  --color-board-900: #151e23;
+  --color-board-800: #1d2930;
+  --color-board-line: #34434b;
+  --color-board-text: #f3f7f5;
+  --color-board-muted: #a4b0b4;
+  --color-board-accent: #f97316;
+  --color-board-accent-hover: #fb923c;
+  --color-board-danger: #f87171;
+  --color-board-success: #34d399;
+
+  --radius-panel: 0.75rem;
+  --radius-control: 0.375rem;
+  --tracking-label: 0.12em;
+  --tracking-brand: 0.18em;
 }
 
 :root {
   font-family: var(--font-sans);
   color-scheme: dark;
-  background: #020617;
+  background: var(--color-ink-950);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
@@ -17,9 +34,146 @@
 }
 
 body {
-  min-width: 320px;
+  min-width: 20rem;
   min-height: 100vh;
   margin: 0;
+  background: var(--color-ink-950);
+  color: var(--color-board-text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-board-accent);
+  color: var(--color-ink-950);
+}
+
+@layer components {
+  .app-shell {
+    @apply min-h-screen overflow-x-clip bg-ink-950 text-board-text;
+  }
+
+  .app-header {
+    @apply w-full border-b border-board-line bg-ink-950;
+  }
+
+  .app-header-container {
+    @apply mx-auto flex w-full max-w-6xl min-w-0 flex-col items-start gap-4 px-4 py-4 md:flex-row md:items-center md:justify-between md:px-8 md:py-5;
+  }
+
+  .brand-link {
+    @apply inline-flex min-h-11 w-fit shrink-0 touch-manipulation items-center rounded-control text-sm font-bold uppercase tracking-brand text-board-accent transition-colors hover:text-board-accent-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-board-accent focus-visible:ring-2 focus-visible:ring-board-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950;
+  }
+
+  .app-header-nav {
+    @apply w-full min-w-0 md:w-auto;
+  }
+
+  .app-header-links {
+    @apply grid w-full grid-cols-2 gap-1 text-sm font-medium text-board-muted md:flex md:w-auto md:flex-wrap md:gap-x-2 lg:gap-x-3;
+  }
+
+  .nav-link {
+    @apply inline-flex min-h-11 items-center rounded-control px-2.5 py-2 text-sm font-medium text-board-muted transition-colors hover:bg-board-800 hover:text-board-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-board-accent focus-visible:ring-2 focus-visible:ring-board-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950;
+  }
+
+  .nav-link-layout {
+    @apply w-full touch-manipulation justify-start border border-transparent md:w-auto md:justify-center;
+  }
+
+  .nav-link-active {
+    @apply border-board-accent/60 bg-board-accent/10 font-semibold text-board-text hover:bg-board-accent/15 hover:text-board-text;
+  }
+
+  .page-container {
+    @apply mx-auto w-full max-w-6xl px-4 py-10 sm:px-8 sm:py-16;
+  }
+
+  .page-container-narrow {
+    @apply mx-auto w-full max-w-4xl px-4 py-10 sm:px-8 sm:py-16;
+  }
+
+  .page-header {
+    @apply max-w-2xl;
+  }
+
+  .page-kicker,
+  .field-label,
+  .card-label {
+    @apply text-sm font-semibold uppercase tracking-label text-board-muted;
+  }
+
+  .page-title {
+    @apply mt-4 text-balance text-3xl font-extrabold leading-tight tracking-[-0.03em] text-board-text sm:text-5xl;
+  }
+
+  .page-description {
+    @apply mt-5 max-w-prose text-pretty text-lg leading-8 text-board-muted;
+  }
+
+  .page-section {
+    @apply mt-10 sm:mt-12;
+  }
+
+  .card-surface {
+    @apply rounded-panel border border-board-line bg-board-900;
+  }
+
+  .card-surface-elevated {
+    @apply rounded-panel border border-board-line bg-board-800;
+  }
+
+  .button-base {
+    @apply inline-flex min-h-11 items-center justify-center rounded-control px-4 py-2 text-sm font-semibold transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:ring-2 focus-visible:ring-offset-2;
+  }
+
+  .button-primary {
+    @apply inline-flex min-h-11 items-center justify-center rounded-control px-4 py-2 text-sm font-semibold transition-colors duration-150 bg-board-accent text-ink-950 hover:bg-board-accent-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-board-accent-hover focus-visible:ring-2 focus-visible:ring-board-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950;
+  }
+
+  .button-secondary {
+    @apply inline-flex min-h-11 items-center justify-center rounded-control border border-board-line bg-transparent px-4 py-2 text-sm font-semibold text-board-text transition-colors duration-150 hover:border-board-accent hover:bg-board-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-board-accent focus-visible:ring-2 focus-visible:ring-board-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950;
+  }
+
+  .button-danger {
+    @apply inline-flex min-h-11 items-center justify-center rounded-control border border-board-danger/50 bg-transparent px-4 py-2 text-sm font-semibold text-board-danger transition-colors duration-150 hover:border-board-danger hover:bg-board-danger/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-board-danger focus-visible:ring-2 focus-visible:ring-board-danger/40 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950;
+  }
+
+  .button-link {
+    @apply inline-flex min-h-11 items-center justify-center rounded-control bg-transparent px-0 py-2 text-sm font-semibold text-board-accent transition-colors duration-150 hover:text-board-accent-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-board-accent focus-visible:ring-2 focus-visible:ring-board-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950;
+  }
+
+  .filter-button {
+    @apply inline-flex min-h-11 items-center justify-center rounded-control px-4 py-2 text-sm font-semibold transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:ring-2 focus-visible:ring-offset-2;
+  }
+
+  .filter-button-active {
+    @apply bg-board-accent text-ink-950 hover:bg-board-accent-hover focus-visible:outline-board-accent-hover focus-visible:ring-board-accent/40 focus-visible:ring-offset-ink-950;
+  }
+
+  .filter-button-inactive {
+    @apply border border-board-line bg-transparent text-board-muted hover:border-board-accent hover:bg-board-800 hover:text-board-text focus-visible:outline-board-accent focus-visible:ring-board-accent/40 focus-visible:ring-offset-ink-950;
+  }
+
+  .input-control {
+    @apply mt-2 block min-h-11 w-full rounded-control border border-board-line bg-board-800 px-3 py-2.5 text-base text-board-text outline-none transition-colors placeholder:text-board-muted/70 focus-visible:border-board-accent focus-visible:ring-2 focus-visible:ring-board-accent/40;
+  }
+
+  .textarea-control {
+    @apply mt-2 block min-h-0 w-full resize-y rounded-control border border-board-line bg-board-800 px-3 py-2.5 text-base text-board-text outline-none transition-colors placeholder:text-board-muted/70 focus-visible:border-board-accent focus-visible:ring-2 focus-visible:ring-board-accent/40;
+  }
+
+  .state-surface {
+    @apply rounded-panel border px-6 text-board-text;
+  }
+
+  .state-empty {
+    @apply rounded-panel border border-dashed border-board-line bg-board-900/70 px-6 py-12 text-center text-board-text;
+  }
+
+  .state-error {
+    @apply rounded-panel border border-board-danger/40 bg-board-danger/10 px-6 py-10 text-board-text;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
