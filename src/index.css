@@ -136,12 +136,60 @@ body {
     @apply w-full sm:w-auto;
   }
 
+  .catalog-controls {
+    @apply mt-10 grid gap-6 rounded-panel border border-board-line bg-board-900/70 p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-8;
+  }
+
+  .catalog-filters {
+    @apply min-w-0;
+  }
+
+  .catalog-filter-set {
+    @apply min-w-0;
+  }
+
+  .catalog-filter-divider {
+    @apply my-1 h-px basis-full bg-board-line sm:my-0 sm:h-8 sm:w-px sm:basis-auto;
+  }
+
+  .catalog-section-title {
+    @apply text-balance text-2xl font-bold tracking-[-0.02em] text-board-text;
+  }
+
   .card-surface {
     @apply rounded-panel border border-board-line bg-board-900;
   }
 
   .card-surface-elevated {
     @apply rounded-panel border border-board-line bg-board-800;
+  }
+
+  .card-surface-interactive {
+    @apply transition-colors duration-150 hover:border-board-accent/60;
+  }
+
+  .card-badge {
+    @apply inline-flex min-h-7 items-center rounded-control border border-board-line px-2.5 py-1 text-xs font-semibold text-board-muted;
+  }
+
+  .wod-card-header {
+    @apply flex min-w-0 flex-wrap items-start justify-between gap-4;
+  }
+
+  .wod-card-tools {
+    @apply flex max-w-full shrink-0 flex-wrap items-center gap-2;
+  }
+
+  .wod-card-meta {
+    @apply mt-6 grid grid-cols-2 gap-4 border-y border-board-line py-4;
+  }
+
+  .wod-card-description {
+    @apply mt-5 flex-1 break-words text-sm leading-6 text-pretty text-board-muted;
+  }
+
+  .wod-card-footer {
+    @apply mt-6 border-t border-board-line pt-4;
   }
 
   .button-base {

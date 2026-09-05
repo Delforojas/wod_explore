@@ -43,7 +43,7 @@
   - funciona correctamente en móvil, tablet y escritorio;
   - no se añaden funcionalidades nuevas.
 
-- [ ] T5. Rediseñar catálogo, WodCard, búsqueda y filtros.
+- [x] T5. Rediseñar catálogo, WodCard, búsqueda y filtros.
   (RF-3, RF-4, RF-5)
   Hecho cuando:
   - el catálogo es fácil de escanear;

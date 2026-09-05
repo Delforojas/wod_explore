@@ -35,28 +35,28 @@ export function WodsPage({ favorites, wods }: WodsPageProps) {
   return (
     <main
       id="main-content"
-      className="mx-auto max-w-6xl px-4 py-10 sm:px-8 sm:py-16"
+      className="page-container"
     >
-      <header className="max-w-2xl">
-        <p className="text-sm font-medium uppercase tracking-[0.2em] text-slate-400">
+      <header className="page-header">
+        <p className="page-kicker">
           Biblioteca de entrenamientos
         </p>
-        <h1 className="mt-4 text-balance text-3xl font-bold leading-tight tracking-tight text-white sm:text-5xl">
+        <h1 className="page-title">
           WODs para cada sesión.
         </h1>
-        <p className="mt-5 text-pretty text-lg leading-8 text-slate-300">
+        <p className="page-description">
           Consulta entrenamientos con su formato, nivel y resumen para encontrar tu
           próximo reto.
         </p>
       </header>
 
-      <section aria-labelledby="wods-heading" className="mt-10 sm:mt-12">
-        <h2 id="wods-heading" className="sr-only">
-          Lista de WODs
+      <section aria-labelledby="wods-heading" className="page-section">
+        <h2 id="wods-heading" className="catalog-section-title">
+          Entrenamientos disponibles
         </h2>
 
         {!result.success ? (
-          <p role="alert" className="rounded-2xl border border-red-400/40 bg-red-400/10 p-6 text-red-200">
+          <p role="alert" className="state-error text-board-danger">
             No se pudieron cargar los entrenamientos locales.
           </p>
         ) : result.data.length === 0 ? (
@@ -66,14 +66,16 @@ export function WodsPage({ favorites, wods }: WodsPageProps) {
           />
         ) : (
           <>
-            <WodSearch value={search} onChange={setSearch} />
-            <div className="mt-8">
-              <WodFilters
-                favoritesOnly={favoritesOnly}
-                onFavoritesOnlyChange={setFavoritesOnly}
-                selectedFilter={selectedFilter}
-                onFilterChange={setSelectedFilter}
-              />
+            <div className="catalog-controls">
+              <WodSearch value={search} onChange={setSearch} />
+              <div className="catalog-filters">
+                <WodFilters
+                  favoritesOnly={favoritesOnly}
+                  onFavoritesOnlyChange={setFavoritesOnly}
+                  selectedFilter={selectedFilter}
+                  onFilterChange={setSelectedFilter}
+                />
+              </div>
             </div>
             {favoritesOnly && favoriteIds.length === 0 ? (
               <div className="mt-8">
@@ -90,7 +92,7 @@ export function WodsPage({ favorites, wods }: WodsPageProps) {
                 />
               </div>
             ) : (
-              <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+              <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:mt-10 lg:grid-cols-3">
                 {filteredWods.map((wod) => (
                   <WodCard
                     key={wod.id}
