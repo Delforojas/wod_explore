@@ -11,12 +11,13 @@ export function ErrorState({ title, message, children }: ErrorStateProps) {
     <section
       role="alert"
       aria-labelledby="error-state-title"
-      className="rounded-2xl border border-red-400/40 bg-red-400/10 px-6 py-10"
+      data-state-kind="error"
+      className="state-error"
     >
-      <h2 id="error-state-title" className="text-xl font-semibold text-red-100">
+      <h2 id="error-state-title" className="text-xl font-bold tracking-[-0.02em] text-board-text">
         {title}
       </h2>
-      <p className="mt-3 max-w-xl text-sm leading-6 text-red-200">{message}</p>
+      <p className="mt-3 max-w-xl text-sm leading-6 text-board-danger">{message}</p>
       {children ? <div className="mt-6">{children}</div> : null}
     </section>
   )

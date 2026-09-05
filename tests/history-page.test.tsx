@@ -61,8 +61,11 @@ describe('HistoryPage', () => {
   it('muestra un estado vacío específico cuando no hay registros', () => {
     renderHistory()
 
+    const emptyState = screen.getByRole('status')
+
     expect(screen.getByRole('heading', { name: 'Historial vacío' })).toBeTruthy()
     expect(screen.getByText('Todavía no has registrado ningún entrenamiento.')).toBeTruthy()
+    expect(emptyState.getAttribute('data-state-kind')).toBe('history')
   })
 
   it('muestra todas las entradas ordenadas de más reciente a más antigua', () => {

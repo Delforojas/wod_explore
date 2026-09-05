@@ -1,16 +1,37 @@
+export type EmptyStateKind =
+  | 'generic'
+  | 'catalog'
+  | 'search'
+  | 'filters'
+  | 'favorites'
+  | 'history'
+  | 'exercises'
+
 interface EmptyStateProps {
   title: string
   message: string
+  kind?: EmptyStateKind
 }
 
-export function EmptyState({ title, message }: EmptyStateProps) {
+const emptyStateKindClasses: Record<EmptyStateKind, string> = {
+  generic: 'state-empty-generic',
+  catalog: 'state-empty-catalog',
+  search: 'state-empty-search',
+  filters: 'state-empty-filters',
+  favorites: 'state-empty-favorites',
+  history: 'state-empty-history',
+  exercises: 'state-empty-exercises',
+}
+
+export function EmptyState({ title, message, kind = 'generic' }: EmptyStateProps) {
   return (
     <section
       role="status"
-      className="rounded-2xl border border-dashed border-slate-700 bg-slate-900/60 px-6 py-12 text-center"
+      data-state-kind={kind}
+      className={`state-empty ${emptyStateKindClasses[kind]}`}
     >
-      <h2 className="text-xl font-semibold text-white">{title}</h2>
-      <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-slate-400">{message}</p>
+      <h2 className="text-xl font-bold tracking-[-0.02em] text-board-text">{title}</h2>
+      <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-board-muted">{message}</p>
     </section>
   )
 }

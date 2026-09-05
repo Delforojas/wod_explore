@@ -38,6 +38,7 @@ export function HistoryPage({ workoutHistory, wods }: HistoryPageProps) {
 
         {entries.length === 0 ? (
           <EmptyState
+            kind="history"
             title="Historial vacío"
             message="Todavía no has registrado ningún entrenamiento."
           />

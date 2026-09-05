@@ -68,9 +68,12 @@ describe('exercise catalog', () => {
       <ExercisesPage exercises={[]} />,
     )
 
-    expect(screen.getByRole('status').textContent).toContain(
+    const emptyState = screen.getByRole('status')
+
+    expect(emptyState.textContent).toContain(
       'No hay ejercicios disponibles',
     )
+    expect(emptyState.getAttribute('data-state-kind')).toBe('exercises')
   })
 
   it('expone el catálogo mediante la ruta /exercises', () => {

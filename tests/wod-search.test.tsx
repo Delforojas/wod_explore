@@ -39,7 +39,7 @@ describe('WOD search', () => {
 
     expect(input.getAttribute('name')).toBe('wod-search')
     expect(input.value).toBe('')
-    expect(input.className).toContain('focus-visible:ring-2')
+    expect(input.className).toContain('input-control')
   })
 
   it('actualiza el valor controlado al escribir', () => {
@@ -87,6 +87,10 @@ describe('WOD search', () => {
 
     fireEvent.change(getSearchInput(), { target: { value: 'Murph' } })
 
-    expect(screen.getByRole('status').textContent).toContain('No hay resultados')
+    const emptyState = screen.getByRole('status')
+
+    expect(emptyState.textContent).toContain('No encontramos WODs')
+    expect(emptyState.textContent).toContain('Prueba con otro término de búsqueda.')
+    expect(emptyState.getAttribute('data-state-kind')).toBe('search')
   })
 })

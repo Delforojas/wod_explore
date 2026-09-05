@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { EmptyState } from '../components/EmptyState'
+import { ErrorState } from '../components/ErrorState'
 import { WodCard } from '../components/WodCard'
 import { WodFilters } from '../components/WodFilters'
 import { WodSearch } from '../components/WodSearch'
@@ -56,11 +57,13 @@ export function WodsPage({ favorites, wods }: WodsPageProps) {
         </h2>
 
         {!result.success ? (
-          <p role="alert" className="state-error text-board-danger">
-            No se pudieron cargar los entrenamientos locales.
-          </p>
+          <ErrorState
+            title="No se pudieron cargar los WODs"
+            message="Revisa los datos locales e inténtalo de nuevo."
+          />
         ) : result.data.length === 0 ? (
           <EmptyState
+            kind="catalog"
             title="No hay entrenamientos disponibles"
             message="Todavía no hay WODs para mostrar. Vuelve a intentarlo más adelante."
           />
@@ -80,6 +83,7 @@ export function WodsPage({ favorites, wods }: WodsPageProps) {
             {favoritesOnly && favoriteIds.length === 0 ? (
               <div className="mt-8">
                 <EmptyState
+                  kind="favorites"
                   title="No tienes favoritos"
                   message="Marca algún WOD como favorito para encontrarlo aquí."
                 />
@@ -87,8 +91,13 @@ export function WodsPage({ favorites, wods }: WodsPageProps) {
             ) : filteredWods.length === 0 ? (
               <div className="mt-8">
                 <EmptyState
-                  title="No hay resultados"
-                  message="No hay WODs que coincidan con los criterios seleccionados."
+                  kind={search.trim() ? 'search' : 'filters'}
+                  title={search.trim() ? 'No encontramos WODs' : 'No hay resultados'}
+                  message={
+                    search.trim()
+                      ? 'Prueba con otro término de búsqueda.'
+                      : 'No hay WODs que coincidan con los filtros seleccionados.'
+                  }
                 />
               </div>
             ) : (

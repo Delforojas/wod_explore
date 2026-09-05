@@ -15,8 +15,8 @@ describe('FavoriteButton', () => {
     const button = screen.getByRole('button', { name: 'Añadir Fran a favoritos' })
 
     expect(button.getAttribute('aria-pressed')).toBe('false')
-    expect(button.className).toContain('border-slate-700')
-    expect(button.className).toContain('focus-visible:ring-2')
+    expect(button.className).toContain('border-board-line')
+    expect(button.className).toContain('button-base')
   })
 
   it('muestra el estado favorito con una etiqueta accesible', () => {
@@ -25,7 +25,7 @@ describe('FavoriteButton', () => {
     const button = screen.getByRole('button', { name: 'Quitar Fran de favoritos' })
 
     expect(button.getAttribute('aria-pressed')).toBe('true')
-    expect(button.className).toContain('border-orange-400/60')
+    expect(button.className).toContain('border-board-accent/60')
   })
 
   it('ejecuta onToggle al activarse mediante el botón', () => {

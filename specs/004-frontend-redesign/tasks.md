@@ -85,7 +85,7 @@
   - historial y formulario funcionan correctamente en móvil y escritorio;
   - no se modifica la lógica de historial.
 
-- [ ] T9. Unificar estados vacíos y estados de error.
+- [x] T9. Unificar estados vacíos y estados de error.
   (RF-9)
   Hecho cuando:
   - todos los estados vacíos utilizan un lenguaje visual consistente;

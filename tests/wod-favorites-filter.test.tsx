@@ -72,7 +72,10 @@ describe('WOD favorites filter', () => {
 
     showFavoritesOnly()
 
-    expect(screen.getByRole('status').textContent).toContain('No tienes favoritos')
+    const emptyState = screen.getByRole('status')
+
+    expect(emptyState.textContent).toContain('No tienes favoritos')
+    expect(emptyState.getAttribute('data-state-kind')).toBe('favorites')
     expect(screen.queryByText('No hay resultados')).toBeNull()
   })
 

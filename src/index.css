@@ -422,11 +422,27 @@ body {
   }
 
   .state-empty {
-    @apply rounded-panel border border-dashed border-board-line bg-board-900/70 px-6 py-12 text-center text-board-text;
+    @apply rounded-panel border border-dashed border-board-line bg-board-900/70 px-5 py-10 text-center text-board-text sm:px-7 sm:py-12;
+  }
+
+  .state-empty-search {
+    @apply border-board-accent/45 bg-board-900;
+  }
+
+  .state-empty-favorites {
+    @apply border-board-accent/30;
+  }
+
+  .state-empty-history {
+    @apply bg-ink-950/40;
+  }
+
+  .state-empty-filters {
+    @apply bg-board-900;
   }
 
   .state-error {
-    @apply rounded-panel border border-board-danger/40 bg-board-danger/10 px-6 py-10 text-board-text;
+    @apply rounded-panel border border-solid border-board-danger/40 bg-board-danger/10 px-5 py-8 text-board-text sm:px-7 sm:py-10;
   }
 }
 

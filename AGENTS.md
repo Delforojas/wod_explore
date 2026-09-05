@@ -66,6 +66,7 @@ Cuando trabajes con Tailwind:
 - sigue `tailwind-css-patterns`
 
 Cuando revises diseño, responsive, UX o accesibilidad:
+- sigue `impeccable`
 - sigue `web-design-guidelines`
 
 Cuando trabajes con datos JSON:
@@ -92,3 +93,33 @@ Usa `find-skills` únicamente cuando una tarea requiera conocimientos que no est
 - Indica claramente qué archivos has modificado.
 - Indica qué verificaciones has ejecutado y su resultado.
 - Si algún requisito de la spec no se ha podido cumplir, indícalo explícitamente.
+
+## Documentación obligatoria
+
+Antes de modificar código:
+
+1. Lee `PRODUCT.md` para entender el propósito y las restricciones del producto.
+
+2. Lee `DESIGN.md` para entender la dirección visual y las reglas de interfaz.
+
+3. Lee `docs/constitution.md` para respetar los principios no negociables.
+
+4. Lee la spec activa dentro de `specs/`.
+
+5. Lee las skills locales relevantes dentro de `.agents/skills/`.
+
+La prioridad es:
+
+1. `docs/constitution.md`
+
+2. `PRODUCT.md`
+
+3. `AGENTS.md`
+
+4. spec activa
+
+5. `DESIGN.md`
+
+6. skills
+
+Si existe una contradicción entre estos documentos, no improvises: detén la implementación e indica el conflicto.

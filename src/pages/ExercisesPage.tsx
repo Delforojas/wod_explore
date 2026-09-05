@@ -46,6 +46,7 @@ export function ExercisesPage({ exercises }: ExercisesPageProps = {}) {
           />
         ) : result.data.length === 0 ? (
           <EmptyState
+            kind="exercises"
             title="No hay ejercicios disponibles"
             message="Todavía no hay ejercicios para mostrar. Vuelve a intentarlo más adelante."
           />

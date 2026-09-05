@@ -39,10 +39,10 @@ export function AppRoutes() {
 function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen overflow-x-hidden bg-slate-950 text-slate-100">
+      <div className="app-shell">
         <a
           href="#main-content"
-          className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:left-4 focus-visible:top-4 focus-visible:z-10 focus-visible:rounded-md focus-visible:bg-white focus-visible:px-4 focus-visible:py-2 focus-visible:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-400 focus-visible:ring-2 focus-visible:ring-orange-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+          className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:left-4 focus-visible:top-4 focus-visible:z-10 focus-visible:rounded-control focus-visible:bg-board-text focus-visible:px-4 focus-visible:py-2 focus-visible:text-ink-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-board-accent focus-visible:ring-2 focus-visible:ring-board-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950"
         >
           Saltar al contenido principal
         </a>

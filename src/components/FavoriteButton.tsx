@@ -13,8 +13,8 @@ export function FavoriteButton({
     ? `Quitar ${wodName} de favoritos`
     : `Añadir ${wodName} a favoritos`
   const stateClasses = isFavorite
-    ? 'border-orange-400/60 bg-orange-400/10 text-orange-300 hover:border-orange-300 hover:text-orange-200'
-    : 'border-slate-700 bg-slate-950/40 text-slate-400 hover:border-slate-500 hover:text-slate-200'
+    ? 'border-board-accent/60 bg-board-accent/10 text-board-accent-hover hover:border-board-accent-hover'
+    : 'border-board-line bg-ink-950/40 text-board-muted hover:border-board-accent hover:text-board-text'
 
   return (
     <button
@@ -22,7 +22,7 @@ export function FavoriteButton({
       aria-label={label}
       aria-pressed={isFavorite}
       onClick={onToggle}
-      className={`inline-flex min-h-11 min-w-11 shrink-0 self-start items-center justify-center rounded-md border p-2 transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400 focus-visible:ring-2 focus-visible:ring-orange-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 sm:self-auto ${stateClasses}`}
+      className={`button-base min-w-11 shrink-0 self-start border p-2 focus-visible:outline-board-accent focus-visible:ring-board-accent/40 focus-visible:ring-offset-ink-950 sm:self-auto ${stateClasses}`}
     >
       <svg
         aria-hidden="true"

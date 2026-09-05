@@ -35,7 +35,7 @@ describe('WodsPage filters', () => {
     expect(
       screen.getByRole('button', { name: 'All' }).getAttribute('aria-pressed'),
     ).toBe('true')
-    expect(screen.getByRole('button', { name: 'All' }).className).toContain('focus-visible:ring-2')
+    expect(screen.getByRole('button', { name: 'All' }).className).toContain('filter-button-active')
     expect(screen.getByRole('button', { name: 'For Time' })).toBeTruthy()
     expect(screen.getByRole('button', { name: 'AMRAP' })).toBeTruthy()
     expect(screen.getByRole('button', { name: 'EMOM' })).toBeTruthy()
@@ -77,6 +77,9 @@ describe('WodsPage filters', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'AMRAP' }))
 
-    expect(screen.getByRole('status').textContent).toContain('No hay resultados')
+    const emptyState = screen.getByRole('status')
+
+    expect(emptyState.textContent).toContain('No hay resultados')
+    expect(emptyState.getAttribute('data-state-kind')).toBe('filters')
   })
 })

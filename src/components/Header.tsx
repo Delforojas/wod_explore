@@ -15,7 +15,7 @@ export function Header() {
           to="/"
           className="brand-link"
         >
-          WOD Explorer
+          <span translate="no">WOD Explorer</span>
         </Link>
 
         <nav className="app-header-nav" aria-label="Navegación principal">
