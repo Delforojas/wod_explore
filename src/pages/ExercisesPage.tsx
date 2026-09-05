@@ -51,7 +51,7 @@ export function ExercisesPage({ exercises }: ExercisesPageProps = {}) {
             message="Todavía no hay ejercicios para mostrar. Vuelve a intentarlo más adelante."
           />
         ) : (
-          <div className="exercise-grid">
+          <div className="catalog-grid">
             {result.data.map((exercise) => (
               <ExerciseCard key={exercise.id} exercise={exercise} />
             ))}

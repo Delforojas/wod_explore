@@ -119,7 +119,7 @@
   - los estados no dependen únicamente del color;
   - el rediseño no introduce regresiones de accesibilidad.
 
-- [ ] T12. Auditoría final con Impeccable.
+- [x] T12. Auditoría final con Impeccable.
   (Todos)
   Hecho cuando:
   - se revisa el frontend completo usando `impeccable`;

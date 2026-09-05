@@ -101,7 +101,7 @@ export function WodsPage({ favorites, wods }: WodsPageProps) {
                 />
               </div>
             ) : (
-              <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:mt-10 lg:grid-cols-3">
+              <div className="catalog-grid">
                 {filteredWods.map((wod) => (
                   <WodCard
                     key={wod.id}
