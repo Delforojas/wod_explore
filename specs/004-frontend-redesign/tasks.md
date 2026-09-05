@@ -55,7 +55,7 @@
   - búsqueda, filtros y favoritos mantienen exactamente su comportamiento actual;
   - no existe overflow horizontal.
 
-- [ ] T6. Rediseñar la página de detalle del WOD.
+- [x] T6. Rediseñar la página de detalle del WOD.
   (RF-6)
   Hecho cuando:
   - el WOD es el elemento visual protagonista;

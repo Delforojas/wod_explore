@@ -20,34 +20,35 @@ export function WodDetailPage({ favorites, workoutHistory }: WodDetailPageProps)
   return (
     <main
       id="main-content"
-      className="mx-auto max-w-4xl px-4 py-10 sm:px-8 sm:py-16"
+      className="page-container-narrow"
     >
-      <Link
-        to="/wods"
-        className="inline-flex min-h-11 items-center touch-manipulation rounded-md py-2 text-sm font-medium text-orange-300 hover:text-orange-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400 focus-visible:ring-2 focus-visible:ring-orange-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
-      >
-        Volver al catálogo de WODs
-      </Link>
+      <nav aria-label="Navegación de detalle" className="detail-back-nav">
+        <Link
+          to="/wods"
+          className="button-link"
+        >
+          Volver al catálogo de WODs
+        </Link>
+      </nav>
 
-      <header className="mt-10 flex max-w-2xl flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-        <div className="min-w-0">
-          <p className="text-sm font-medium uppercase tracking-[0.2em] text-slate-400">
-            Detalle del entrenamiento
-          </p>
-          <h1 className="mt-4 break-words text-balance text-3xl font-bold leading-tight tracking-tight text-white sm:text-5xl">
+      <header className="detail-header">
+        <div className="detail-heading">
+          <h1 className="page-title mt-0 break-words">
             {wod?.name ?? 'WOD no encontrado'}
           </h1>
         </div>
         {wod ? (
-          <FavoriteButton
-            isFavorite={favorites.isFavorite(wod.id)}
-            onToggle={() => favorites.toggleFavorite(wod.id)}
-            wodName={wod.name}
-          />
+          <div className="detail-actions">
+            <FavoriteButton
+              isFavorite={favorites.isFavorite(wod.id)}
+              onToggle={() => favorites.toggleFavorite(wod.id)}
+              wodName={wod.name}
+            />
+          </div>
         ) : null}
       </header>
 
-      <section className="mt-10">
+      <section className="page-section detail-content">
         {!result.success ? (
           <ErrorState
             title="No se pudo cargar el WOD"
@@ -64,43 +65,43 @@ export function WodDetailPage({ favorites, workoutHistory }: WodDetailPageProps)
               Información de {wod.name}
             </h2>
 
-            <dl className="grid gap-5 rounded-2xl border border-slate-800 bg-slate-900 p-5 sm:grid-cols-3 sm:p-6">
-              <div className="min-w-0">
-                <dt className="text-xs uppercase tracking-[0.14em] text-slate-400">Tipo</dt>
-                <dd className="mt-2 break-words text-base font-semibold text-orange-300">
+            <dl className="detail-facts">
+              <div className="detail-fact">
+                <dt className="card-label">Tipo</dt>
+                <dd className="mt-2 break-words text-base font-semibold text-board-accent">
                   {wod.type}
                 </dd>
               </div>
-              <div className="min-w-0">
-                <dt className="text-xs uppercase tracking-[0.14em] text-slate-400">Nivel</dt>
-                <dd className="mt-2 break-words text-base font-semibold text-slate-100">
+              <div className="detail-fact">
+                <dt className="card-label">Nivel</dt>
+                <dd className="mt-2 break-words text-base font-semibold text-board-text">
                   {wod.level}
                 </dd>
               </div>
-              <div className="min-w-0">
-                <dt className="text-xs uppercase tracking-[0.14em] text-slate-400">
+              <div className="detail-fact detail-fact-structure">
+                <dt className="card-label">
                   Estructura / duración
                 </dt>
-                <dd className="mt-2 break-words text-base font-semibold text-slate-100">
+                <dd className="mt-2 break-words text-base font-semibold text-board-text">
                   {wod.structure}
                 </dd>
               </div>
             </dl>
 
-            <section aria-labelledby="exercise-list-title" className="mt-8">
-              <h2 id="exercise-list-title" className="text-balance text-2xl font-semibold text-white">
+            <section aria-labelledby="exercise-list-title" className="detail-section">
+              <h2 id="exercise-list-title" className="text-balance text-2xl font-bold tracking-[-0.02em] text-board-text">
                 Ejercicios y formato
               </h2>
-              <ul className="mt-4 divide-y divide-slate-800 rounded-2xl border border-slate-800 bg-slate-900">
+              <ul className="detail-list">
                 {wod.exercises.map((exercise, index) => (
                   <li
                     key={`${exercise.exerciseId}-${exercise.repetitions}-${index}`}
-                    className="flex flex-col gap-2 px-5 py-4 sm:flex-row sm:items-center sm:justify-between"
+                    className="detail-list-row"
                   >
-                    <span className="break-words font-medium text-slate-100">
+                    <span className="detail-exercise-name">
                       {exercise.exerciseId}
                     </span>
-                    <span className="text-sm text-slate-400">
+                    <span className="detail-exercise-format">
                       Repeticiones / formato: {exercise.repetitions}
                     </span>
                   </li>
@@ -108,19 +109,21 @@ export function WodDetailPage({ favorites, workoutHistory }: WodDetailPageProps)
               </ul>
             </section>
 
-            <section aria-labelledby="description-title" className="mt-8">
-              <h2 id="description-title" className="text-balance text-2xl font-semibold text-white">
+            <section aria-labelledby="description-title" className="detail-section">
+              <h2 id="description-title" className="text-balance text-2xl font-bold tracking-[-0.02em] text-board-text">
                 Descripción
               </h2>
-              <p className="mt-4 rounded-2xl border border-slate-800 bg-slate-900 p-5 text-base leading-7 text-pretty text-slate-300 sm:p-6">
+              <p className="detail-description">
                 {wod.description}
               </p>
             </section>
 
-            <WorkoutLogForm
-              wodId={wod.id}
-              addWorkout={workoutHistory.addWorkout}
-            />
+            <div className="detail-log">
+              <WorkoutLogForm
+                wodId={wod.id}
+                addWorkout={workoutHistory.addWorkout}
+              />
+            </div>
           </article>
         )}
       </section>

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Helvetica Neue", ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   --color-ink-950: #0b1014;
@@ -24,7 +24,7 @@
 :root {
   font-family: var(--font-sans);
   color-scheme: dark;
-  background: var(--color-ink-950);
+  background: var(--color-board-800);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
@@ -37,7 +37,7 @@ body {
   min-width: 20rem;
   min-height: 100vh;
   margin: 0;
-  background: var(--color-ink-950);
+  background: var(--color-board-800);
   color: var(--color-board-text);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -50,11 +50,11 @@ body {
 
 @layer components {
   .app-shell {
-    @apply min-h-screen overflow-x-clip bg-ink-950 text-board-text;
+    @apply min-h-screen overflow-x-clip bg-board-800 text-board-text;
   }
 
   .app-header {
-    @apply w-full border-b border-board-line bg-ink-950;
+    @apply w-full border-b border-board-line bg-board-900;
   }
 
   .app-header-container {
@@ -66,7 +66,7 @@ body {
   }
 
   .app-header-nav {
-    @apply w-full min-w-0 md:w-auto;
+    @apply w-full min-w-0 rounded-panel border border-board-accent/30 bg-ink-950 p-1 md:w-auto;
   }
 
   .app-header-links {
@@ -82,11 +82,27 @@ body {
   }
 
   .nav-link-active {
-    @apply border-board-accent/60 bg-board-accent/10 font-semibold text-board-text hover:bg-board-accent/15 hover:text-board-text;
+    @apply border-board-accent bg-board-accent font-semibold text-ink-950 hover:bg-board-accent-hover hover:text-ink-950;
   }
 
   .page-container {
     @apply mx-auto w-full max-w-6xl px-4 py-10 sm:px-8 sm:py-16;
+  }
+
+  .page-container-quiet {
+    @apply py-14;
+  }
+
+  .page-container-quiet .page-kicker {
+    opacity: 0.8;
+  }
+
+  .page-container-quiet .page-title {
+    @apply font-bold;
+  }
+
+  .page-container-quiet .page-section {
+    @apply mt-14;
   }
 
   .page-container-narrow {
@@ -190,6 +206,74 @@ body {
 
   .wod-card-footer {
     @apply mt-6 border-t border-board-line pt-4;
+  }
+
+  .detail-header {
+    @apply mt-8 flex max-w-4xl flex-col gap-6 sm:flex-row sm:items-start sm:justify-between;
+  }
+
+  .detail-back-nav {
+    @apply w-fit;
+  }
+
+  .detail-heading {
+    @apply min-w-0 max-w-3xl;
+  }
+
+  .detail-actions {
+    @apply shrink-0 sm:pt-2;
+  }
+
+  .detail-content {
+    @apply max-w-4xl;
+  }
+
+  .detail-section {
+    @apply mt-10 sm:mt-12;
+  }
+
+  .detail-facts {
+    @apply grid gap-5 border-y border-board-line py-5 sm:grid-cols-2 sm:py-6 lg:grid-cols-3;
+  }
+
+  .detail-fact {
+    @apply min-w-0;
+  }
+
+  .detail-fact-structure {
+    @apply sm:col-span-2 lg:col-span-1;
+  }
+
+  .detail-list {
+    @apply mt-4 divide-y divide-board-line border-y border-board-line;
+  }
+
+  .detail-list-row {
+    @apply flex min-w-0 flex-col gap-2 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6;
+  }
+
+  .detail-exercise-name {
+    @apply min-w-0 break-words font-semibold text-board-text;
+  }
+
+  .detail-exercise-format {
+    @apply min-w-0 break-words text-sm text-board-muted sm:text-right;
+  }
+
+  .detail-description {
+    @apply mt-4 max-w-prose border-y border-board-line py-5 text-base leading-7 text-pretty text-board-muted sm:py-6;
+  }
+
+  .detail-log {
+    @apply mt-12;
+  }
+
+  .detail-log > section {
+    @apply mt-0;
+  }
+
+  .history-list {
+    @apply grid gap-5;
   }
 
   .button-base {
