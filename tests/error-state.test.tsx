@@ -18,10 +18,12 @@ describe('ErrorState', () => {
     )
 
     const alert = screen.getByRole('alert')
+    const heading = screen.getByRole('heading', { name: 'No se pudo cargar el contenido' })
 
     expect(alert).toBeTruthy()
     expect(alert.getAttribute('data-state-kind')).toBe('error')
-    expect(screen.getByRole('heading', { name: 'No se pudo cargar el contenido' })).toBeTruthy()
+    expect(alert.getAttribute('aria-labelledby')).toBe(heading.id)
+    expect(heading.id).not.toBe('')
     expect(alert.textContent).toContain('Comprueba los datos locales e inténtalo de nuevo.')
   })
 

@@ -1,3 +1,5 @@
+import { useId } from 'react'
+
 export type EmptyStateKind =
   | 'generic'
   | 'catalog'
@@ -24,13 +26,16 @@ const emptyStateKindClasses: Record<EmptyStateKind, string> = {
 }
 
 export function EmptyState({ title, message, kind = 'generic' }: EmptyStateProps) {
+  const titleId = useId()
+
   return (
     <section
       role="status"
+      aria-labelledby={titleId}
       data-state-kind={kind}
       className={`state-empty ${emptyStateKindClasses[kind]}`}
     >
-      <h2 className="text-xl font-bold tracking-[-0.02em] text-board-text">{title}</h2>
+      <h2 id={titleId} className="text-xl font-bold tracking-[-0.02em] text-board-text">{title}</h2>
       <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-board-muted">{message}</p>
     </section>
   )

@@ -107,7 +107,7 @@
   - las áreas interactivas tienen tamaño adecuado;
   - los layouts conservan jerarquía en pantallas pequeñas.
 
-- [ ] T11. Revisión global de accesibilidad.
+- [x] T11. Revisión global de accesibilidad.
   (RF-10 y requisitos no funcionales)
   Hecho cuando:
   - headings mantienen una estructura lógica;

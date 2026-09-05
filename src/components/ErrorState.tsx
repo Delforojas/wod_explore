@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useId } from 'react'
 
 interface ErrorStateProps {
   title: string
@@ -7,14 +8,16 @@ interface ErrorStateProps {
 }
 
 export function ErrorState({ title, message, children }: ErrorStateProps) {
+  const titleId = useId()
+
   return (
     <section
       role="alert"
-      aria-labelledby="error-state-title"
+      aria-labelledby={titleId}
       data-state-kind="error"
       className="state-error"
     >
-      <h2 id="error-state-title" className="text-xl font-bold tracking-[-0.02em] text-board-text">
+      <h2 id={titleId} className="text-xl font-bold tracking-[-0.02em] text-board-text">
         {title}
       </h2>
       <p className="mt-3 max-w-xl text-sm leading-6 text-board-danger">{message}</p>

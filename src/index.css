@@ -336,7 +336,7 @@ body {
   }
 
   .history-entry-link {
-    @apply inline-flex min-h-11 items-center rounded-control py-2 text-board-text transition-colors duration-150 hover:text-board-accent focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-board-accent focus-visible:ring-2 focus-visible:ring-board-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-board-900;
+    @apply inline-flex min-h-11 touch-manipulation items-center rounded-control py-2 text-board-text transition-colors duration-150 hover:text-board-accent focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-board-accent focus-visible:ring-2 focus-visible:ring-board-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-board-900;
   }
 
   .history-entry-facts {
@@ -377,31 +377,31 @@ body {
   }
 
   .button-danger-secondary {
-    @apply inline-flex min-h-11 items-center justify-center rounded-control border border-transparent px-2 py-2 text-sm font-semibold text-board-muted transition-colors duration-150 hover:border-board-danger/40 hover:bg-board-danger/10 hover:text-board-danger focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-board-danger focus-visible:ring-2 focus-visible:ring-board-danger/40 focus-visible:ring-offset-2 focus-visible:ring-offset-board-900;
+    @apply inline-flex min-h-11 touch-manipulation items-center justify-center rounded-control border border-transparent px-2 py-2 text-sm font-semibold text-board-muted transition-colors duration-150 hover:border-board-danger/40 hover:bg-board-danger/10 hover:text-board-danger focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-board-danger focus-visible:ring-2 focus-visible:ring-board-danger/40 focus-visible:ring-offset-2 focus-visible:ring-offset-board-900;
   }
 
   .button-base {
-    @apply inline-flex min-h-11 items-center justify-center rounded-control px-4 py-2 text-sm font-semibold transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:ring-2 focus-visible:ring-offset-2;
+    @apply inline-flex min-h-11 touch-manipulation items-center justify-center rounded-control px-4 py-2 text-sm font-semibold transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:ring-2 focus-visible:ring-offset-2;
   }
 
   .button-primary {
-    @apply inline-flex min-h-11 items-center justify-center rounded-control px-4 py-2 text-sm font-semibold transition-colors duration-150 bg-board-accent text-ink-950 hover:bg-board-accent-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-board-accent-hover focus-visible:ring-2 focus-visible:ring-board-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950;
+    @apply inline-flex min-h-11 touch-manipulation items-center justify-center rounded-control px-4 py-2 text-sm font-semibold transition-colors duration-150 bg-board-accent text-ink-950 hover:bg-board-accent-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-board-accent-hover focus-visible:ring-2 focus-visible:ring-board-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950;
   }
 
   .button-secondary {
-    @apply inline-flex min-h-11 items-center justify-center rounded-control border border-board-line bg-transparent px-4 py-2 text-sm font-semibold text-board-text transition-colors duration-150 hover:border-board-accent hover:bg-board-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-board-accent focus-visible:ring-2 focus-visible:ring-board-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950;
+    @apply inline-flex min-h-11 touch-manipulation items-center justify-center rounded-control border border-board-line bg-transparent px-4 py-2 text-sm font-semibold text-board-text transition-colors duration-150 hover:border-board-accent hover:bg-board-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-board-accent focus-visible:ring-2 focus-visible:ring-board-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950;
   }
 
   .button-danger {
-    @apply inline-flex min-h-11 items-center justify-center rounded-control border border-board-danger/50 bg-transparent px-4 py-2 text-sm font-semibold text-board-danger transition-colors duration-150 hover:border-board-danger hover:bg-board-danger/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-board-danger focus-visible:ring-2 focus-visible:ring-board-danger/40 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950;
+    @apply inline-flex min-h-11 touch-manipulation items-center justify-center rounded-control border border-board-danger/50 bg-transparent px-4 py-2 text-sm font-semibold text-board-danger transition-colors duration-150 hover:border-board-danger hover:bg-board-danger/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-board-danger focus-visible:ring-2 focus-visible:ring-board-danger/40 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950;
   }
 
   .button-link {
-    @apply inline-flex min-h-11 min-w-0 max-w-full items-center justify-center rounded-control bg-transparent px-0 py-2 text-left text-sm font-semibold break-words whitespace-normal text-board-accent transition-colors duration-150 hover:text-board-accent-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-board-accent focus-visible:ring-2 focus-visible:ring-board-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950;
+    @apply inline-flex min-h-11 min-w-0 max-w-full touch-manipulation items-center justify-center rounded-control bg-transparent px-0 py-2 text-left text-sm font-semibold break-words whitespace-normal text-board-accent transition-colors duration-150 hover:text-board-accent-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-board-accent focus-visible:ring-2 focus-visible:ring-board-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950;
   }
 
   .filter-button {
-    @apply inline-flex min-h-11 items-center justify-center rounded-control px-4 py-2 text-sm font-semibold transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:ring-2 focus-visible:ring-offset-2;
+    @apply inline-flex min-h-11 touch-manipulation items-center justify-center rounded-control px-4 py-2 text-sm font-semibold transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:ring-2 focus-visible:ring-offset-2;
   }
 
   .filter-button-active {

@@ -94,6 +94,11 @@ describe('exercise catalog', () => {
       />,
     )
 
-    expect(screen.getByRole('status').textContent).toContain('Sin ejercicios')
+    const status = screen.getByRole('status')
+    const heading = screen.getByRole('heading', { name: 'Sin ejercicios' })
+
+    expect(status.textContent).toContain('Sin ejercicios')
+    expect(status.getAttribute('aria-labelledby')).toBe(heading.id)
+    expect(heading.id).not.toBe('')
   })
 })
