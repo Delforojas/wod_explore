@@ -2,7 +2,7 @@
 
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter, useLocation } from 'react-router-dom'
 import { AppRoutes } from '../src/App'
 import { Header } from '../src/components/Header'
 
@@ -14,9 +14,16 @@ function renderNavigation(initialPath = '/') {
   return render(
     <MemoryRouter initialEntries={[initialPath]}>
       <Header />
+      <LocationProbe />
       <AppRoutes />
     </MemoryRouter>,
   )
+}
+
+function LocationProbe() {
+  const location = useLocation()
+
+  return <span data-testid="current-path">{location.pathname}</span>
 }
 
 describe('main navigation', () => {
@@ -46,18 +53,26 @@ describe('main navigation', () => {
 
     fireEvent.click(screen.getByRole('link', { name: 'Ejercicios' }))
     expect(screen.getByRole('heading', { name: 'Ejercicios de CrossFit.' })).toBeTruthy()
-    expect(window.location.pathname).toBe('/')
+    expect(screen.getByTestId('current-path').textContent).toBe('/exercises')
 
     fireEvent.click(screen.getByRole('link', { name: 'WODs' }))
     expect(screen.getByRole('heading', { name: 'WODs para cada sesión.' })).toBeTruthy()
-    expect(window.location.pathname).toBe('/')
+    expect(screen.getByTestId('current-path').textContent).toBe('/wods')
 
     fireEvent.click(screen.getByRole('link', { name: 'Historial' }))
     expect(screen.getByRole('heading', { name: 'Historial de entrenamientos.' })).toBeTruthy()
-    expect(window.location.pathname).toBe('/')
+    expect(screen.getByTestId('current-path').textContent).toBe('/history')
 
     fireEvent.click(screen.getByRole('link', { name: 'Inicio' }))
     expect(screen.getByRole('heading', { name: 'Encuentra tu próximo WOD.' })).toBeTruthy()
+    expect(screen.getByTestId('current-path').textContent).toBe('/')
+  })
+
+  it('redirige las rutas desconocidas al inicio', () => {
+    renderNavigation('/unknown')
+
+    expect(screen.getByRole('heading', { name: 'Encuentra tu próximo WOD.' })).toBeTruthy()
+    expect(screen.getByTestId('current-path').textContent).toBe('/')
   })
 
   it('indica la sección activa también en rutas anidadas', () => {

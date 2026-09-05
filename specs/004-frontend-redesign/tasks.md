@@ -129,7 +129,7 @@
   - no se introducen funcionalidades nuevas;
   - `DESIGN.md` sigue siendo respetado.
 
-- [ ] T13. Regresión funcional y validación técnica.
+- [x] T13. Regresión funcional y validación técnica.
   (RF-10)
   Hecho cuando:
   - catálogo de WODs funciona;
