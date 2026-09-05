@@ -1,6 +1,6 @@
 # Tareas — Spec 004
 
-- [ ] T1. Auditoría visual inicial con Impeccable.
+- [x] T1. Auditoría visual inicial con Impeccable.
   (RF: todos los requisitos visuales de la spec)
   Hecho cuando:
   - se revisa el frontend actual antes de modificarlo;
@@ -10,7 +10,7 @@
   - no se modifica funcionalidad;
   - no se modifica código todavía.
 
-- [ ] T2. Definir y aplicar el sistema visual base.
+- [x] T2. Definir y aplicar el sistema visual base.
   (RF: consistencia global)
   Hecho cuando:
   - existe una jerarquía tipográfica coherente;
@@ -148,7 +148,7 @@
   - `npm run build` pasa;
   - TypeScript no presenta errores.
 
-- [ ] T14. Validación final de la Spec 004 y actualización del README.
+- [x] T14. Validación final de la Spec 004 y actualización del README.
   (Todos)
   Hecho cuando:
   - todos los requisitos de rediseño están satisfechos;

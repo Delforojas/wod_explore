@@ -42,7 +42,7 @@ La navegación debe incluir las secciones existentes:
 - WODs
 - Ejercicios
 - Historial
-- Estadísticas cuando exista la Spec 004
+- Estadísticas cuando una spec futura lo defina
 
 Debe funcionar correctamente en móvil y escritorio.
 

@@ -1,8 +1,9 @@
 # WOD Explorer
 
-WOD Explorer es una aplicación web estática para consultar WODs y ejercicios de
-CrossFit. El MVP utiliza exclusivamente datos locales en JSON y no requiere
-backend, autenticación, base de datos ni APIs externas.
+WOD Explorer es una aplicación web estática para explorar WODs y ejercicios de
+CrossFit, encontrar entrenamientos, guardar favoritos y revisar sesiones
+realizadas. Utiliza exclusivamente datos locales en JSON y no requiere backend,
+autenticación, base de datos ni APIs externas.
 
 ## Stack
 
@@ -13,6 +14,17 @@ backend, autenticación, base de datos ni APIs externas.
 - React Router
 - Zod
 - Vitest y Testing Library
+
+## Dirección visual
+
+La interfaz sigue la dirección **Pizarra de Intervalos**: superficies oscuras,
+acentos naranja, jerarquía tipográfica marcada y contenido organizado para
+escanear rápidamente. El lenguaje visual busca transmitir energía y rendimiento
+sin adoptar la apariencia de un panel empresarial genérico.
+
+La experiencia es mobile-first y responsive, con layouts adaptados a móvil,
+tablet y escritorio. Se utilizan HTML semántico, navegación por teclado, focus
+visible, labels asociados y nombres accesibles para los controles principales.
 
 ## Instalación
 
@@ -49,7 +61,7 @@ npm run build
 También está disponible `npm run lint` para revisar el código. El tipado
 TypeScript se comprueba durante el build.
 
-## Funcionalidades del MVP
+## Funcionalidades actuales
 
 - Consulta de WODs desde `src/data/wods.json`.
 - Búsqueda por nombre con coincidencias parciales, exactas y sin distinguir mayúsculas.
@@ -66,6 +78,14 @@ TypeScript se comprueba durante el build.
 - Navegación interna entre Inicio, WODs, Ejercicios e Historial.
 - Estados vacíos diferenciados y errores controlados.
 - Interfaz responsive y accesible mediante teclado.
+
+## Arquitectura frontend
+
+La aplicación está organizada como un frontend React con páginas, componentes
+reutilizables, hooks de estado, utilidades, esquemas Zod y tipos TypeScript.
+Los WODs y ejercicios se cargan desde `src/data/*.json` y se validan antes de
+usarse. Favoritos e historial se guardan únicamente en el navegador mediante
+`localStorage`.
 
 ## Favoritos locales
 
@@ -102,13 +122,13 @@ indica que no está disponible, sin crear un enlace inexistente.
 
 ## Rutas
 
-- `/`: Inicio y catalogo de WODs.
-- `/wods`: catalogo de WODs.
+- `/`: Inicio.
+- `/wods`: catálogo de WODs.
 - `/wods/:id`: detalle de un WOD.
-- `/exercises`: catalogo de ejercicios.
+- `/exercises`: catálogo de ejercicios.
 - `/history`: historial local de entrenamientos.
 
-## Estructura basica
+## Estructura básica
 
 ```text
 src/
@@ -117,7 +137,7 @@ src/
   hooks/        Estado reutilizable de React
   lib/          Carga, validación y utilidades
   pages/        Páginas y vistas de rutas
-  schemas/      Schemas de validación Zod
+  schemas/      Esquemas de validación Zod
   types/        Tipos TypeScript
 tests/          Tests de lógica, datos y componentes
 ```
