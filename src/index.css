@@ -34,7 +34,6 @@
 }
 
 body {
-  min-width: 20rem;
   min-height: 100vh;
   margin: 0;
   background: var(--color-board-800);
@@ -66,11 +65,11 @@ body {
   }
 
   .app-header-nav {
-    @apply w-full min-w-0 rounded-panel border border-board-accent/30 bg-ink-950 p-1 md:w-auto;
+    @apply w-full min-w-0 max-w-full rounded-panel border border-board-accent/30 bg-ink-950 p-1 md:w-auto;
   }
 
   .app-header-links {
-    @apply grid w-full grid-cols-2 gap-1 text-sm font-medium text-board-muted md:flex md:w-auto md:flex-wrap md:gap-x-2 lg:gap-x-3;
+    @apply grid w-full min-w-0 grid-cols-2 gap-1 text-sm font-medium text-board-muted md:flex md:w-auto md:flex-wrap md:gap-x-2 lg:gap-x-3;
   }
 
   .nav-link {
@@ -153,7 +152,11 @@ body {
   }
 
   .catalog-controls {
-    @apply mt-10 grid gap-6 rounded-panel border border-board-line bg-board-900/70 p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-8;
+    @apply mt-10 grid min-w-0 gap-6 rounded-panel border border-board-line bg-board-900/70 p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-8;
+  }
+
+  .catalog-controls > * {
+    @apply min-w-0;
   }
 
   .catalog-filters {
@@ -217,7 +220,7 @@ body {
   }
 
   .wod-card-tools {
-    @apply flex max-w-full shrink-0 flex-wrap items-center gap-2;
+    @apply flex min-w-0 max-w-full shrink-0 flex-wrap items-center gap-2;
   }
 
   .wod-card-meta {
@@ -233,7 +236,7 @@ body {
   }
 
   .detail-header {
-    @apply mt-8 flex max-w-4xl flex-col gap-6 sm:flex-row sm:items-start sm:justify-between;
+    @apply mt-8 flex min-w-0 max-w-4xl flex-col gap-6 sm:flex-row sm:items-start sm:justify-between;
   }
 
   .detail-back-nav {
@@ -305,7 +308,7 @@ body {
   }
 
   .history-section-heading {
-    @apply flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6;
+    @apply flex min-w-0 flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6;
   }
 
   .history-entry {
@@ -394,7 +397,7 @@ body {
   }
 
   .button-link {
-    @apply inline-flex min-h-11 items-center justify-center rounded-control bg-transparent px-0 py-2 text-sm font-semibold text-board-accent transition-colors duration-150 hover:text-board-accent-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-board-accent focus-visible:ring-2 focus-visible:ring-board-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950;
+    @apply inline-flex min-h-11 min-w-0 max-w-full items-center justify-center rounded-control bg-transparent px-0 py-2 text-left text-sm font-semibold break-words whitespace-normal text-board-accent transition-colors duration-150 hover:text-board-accent-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-board-accent focus-visible:ring-2 focus-visible:ring-board-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950;
   }
 
   .filter-button {

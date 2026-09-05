@@ -95,7 +95,7 @@
   - se reutilizan componentes existentes cuando sea razonable;
   - no se añaden funcionalidades nuevas.
 
-- [ ] T10. Revisión global responsive.
+- [x] T10. Revisión global responsive.
   (RF-10 y requisitos no funcionales)
   Hecho cuando:
   - se revisan al menos móvil pequeño, móvil, tablet y escritorio;
