@@ -13,21 +13,29 @@ export function WorkoutHistoryItem({ entry, wod, onDelete }: WorkoutHistoryItemP
   const titleId = `workout-history-${entry.id}-title`
 
   return (
-    <li>
+    <li className="history-entry">
       <article
         aria-labelledby={titleId}
-        className="rounded-2xl border border-slate-800 bg-slate-900 p-5 shadow-lg shadow-slate-950/20 sm:p-6"
+        className="history-entry-content"
       >
-        <header className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <header className="history-entry-header">
+          <div className="history-entry-date">
+            <time dateTime={entry.date} className="font-mono text-lg font-bold tracking-[-0.02em] text-board-text">
+              {entry.date}
+            </time>
+            <span className="history-entry-date-label">
+              Sesión registrada
+            </span>
+          </div>
           <div className="min-w-0">
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-orange-400">
+            <p className="card-label text-board-accent">
               {wod?.type ?? 'WOD no disponible'}
             </p>
-            <h2 id={titleId} className="mt-2 break-words text-2xl font-semibold text-white">
+            <h2 id={titleId} className="history-entry-title">
               {wod ? (
                 <Link
                   to={`/wods/${wod.id}`}
-                  className="inline-flex min-h-11 items-center touch-manipulation rounded-md hover:text-orange-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-400 focus-visible:ring-2 focus-visible:ring-orange-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                  className="history-entry-link"
                 >
                   {wod.name}
                 </Link>
@@ -36,43 +44,40 @@ export function WorkoutHistoryItem({ entry, wod, onDelete }: WorkoutHistoryItemP
               )}
             </h2>
           </div>
-          <time dateTime={entry.date} className="shrink-0 text-sm text-slate-400">
-            {entry.date}
-          </time>
         </header>
 
-        <dl className="mt-5 grid gap-4 border-t border-slate-800 pt-4 sm:grid-cols-2">
+        <dl className="history-entry-facts">
           <div>
-            <dt className="text-xs uppercase tracking-[0.14em] text-slate-400">Tipo</dt>
-            <dd className="mt-1 text-sm font-medium text-slate-200">
+            <dt className="card-label">Tipo</dt>
+            <dd className="mt-1 text-sm font-medium text-board-text">
               {wod?.type ?? 'No disponible'}
             </dd>
           </div>
           {entry.result ? (
             <div>
-              <dt className="text-xs uppercase tracking-[0.14em] text-slate-400">Resultado</dt>
-              <dd className="mt-1 break-words text-sm font-medium text-slate-200">{entry.result}</dd>
+              <dt className="card-label">Resultado</dt>
+              <dd className="mt-1 break-words text-sm font-medium text-board-text">{entry.result}</dd>
             </div>
           ) : null}
         </dl>
 
         {entry.notes ? (
-          <div className="mt-5">
-            <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
+          <div className="history-entry-notes">
+            <h3 className="card-label">
               Notas
             </h3>
-            <p className="mt-2 break-words text-sm leading-6 text-slate-300">{entry.notes}</p>
+            <p className="mt-2 break-words text-sm leading-6 text-board-muted">{entry.notes}</p>
           </div>
         ) : null}
 
-        <div className="mt-6 border-t border-slate-800 pt-4">
+        <footer className="history-entry-footer">
           <DeleteWorkoutButton
             entryId={entry.id}
             wodName={wod?.name ?? 'WOD no disponible'}
             date={entry.date}
             onDelete={onDelete}
           />
-        </div>
+        </footer>
       </article>
     </li>
   )

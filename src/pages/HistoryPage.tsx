@@ -15,24 +15,26 @@ export function HistoryPage({ workoutHistory, wods }: HistoryPageProps) {
   return (
     <main
       id="main-content"
-      className="mx-auto max-w-4xl px-4 py-10 sm:px-8 sm:py-16"
+      className="page-container-narrow"
     >
-      <header className="max-w-2xl">
-        <p className="text-sm font-medium uppercase tracking-[0.2em] text-slate-400">
-          Tu progreso
-        </p>
-        <h1 className="mt-4 text-balance text-3xl font-bold leading-tight tracking-tight text-white sm:text-5xl">
+      <header className="history-page-header">
+        <h1 className="page-title mt-0">
           Historial de entrenamientos.
         </h1>
-        <p className="mt-5 text-pretty text-lg leading-8 text-slate-300">
+        <p className="page-description">
           Revisa los WODs que has realizado y los resultados que decidiste guardar.
         </p>
       </header>
 
-      <section aria-labelledby="history-heading" className="mt-10 sm:mt-12">
-        <h2 id="history-heading" className="sr-only">
-          Historial de entrenamientos
-        </h2>
+      <section aria-labelledby="history-heading" className="page-section">
+        <div className="history-section-heading">
+          <h2 id="history-heading" className="text-balance text-2xl font-bold tracking-[-0.02em] text-board-text">
+            Sesiones registradas
+          </h2>
+          <p className="max-w-prose text-sm leading-6 text-board-muted">
+            De la más reciente a la más antigua.
+          </p>
+        </div>
 
         {entries.length === 0 ? (
           <EmptyState
@@ -40,7 +42,7 @@ export function HistoryPage({ workoutHistory, wods }: HistoryPageProps) {
             message="Todavía no has registrado ningún entrenamiento."
           />
         ) : (
-          <ol className="grid gap-4" aria-label="Entrenamientos registrados">
+          <ol className="history-list" aria-label="Entrenamientos registrados">
             {entries.map((entry) => (
               <WorkoutHistoryItem
                 key={entry.id}

@@ -297,7 +297,84 @@ body {
   }
 
   .history-list {
-    @apply grid gap-5;
+    @apply divide-y divide-board-line border-y border-board-line;
+  }
+
+  .history-page-header {
+    @apply max-w-2xl;
+  }
+
+  .history-section-heading {
+    @apply flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6;
+  }
+
+  .history-entry {
+    @apply py-7 sm:py-8;
+  }
+
+  .history-entry-date {
+    @apply flex min-w-0 flex-wrap items-baseline gap-x-3 gap-y-1 sm:block sm:pt-1;
+  }
+
+  .history-entry-date-label {
+    @apply text-xs font-semibold uppercase tracking-label text-board-muted;
+  }
+
+  .history-entry-content {
+    @apply min-w-0;
+  }
+
+  .history-entry-header {
+    @apply grid min-w-0 gap-2 sm:grid-cols-[8rem_minmax(0,1fr)] sm:gap-8;
+  }
+
+  .history-entry-title {
+    @apply mt-2 break-words text-2xl font-bold tracking-[-0.02em] text-board-text;
+  }
+
+  .history-entry-link {
+    @apply inline-flex min-h-11 items-center rounded-control py-2 text-board-text transition-colors duration-150 hover:text-board-accent focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-board-accent focus-visible:ring-2 focus-visible:ring-board-accent/40 focus-visible:ring-offset-2 focus-visible:ring-offset-board-900;
+  }
+
+  .history-entry-facts {
+    @apply mt-6 grid gap-4 border-y border-board-line py-4 sm:grid-cols-2;
+  }
+
+  .history-entry-notes {
+    @apply mt-6 max-w-prose border-t border-board-line pt-5;
+  }
+
+  .history-entry-footer {
+    @apply mt-6 flex justify-start border-t border-board-line pt-4 sm:justify-end;
+  }
+
+  .history-log-form {
+    @apply mt-12 rounded-panel border border-board-accent/40 bg-board-900 p-5 sm:p-7;
+  }
+
+  .history-log-form-intro {
+    @apply mt-2 max-w-2xl text-sm leading-6 text-board-muted;
+  }
+
+  .history-log-form-fields {
+    @apply mt-7 grid gap-5 sm:grid-cols-2;
+  }
+
+  .history-log-field {
+    @apply min-w-0;
+  }
+
+  .history-log-field-wide,
+  .history-log-form-actions {
+    @apply sm:col-span-2;
+  }
+
+  .history-log-form-actions {
+    @apply flex flex-col items-start gap-3 border-t border-board-line pt-5 sm:flex-row sm:items-center;
+  }
+
+  .button-danger-secondary {
+    @apply inline-flex min-h-11 items-center justify-center rounded-control border border-transparent px-2 py-2 text-sm font-semibold text-board-muted transition-colors duration-150 hover:border-board-danger/40 hover:bg-board-danger/10 hover:text-board-danger focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-board-danger focus-visible:ring-2 focus-visible:ring-board-danger/40 focus-visible:ring-offset-2 focus-visible:ring-offset-board-900;
   }
 
   .button-base {

@@ -52,18 +52,18 @@ export function WorkoutLogForm({ wodId, addWorkout }: WorkoutLogFormProps) {
   return (
     <section
       aria-labelledby="workout-log-title"
-      className="mt-8 rounded-2xl border border-orange-400/30 bg-orange-400/5 p-5 sm:p-6"
+      className="history-log-form"
     >
-      <h2 id="workout-log-title" className="text-2xl font-semibold text-white">
+      <h2 id="workout-log-title" className="text-2xl font-bold tracking-[-0.02em] text-board-text">
         Registrar entrenamiento
       </h2>
-      <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">
+      <p className="history-log-form-intro">
         Guarda cuándo realizaste este WOD y añade un resultado o notas si quieres.
       </p>
 
-      <form noValidate onSubmit={handleSubmit} className="mt-6 grid gap-5">
-        <div>
-          <label htmlFor="workout-date" className="text-sm font-medium text-slate-200">
+      <form noValidate onSubmit={handleSubmit} className="history-log-form-fields">
+        <div className="history-log-field">
+          <label htmlFor="workout-date" className="field-label">
             Fecha del entrenamiento
           </label>
           <input
@@ -77,18 +77,18 @@ export function WorkoutLogForm({ wodId, addWorkout }: WorkoutLogFormProps) {
             aria-invalid={dateError ? 'true' : 'false'}
             aria-describedby={dateError ? 'workout-date-error' : undefined}
             onChange={(event) => setDate(event.target.value)}
-            className="mt-2 block min-h-11 w-full rounded-md border border-slate-700 bg-slate-950/70 px-3 py-2 text-slate-100 outline-none transition-colors focus-visible:border-orange-400 focus-visible:ring-2 focus-visible:ring-orange-400/40"
+            className="input-control"
           />
           {dateError ? (
-            <p id="workout-date-error" role="alert" className="mt-2 text-sm text-orange-300">
+            <p id="workout-date-error" role="alert" className="mt-2 text-sm text-board-accent-hover">
               {dateError}
             </p>
           ) : null}
         </div>
 
-        <div>
-          <label htmlFor="workout-result" className="text-sm font-medium text-slate-200">
-            Resultado <span className="text-slate-500">(opcional)</span>
+        <div className="history-log-field">
+          <label htmlFor="workout-result" className="field-label">
+            Resultado <span className="text-board-muted">(opcional)</span>
           </label>
           <input
             id="workout-result"
@@ -96,14 +96,14 @@ export function WorkoutLogForm({ wodId, addWorkout }: WorkoutLogFormProps) {
             type="text"
             value={result}
             onChange={(event) => setResult(event.target.value)}
-            className="mt-2 block min-h-11 w-full rounded-md border border-slate-700 bg-slate-950/70 px-3 py-2 text-slate-100 outline-none transition-colors placeholder:text-slate-500 focus-visible:border-orange-400 focus-visible:ring-2 focus-visible:ring-orange-400/40"
+            className="input-control"
             placeholder="Ej. 05:42 o 7 rondas + 12 reps"
           />
         </div>
 
-        <div>
-          <label htmlFor="workout-notes" className="text-sm font-medium text-slate-200">
-            Notas <span className="text-slate-500">(opcional)</span>
+        <div className="history-log-field history-log-field-wide">
+          <label htmlFor="workout-notes" className="field-label">
+            Notas <span className="text-board-muted">(opcional)</span>
           </label>
           <textarea
             id="workout-notes"
@@ -111,20 +111,20 @@ export function WorkoutLogForm({ wodId, addWorkout }: WorkoutLogFormProps) {
             value={notes}
             rows={4}
             onChange={(event) => setNotes(event.target.value)}
-            className="mt-2 block w-full resize-y rounded-md border border-slate-700 bg-slate-950/70 px-3 py-2 text-slate-100 outline-none transition-colors placeholder:text-slate-500 focus-visible:border-orange-400 focus-visible:ring-2 focus-visible:ring-orange-400/40"
+            className="textarea-control"
             placeholder="Añade cualquier detalle que quieras recordar"
           />
         </div>
 
-        <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+        <div className="history-log-form-actions">
           <button
             type="submit"
-            className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-md bg-orange-400 px-4 py-2 text-sm font-semibold text-slate-950 transition-colors hover:bg-orange-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-300 focus-visible:ring-2 focus-visible:ring-orange-400/40 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+            className="button-primary"
           >
             Guardar entrenamiento
           </button>
           {successMessage ? (
-            <p role="status" aria-live="polite" className="text-sm text-emerald-300">
+            <p role="status" aria-live="polite" className="text-sm text-board-success">
               {successMessage}
             </p>
           ) : null}

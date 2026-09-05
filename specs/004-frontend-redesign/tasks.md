@@ -74,7 +74,7 @@
   - el grid es responsive;
   - no se modifica la estructura de `exercises.json`.
 
-- [ ] T8. Rediseñar historial y formulario de entrenamiento.
+- [x] T8. Rediseñar historial y formulario de entrenamiento.
   (RF-8)
   Hecho cuando:
   - el historial prioriza lectura cronológica;
