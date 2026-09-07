@@ -9,33 +9,38 @@ const navigationItems = [
 
 export function Header() {
   return (
-    <header className="app-header">
-      <div className="app-header-container">
+    <aside className="app-navigation">
+      <div className="app-navigation-brand">
         <Link
           to="/"
           className="brand-link"
         >
-          <span translate="no">WOD Explorer</span>
+          <span className="brand-mark" aria-hidden="true">W</span>
+          <span className="brand-name" translate="no">WOD Explorer</span>
         </Link>
-
-        <nav className="app-header-nav" aria-label="Navegación principal">
-          <ul className="app-header-links">
-            {navigationItems.map((item) => (
-              <li key={item.path}>
-                <NavLink
-                  to={item.path}
-                  end={item.end}
-                  className={({ isActive }) =>
-                    `nav-link nav-link-layout${isActive ? ' nav-link-active' : ''}`
-                  }
-                >
-                  {item.label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <p className="brand-context">Catálogo local</p>
       </div>
-    </header>
+
+      <nav className="app-navigation-nav" aria-label="Navegación principal">
+        <p className="navigation-caption">Secciones</p>
+        <ul className="app-header-links">
+          {navigationItems.map((item) => (
+            <li key={item.path}>
+              <NavLink
+                to={item.path}
+                end={item.end}
+                className={({ isActive }) =>
+                  `nav-link nav-link-layout${isActive ? ' nav-link-active' : ''}`
+                }
+              >
+                {item.label}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <p className="navigation-footer">Entrena. Registra. Repite.</p>
+    </aside>
   )
 }

@@ -49,7 +49,9 @@ function App() {
 
         <Header />
 
-        <AppRoutes />
+        <div className="app-workspace">
+          <AppRoutes />
+        </div>
       </div>
     </BrowserRouter>
   )

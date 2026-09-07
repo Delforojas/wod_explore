@@ -14,7 +14,7 @@ export function WodCard({ wod, isFavorite, onToggleFavorite }: WodCardProps) {
   return (
     <article
       aria-labelledby={titleId}
-      className="card-surface card-surface-interactive flex h-full min-w-0 flex-col p-5 sm:p-6"
+      className="catalog-row"
     >
       <header className="wod-card-header">
         <div className="min-w-0">
@@ -37,22 +37,23 @@ export function WodCard({ wod, isFavorite, onToggleFavorite }: WodCardProps) {
         </div>
       </header>
 
-      <dl className="wod-card-meta">
-        <div>
-          <dt className="card-label">Estructura</dt>
-          <dd className="mt-1 break-words text-sm font-medium text-board-text">
-            {wod.structure}
-          </dd>
-        </div>
-        <div>
-          <dt className="card-label">Nivel</dt>
-          <dd className="mt-1 text-sm font-medium text-board-text">{wod.level}</dd>
-        </div>
-      </dl>
-
-      <p className="wod-card-description">
-        {wod.description}
-      </p>
+      <div className="wod-card-body">
+        <p className="wod-card-description">
+          {wod.description}
+        </p>
+        <dl className="wod-card-meta">
+          <div>
+            <dt className="card-label">Estructura</dt>
+            <dd className="mt-1 break-words text-sm font-medium text-board-text">
+              {wod.structure}
+            </dd>
+          </div>
+          <div>
+            <dt className="card-label">Nivel</dt>
+            <dd className="mt-1 text-sm font-medium text-board-text">{wod.level}</dd>
+          </div>
+        </dl>
+      </div>
 
       <footer className="wod-card-footer">
         <Link

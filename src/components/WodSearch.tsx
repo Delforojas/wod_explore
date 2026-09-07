@@ -5,7 +5,7 @@ interface WodSearchProps {
 
 export function WodSearch({ value, onChange }: WodSearchProps) {
   return (
-    <div className="w-full max-w-2xl">
+    <div className="catalog-search">
       <label htmlFor="wod-search" className="field-label normal-case tracking-normal text-board-text">
         Buscar WOD por nombre
       </label>

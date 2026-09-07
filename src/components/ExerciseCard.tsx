@@ -10,7 +10,7 @@ export function ExerciseCard({ exercise }: ExerciseCardProps) {
   return (
     <article
       aria-labelledby={titleId}
-      className="card-surface exercise-card flex h-full min-w-0 flex-col p-5 sm:p-6"
+      className="exercise-row"
     >
       <header className="exercise-card-header">
         <p className="exercise-category">

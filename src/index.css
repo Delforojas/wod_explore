@@ -2,18 +2,19 @@
 
 @theme {
   --font-sans: "Helvetica Neue", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  --color-ink-950: #0b1014;
-  --color-board-900: #151e23;
-  --color-board-800: #1d2930;
-  --color-board-line: #34434b;
-  --color-board-text: #f3f7f5;
-  --color-board-muted: #a4b0b4;
-  --color-board-accent: #f97316;
-  --color-board-accent-hover: #fb923c;
-  --color-board-danger: #f87171;
-  --color-board-success: #34d399;
+  --color-ink-950: #151515;
+  --color-board-900: #f4f0e8;
+  --color-board-800: #e3ded4;
+  --color-board-line: #aaa49a;
+  --color-board-text: #191919;
+  --color-board-muted: #5f5b54;
+  --color-board-accent: #f05a28;
+  --color-board-accent-hover: #ff7843;
+  --color-board-danger: #b53b32;
+  --color-board-success: #26785f;
 
   --radius-panel: 0.75rem;
   --radius-control: 0.375rem;
@@ -446,6 +447,408 @@ body {
 
   .state-error {
     @apply rounded-panel border border-solid border-board-danger/40 bg-board-danger/10 px-5 py-8 text-board-text sm:px-7 sm:py-10;
+  }
+
+  /* The archive layout replaces the centered dashboard shell with a fixed rail. */
+  .app-navigation {
+    @apply relative z-40 flex min-h-24 flex-col border-b border-ink-950/20 bg-ink-950 px-4 py-4 text-board-900 sm:px-8 lg:fixed lg:inset-y-0 lg:left-0 lg:w-64 lg:border-b-0 lg:border-r lg:px-6 lg:py-7;
+  }
+
+  .app-navigation-brand {
+    @apply flex items-center justify-between gap-4 lg:block;
+  }
+
+  .brand-link {
+    @apply min-h-11 gap-3 rounded-none text-board-accent;
+  }
+
+  .brand-mark {
+    @apply inline-flex h-10 w-10 items-center justify-center border border-board-accent bg-board-accent font-display text-2xl font-bold leading-none text-ink-950;
+  }
+
+  .brand-name {
+    @apply max-w-[10rem] text-left text-sm leading-5 tracking-brand text-board-900;
+  }
+
+  .brand-context,
+  .navigation-footer,
+  .navigation-caption {
+    @apply text-[0.65rem] font-semibold uppercase tracking-label text-board-muted;
+  }
+
+  .brand-context {
+    @apply hidden lg:ml-14 lg:mt-3 lg:block;
+  }
+
+  .app-navigation-nav {
+    @apply fixed inset-x-0 bottom-0 border-t border-board-line bg-ink-950 px-3 py-2 lg:static lg:mt-16 lg:border-0 lg:p-0;
+  }
+
+  .navigation-caption {
+    @apply hidden lg:mb-4 lg:block;
+  }
+
+  .app-header-links {
+    @apply grid grid-cols-4 gap-1 md:flex md:flex-row md:flex-wrap lg:block;
+  }
+
+  .nav-link-layout {
+    @apply min-h-12 w-full justify-center border-0 px-2 text-center text-[0.7rem] uppercase tracking-label md:w-auto md:px-3 lg:relative lg:min-h-14 lg:justify-start lg:border-b lg:border-transparent lg:px-0 lg:text-left;
+  }
+
+  .nav-link {
+    @apply rounded-none text-board-muted hover:bg-board-900/10 hover:text-board-900 focus-visible:outline-board-accent focus-visible:ring-board-accent/40 focus-visible:ring-offset-ink-950 lg:pr-4;
+  }
+
+  .nav-link-active {
+    @apply bg-board-accent text-ink-950 hover:bg-board-accent-hover hover:text-ink-950 lg:bg-transparent lg:text-board-accent lg:before:absolute lg:before:right-0 lg:before:top-0 lg:before:h-full lg:before:w-1 lg:before:bg-board-accent;
+  }
+
+  .navigation-footer {
+    @apply mt-auto hidden border-t border-board-900/20 pt-5 lg:block;
+  }
+
+  .app-workspace {
+    @apply min-w-0 pb-20 lg:pl-64 lg:pb-0;
+  }
+
+  .app-page {
+    @apply min-h-screen w-full min-w-0 px-5 py-10 sm:px-10 sm:py-14 lg:px-16 lg:py-16;
+  }
+
+  .home-page {
+    @apply bg-board-800 p-0;
+  }
+
+  .home-deck {
+    @apply relative grid min-h-[calc(100vh-5rem)] grid-cols-1 border-b border-board-line bg-board-900 lg:min-h-screen lg:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.7fr)];
+  }
+
+  .home-title-block {
+    @apply flex min-w-0 flex-col justify-center px-5 py-14 sm:px-10 lg:px-16 lg:py-20;
+  }
+
+  .home-title {
+    @apply max-w-5xl text-balance font-display text-[clamp(3.5rem,9vw,6rem)] font-semibold leading-[0.9] tracking-[-0.035em] text-board-text;
+  }
+
+  .home-title span {
+    @apply block text-board-accent;
+  }
+
+  .home-description {
+    @apply mt-8 max-w-prose text-lg leading-8 text-board-muted sm:text-xl;
+  }
+
+  .home-actions {
+    @apply mt-10 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center;
+  }
+
+  .home-feature {
+    @apply flex min-h-80 flex-col justify-between border-t border-board-line bg-board-accent px-5 py-6 text-ink-950 sm:px-10 sm:py-8 lg:min-h-0 lg:border-l lg:border-t-0 lg:px-10 lg:py-12;
+  }
+
+  .home-feature-label,
+  .home-feature-note {
+    @apply text-xs font-bold uppercase tracking-label;
+  }
+
+  .home-feature-word {
+    @apply my-10 font-display text-[clamp(7rem,20vw,13rem)] font-semibold leading-[0.72] tracking-[-0.035em] lg:my-0;
+  }
+
+  .home-feature-note {
+    @apply max-w-[14rem] border-t border-ink-950/30 pt-4 leading-5;
+  }
+
+  .home-deck-footer {
+    @apply col-span-full grid grid-cols-[auto_1fr_auto] gap-4 border-t border-board-line px-5 py-4 text-[0.65rem] font-semibold uppercase tracking-label text-board-muted sm:px-10 lg:px-16;
+  }
+
+  .catalog-page {
+    @apply bg-board-900;
+  }
+
+  .catalog-intro {
+    @apply grid min-w-0 gap-7 border-b border-board-line pb-10 lg:grid-cols-[minmax(0,1fr)_minmax(15rem,0.45fr)] lg:items-end lg:gap-16 lg:pb-14;
+  }
+
+  .catalog-title {
+    @apply max-w-5xl text-balance font-display text-[clamp(3rem,8vw,6rem)] font-semibold leading-[0.92] tracking-[-0.035em] text-board-text;
+  }
+
+  .catalog-description {
+    @apply max-w-prose text-lg leading-8 text-board-muted lg:pb-1;
+  }
+
+  .catalog-index {
+    @apply order-last text-xs font-semibold uppercase tracking-label text-board-muted lg:col-start-1 lg:row-start-2;
+  }
+
+  .catalog-stage,
+  .history-stage {
+    @apply mt-10 min-w-0 sm:mt-14;
+  }
+
+  .catalog-stage-heading {
+    @apply flex min-w-0 items-center gap-5;
+  }
+
+  .catalog-section-title {
+    @apply shrink-0 text-lg font-bold uppercase tracking-label text-board-text;
+  }
+
+  .catalog-stage-rule {
+    @apply h-px min-w-0 flex-1 bg-board-line;
+  }
+
+  .catalog-controls {
+    @apply mt-8 grid min-w-0 gap-7 border-y border-board-line bg-transparent p-0 py-5 lg:grid-cols-[minmax(16rem,0.7fr)_minmax(0,1.3fr)] lg:items-start lg:gap-10;
+  }
+
+  .catalog-search {
+    @apply min-w-0;
+  }
+
+  .catalog-search .input-control {
+    @apply mt-3 rounded-none border-0 border-b-2 border-board-line bg-transparent px-0 py-3 text-lg focus-visible:border-board-accent focus-visible:ring-0;
+  }
+
+  .catalog-filter-set {
+    @apply min-w-0;
+  }
+
+  .filter-rail {
+    @apply mt-3 flex min-w-0 flex-wrap items-center gap-2;
+  }
+
+  .filter-rail-label {
+    @apply mr-2 text-xs font-semibold uppercase tracking-label text-board-muted;
+  }
+
+  .filter-button {
+    @apply min-h-10 rounded-none border border-board-line px-3 py-2 text-xs uppercase tracking-label;
+  }
+
+  .filter-button-active {
+    @apply border-board-accent bg-board-accent text-ink-950 hover:bg-board-accent-hover;
+  }
+
+  .filter-button-inactive {
+    @apply bg-transparent text-board-muted hover:border-board-accent hover:bg-transparent hover:text-board-text;
+  }
+
+  .catalog-filter-divider {
+    @apply my-1 h-6 w-px basis-auto bg-board-line;
+  }
+
+  .catalog-list,
+  .exercise-list {
+    @apply mt-7 min-w-0 border-t border-board-line;
+  }
+
+  .catalog-row {
+    @apply grid min-w-0 border-b border-board-line py-7 transition-colors duration-150 hover:bg-board-800/40 sm:py-8 lg:grid-cols-[minmax(10rem,1fr)_minmax(0,1.55fr)_minmax(9rem,0.7fr)_auto] lg:grid-rows-[auto_1fr] lg:gap-x-8 lg:gap-y-4 lg:[grid-template-areas:'title_description_meta_tools'_'footer_description_meta_.'];
+  }
+
+  .catalog-row .wod-card-header,
+  .catalog-row .wod-card-body {
+    @apply contents;
+  }
+
+  .catalog-row .wod-card-header > div:first-child {
+    grid-area: title;
+  }
+
+  .catalog-row .wod-card-tools {
+    grid-area: tools;
+  }
+
+  .catalog-row .wod-card-description {
+    grid-area: description;
+  }
+
+  .catalog-row .wod-card-meta {
+    grid-area: meta;
+  }
+
+  .catalog-row .wod-card-footer {
+    grid-area: footer;
+  }
+
+  .wod-card-header {
+    @apply min-w-0;
+  }
+
+  .wod-card-tools {
+    @apply flex min-w-0 max-w-full flex-wrap items-start gap-2;
+  }
+
+  .wod-card-meta {
+    @apply mt-0 grid min-w-0 gap-3 border-0 py-0;
+  }
+
+  .wod-card-meta > div {
+    @apply border-b border-board-line/60 pb-3;
+  }
+
+  .wod-card-meta > div + div {
+    @apply pt-1;
+  }
+
+  .wod-card-description {
+    @apply mt-0 max-w-prose text-base leading-7 text-board-muted;
+  }
+
+  .wod-card-footer {
+    @apply mt-0 border-0 pt-0;
+  }
+
+  .card-badge {
+    @apply min-h-8 rounded-none border-board-line px-2 text-[0.65rem] uppercase tracking-label text-board-muted;
+  }
+
+  .exercise-list {
+    @apply divide-y divide-board-line;
+  }
+
+  .exercise-row {
+    @apply grid min-w-0 gap-4 py-6 sm:grid-cols-[minmax(10rem,0.55fr)_minmax(0,1.2fr)_minmax(0,1.5fr)] sm:items-start sm:gap-8 sm:py-7;
+  }
+
+  .exercise-row .exercise-card-header {
+    @apply contents;
+  }
+
+  .exercise-row .exercise-category {
+    @apply order-1 inline-flex w-fit max-w-full self-start border-0 p-0 text-xs;
+  }
+
+  .exercise-row h2 {
+    @apply order-2 mt-0 text-2xl font-semibold text-board-text sm:order-2;
+  }
+
+  .exercise-row .exercise-card-description {
+    @apply order-3 mt-0 max-w-prose text-base leading-7 text-board-muted;
+  }
+
+  .detail-page {
+    @apply bg-board-900;
+  }
+
+  .detail-page .detail-back-nav {
+    @apply border-b border-board-line pb-5;
+  }
+
+  .detail-header {
+    @apply mt-10 grid min-w-0 max-w-none gap-6 border-b border-board-line pb-10 sm:mt-14 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end lg:pb-14;
+  }
+
+  .detail-heading {
+    @apply max-w-5xl;
+  }
+
+  .detail-header .page-title {
+    @apply font-display text-[clamp(3rem,8vw,6rem)] font-semibold leading-[0.92] tracking-[-0.035em];
+  }
+
+  .detail-content {
+    @apply mt-0 max-w-none;
+  }
+
+  .detail-facts {
+    @apply grid max-w-5xl gap-0 border-b border-board-line py-0 sm:grid-cols-3;
+  }
+
+  .detail-fact {
+    @apply border-b border-board-line py-5 sm:border-b-0 sm:border-r sm:px-6 sm:first:pl-0;
+  }
+
+  .detail-fact:last-child {
+    @apply border-r-0;
+  }
+
+  .detail-section {
+    @apply mt-12 max-w-5xl border-t border-board-line pt-8;
+  }
+
+  .detail-section > h2 {
+    @apply font-display text-3xl font-semibold text-board-text;
+  }
+
+  .detail-list {
+    @apply mt-6;
+  }
+
+  .detail-list-row {
+    @apply py-5;
+  }
+
+  .detail-log {
+    @apply mt-14 max-w-5xl;
+  }
+
+  .history-page-header {
+    @apply max-w-none;
+  }
+
+  .history-stage {
+    @apply max-w-5xl;
+  }
+
+  .history-section-heading {
+    @apply items-start border-b border-board-line pb-5 sm:items-baseline;
+  }
+
+  .history-section-heading h2 {
+    @apply font-display text-3xl font-semibold;
+  }
+
+  .history-entry {
+    @apply py-8 sm:py-10;
+  }
+
+  .history-entry-header {
+    @apply sm:grid-cols-[10rem_minmax(0,1fr)] sm:gap-10;
+  }
+
+  .history-entry-title {
+    @apply font-display text-3xl font-semibold;
+  }
+
+  .history-entry-facts {
+    @apply max-w-3xl border-y border-board-line;
+  }
+
+  .history-log-form {
+    @apply max-w-5xl rounded-none border border-board-line bg-ink-950 p-5 text-board-900 sm:p-8;
+  }
+
+  .history-log-form .field-label,
+  .history-log-form h2 {
+    @apply text-board-900;
+  }
+
+  .history-log-form .history-log-form-intro {
+    @apply text-board-muted;
+  }
+
+  .history-log-form .input-control,
+  .history-log-form .textarea-control {
+    @apply border-board-line bg-board-900 text-board-text;
+  }
+
+  .button-primary,
+  .button-secondary,
+  .button-danger,
+  .button-danger-secondary,
+  .button-link {
+    @apply rounded-none;
+  }
+
+  .state-empty,
+  .state-error {
+    @apply rounded-none text-left;
   }
 }
 
