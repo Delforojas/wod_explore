@@ -1,3 +1,38 @@
 node_modules/
 dist/
 *.local
+# Environment variables
+
+.env
+
+# Dependencies
+
+node_modules/
+
+# Build output
+
+dist/
+
+# Logs
+
+*.log
+
+# macOS
+
+.DS_Store
+
+# IDE
+
+.vscode/
+
+.idea/
+
+# Java / Spring Boot
+
+target/
+
+*.class
+
+# Docker local data
+
+mysql_data/
