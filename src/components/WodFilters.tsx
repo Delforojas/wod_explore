@@ -19,7 +19,8 @@ export function WodFilters({
   return (
     <fieldset className="catalog-filter-set">
       <legend className="field-label text-board-text">Filtrar WODs</legend>
-      <div className="mt-4 flex flex-wrap gap-2">
+      <div className="filter-rail">
+        <span className="filter-rail-label" aria-hidden="true">Por formato</span>
         {WOD_FILTERS.map((filter) => {
           const isSelected = selectedFilter === filter
 

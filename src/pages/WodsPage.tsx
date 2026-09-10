@@ -34,27 +34,25 @@ export function WodsPage({ favorites, wods }: WodsPageProps) {
     : []
 
   return (
-    <main
-      id="main-content"
-      className="page-container"
-    >
-      <header className="page-header">
-        <p className="page-kicker">
-          Biblioteca de entrenamientos
-        </p>
-        <h1 className="page-title">
+    <main id="main-content" className="app-page catalog-page">
+      <header className="catalog-intro">
+        <h1 className="catalog-title">
           WODs para cada sesión.
         </h1>
-        <p className="page-description">
+        <p className="catalog-description">
           Consulta entrenamientos con su formato, nivel y resumen para encontrar tu
           próximo reto.
         </p>
+        <p className="catalog-index">Biblioteca / Entrenamientos</p>
       </header>
 
-      <section aria-labelledby="wods-heading" className="page-section">
-        <h2 id="wods-heading" className="catalog-section-title">
-          Entrenamientos disponibles
-        </h2>
+      <section aria-labelledby="wods-heading" className="catalog-stage">
+        <div className="catalog-stage-heading">
+          <h2 id="wods-heading" className="catalog-section-title">
+            Entrenamientos disponibles
+          </h2>
+          <span className="catalog-stage-rule" aria-hidden="true" />
+        </div>
 
         {!result.success ? (
           <ErrorState
@@ -101,7 +99,7 @@ export function WodsPage({ favorites, wods }: WodsPageProps) {
                 />
               </div>
             ) : (
-              <div className="catalog-grid">
+              <div className="catalog-list">
                 {filteredWods.map((wod) => (
                   <WodCard
                     key={wod.id}

@@ -6,7 +6,7 @@ No define comportamiento funcional ni reglas de negocio.
 
 ## Objetivo visual
 
-Crear una interfaz moderna, limpia y deportiva para una aplicación de CrossFit.
+Crear un archivo editorial de entrenamiento para una aplicación de CrossFit.
 
 El diseño debe transmitir:
 - energía;
@@ -17,22 +17,24 @@ El diseño debe transmitir:
 
 ## Dirección visual
 
-- Estética deportiva y tecnológica.
-- Evitar apariencia genérica de dashboard empresarial.
-- Uso claro de jerarquía visual.
-- Cards con información fácil de escanear.
-- Espaciado consistente.
+- Estética de publicación deportiva: papel, tinta, naranja de señal y reglas finas.
+- Evitar apariencia genérica de dashboard empresarial y tarjetas uniformes.
+- Jerarquía editorial con titulares de gran escala y filas técnicas escaneables.
+- La interfaz debe sentirse como un archivo de sesiones, no como un panel de métricas.
+- Espaciado consistente dentro de una composición asimétrica.
 - Diseño mobile-first.
 
 ## Layout
 
-La aplicación debe mantener una estructura clara:
+La aplicación utiliza una arquitectura de archivo:
 
-- navegación principal;
-- contenido centrado;
-- secciones bien diferenciadas;
-- grids responsive para WODs y ejercicios;
-- páginas de detalle con jerarquía clara.
+- rail de navegación lateral fijo en escritorio;
+- navegación inferior fija en móvil;
+- superficies full-width sin contenedor centrado convencional;
+- Home como doble bloque asimétrico con un panel WOD dominante;
+- catálogos como filas editoriales, no como grids uniformes de cards;
+- filtros y búsqueda integrados en una franja de control;
+- páginas de detalle e historial como documentos de lectura con reglas y columnas.
 
 ## Navegación
 
@@ -48,10 +50,9 @@ Debe funcionar correctamente en móvil y escritorio.
 
 ## Componentes
 
-Mantener consistencia visual entre:
+Mantener consistencia visual entre las piezas editoriales:
 
-- WodCard
-- ExerciseCard
+- WodCard y ExerciseCard presentados como filas técnicas.
 - FavoriteButton
 - WodSearch
 - filtros
@@ -70,11 +71,9 @@ Comprobar como mínimo:
 - tablet;
 - escritorio.
 
-Evitar:
-- overflow horizontal;
-- texto cortado;
-- controles demasiado pequeños;
-- grids rígidos.
+En móvil, el rail se convierte en una barra inferior y las columnas se apilan en
+orden de lectura. Evitar overflow horizontal, texto cortado, controles pequeños y
+grids rígidos.
 
 ## Accesibilidad
 

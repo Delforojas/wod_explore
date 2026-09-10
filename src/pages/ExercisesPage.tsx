@@ -18,26 +18,24 @@ export function ExercisesPage({ exercises }: ExercisesPageProps = {}) {
         }
 
   return (
-    <main
-      id="main-content"
-      className="page-container page-container-quiet"
-    >
-      <header className="page-header">
-        <p className="page-kicker">
-          Biblioteca de movimientos
-        </p>
-        <h1 className="page-title">
+    <main id="main-content" className="app-page catalog-page exercises-page">
+      <header className="catalog-intro">
+        <h1 className="catalog-title">
           Ejercicios de CrossFit.
         </h1>
-        <p className="page-description">
+        <p className="catalog-description">
           Consulta los movimientos disponibles y conoce la categoría de cada ejercicio.
         </p>
+        <p className="catalog-index">Biblioteca / Movimientos</p>
       </header>
 
-      <section aria-labelledby="exercises-heading" className="page-section">
+      <section aria-labelledby="exercises-heading" className="catalog-stage">
+        <div className="catalog-stage-heading">
         <h2 id="exercises-heading" className="catalog-section-title">
           Movimientos disponibles
         </h2>
+        <span className="catalog-stage-rule" aria-hidden="true" />
+        </div>
 
         {!result.success ? (
           <ErrorState
@@ -51,7 +49,7 @@ export function ExercisesPage({ exercises }: ExercisesPageProps = {}) {
             message="Todavía no hay ejercicios para mostrar. Vuelve a intentarlo más adelante."
           />
         ) : (
-          <div className="catalog-grid">
+          <div className="exercise-list">
             {result.data.map((exercise) => (
               <ExerciseCard key={exercise.id} exercise={exercise} />
             ))}

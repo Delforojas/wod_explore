@@ -35,4 +35,5 @@ target/
 
 # Docker local data
 
+
 mysql_data/

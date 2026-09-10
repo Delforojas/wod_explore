@@ -18,10 +18,7 @@ export function WodDetailPage({ favorites, workoutHistory }: WodDetailPageProps)
   const wod = result.success ? findWodById(result.data, id) : undefined
 
   return (
-    <main
-      id="main-content"
-      className="page-container-narrow"
-    >
+    <main id="main-content" className="app-page detail-page">
       <nav aria-label="Navegación de detalle" className="detail-back-nav">
         <Link
           to="/wods"
