@@ -90,6 +90,20 @@ class UserControllerTest {
     }
 
     @Test
+    void register_MissingRequiredFields_ReturnsBadRequestWithDetails() throws Exception {
+        mockMvc.perform(post("/api/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.message").value("Datos inválidos"))
+                .andExpect(jsonPath("$.details.name").exists())
+                .andExpect(jsonPath("$.details.lastName").exists())
+                .andExpect(jsonPath("$.details.email").exists())
+                .andExpect(jsonPath("$.details.password").exists());
+    }
+
+    @Test
     void register_EmailLongerThan150Characters_ReturnsBadRequest() throws Exception {
         String email = "a".repeat(145) + "@x.com";
 

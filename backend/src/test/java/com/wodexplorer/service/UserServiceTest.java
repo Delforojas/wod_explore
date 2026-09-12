@@ -63,7 +63,7 @@ class UserServiceTest {
     @Test
     void register_WhenEmailExists_DoesNotEncodeOrPersist() {
         UserRegistrationRequest request = new UserRegistrationRequest(
-                "Delfin", "Rojas", "delfin@example.com", "ExamplePassword123");
+                "Delfin", "Rojas", "  DELFIN@EXAMPLE.COM ", "ExamplePassword123");
         given(userRepository.existsByEmail("delfin@example.com")).willReturn(true);
 
         assertThatThrownBy(() -> userService.register(request))

@@ -1,5 +1,6 @@
 package com.wodexplorer.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -22,6 +23,8 @@ import com.wodexplorer.exception.GlobalExceptionHandler;
 import com.wodexplorer.exception.InvalidCredentialsException;
 import com.wodexplorer.service.AuthService;
 import com.wodexplorer.service.JwtService;
+
+import org.springframework.test.web.servlet.MvcResult;
 
 @WebMvcTest(AuthController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -74,6 +77,40 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.message").value("Credenciales inválidas"))
                 .andExpect(jsonPath("$.password").doesNotExist())
                 .andExpect(jsonPath("$.passwordHash").doesNotExist());
+    }
+
+    @Test
+    void login_UnknownEmailAndWrongPassword_ReturnEquivalentResponses() throws Exception {
+        given(authService.login(any())).willThrow(new InvalidCredentialsException());
+
+        MvcResult unknownEmail = mockMvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "email": "unknown@example.com",
+                                  "password": "ExamplePassword123"
+                                }
+                                """))
+                .andExpect(status().isUnauthorized())
+                .andReturn();
+
+        MvcResult wrongPassword = mockMvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "email": "delfin@example.com",
+                                  "password": "WrongPassword"
+                                }
+                                """))
+                .andExpect(status().isUnauthorized())
+                .andReturn();
+
+        assertThat(unknownEmail.getResponse().getStatus())
+                .isEqualTo(wrongPassword.getResponse().getStatus());
+        assertThat(unknownEmail.getResponse().getContentType())
+                .isEqualTo(wrongPassword.getResponse().getContentType());
+        assertThat(unknownEmail.getResponse().getContentAsString())
+                .isEqualTo(wrongPassword.getResponse().getContentAsString());
     }
 
     @Test
