@@ -9,6 +9,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import org.hibernate.annotations.Generated;
+import org.hibernate.generator.EventType;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -30,6 +33,7 @@ public class User {
     private String passwordHash;
 
     @Column(name = "created_at", insertable = false, updatable = false)
+    @Generated(event = EventType.INSERT)
     private LocalDateTime createdAt;
 
     public User() {
