@@ -68,6 +68,30 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(error);
     }
 
+    @ExceptionHandler(InvalidExerciseResultException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidExerciseResult(
+            InvalidExerciseResultException exception) {
+        Map<String, String> details = Map.of("result", exception.getMessage());
+        Map<String, Object> error = Map.of(
+                "error", "VALIDATION_ERROR",
+                "message", "Datos inválidos",
+                "details", details
+        );
+
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(ExerciseResultNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleExerciseResultNotFound(
+            ExerciseResultNotFoundException exception) {
+        Map<String, Object> error = Map.of(
+                "status", HttpStatus.NOT_FOUND.value(),
+                "message", exception.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationError(
             MethodArgumentNotValidException exception) {

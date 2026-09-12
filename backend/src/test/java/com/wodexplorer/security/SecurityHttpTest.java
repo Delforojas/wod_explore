@@ -37,6 +37,7 @@ import com.wodexplorer.config.JwtConfiguration;
 import com.wodexplorer.config.SecurityConfig;
 import com.wodexplorer.controller.AuthController;
 import com.wodexplorer.controller.ExerciseController;
+import com.wodexplorer.controller.ExerciseResultController;
 import com.wodexplorer.controller.UserController;
 import com.wodexplorer.controller.WodController;
 import com.wodexplorer.controller.WodResultController;
@@ -45,6 +46,7 @@ import com.wodexplorer.dto.UserResponse;
 import com.wodexplorer.exception.GlobalExceptionHandler;
 import com.wodexplorer.service.AuthService;
 import com.wodexplorer.service.ExerciseService;
+import com.wodexplorer.service.ExerciseResultService;
 import com.wodexplorer.service.JwtService;
 import com.wodexplorer.service.UserService;
 import com.wodexplorer.service.WodService;
@@ -53,7 +55,7 @@ import com.wodexplorer.service.WodResultService;
 import io.jsonwebtoken.Jwts;
 
 @WebMvcTest({ExerciseController.class, UserController.class, AuthController.class,
-        WodController.class, WodResultController.class})
+        WodController.class, WodResultController.class, ExerciseResultController.class})
 @ImportAutoConfiguration(exclude = UserDetailsServiceAutoConfiguration.class)
 @Import({
         CorsConfig.class,
@@ -82,6 +84,9 @@ class SecurityHttpTest {
 
     @MockitoBean
     private ExerciseService exerciseService;
+
+    @MockitoBean
+    private ExerciseResultService exerciseResultService;
 
     @MockitoBean
     private UserService userService;
@@ -198,6 +203,29 @@ class SecurityHttpTest {
                 .andExpect(jsonPath("$").isEmpty());
 
         then(wodResultService).should().findOwnResults(18, TEST_EMAIL);
+    }
+
+    @Test
+    void exerciseResults_WithoutJwt_ReturnsJsonUnauthorized() throws Exception {
+        mockMvc.perform(get("/api/exercises/18/results"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.error").value("UNAUTHORIZED"))
+                .andExpect(jsonPath("$.message").value("Autenticación requerida"));
+
+        then(exerciseResultService).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void exerciseResults_WithValidJwt_UsesJwtSubject() throws Exception {
+        given(exerciseResultService.findOwnResults(18, TEST_EMAIL)).willReturn(List.of());
+        String token = jwtService.generateToken(TEST_EMAIL);
+
+        mockMvc.perform(get("/api/exercises/18/results")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isEmpty());
+
+        then(exerciseResultService).should().findOwnResults(18, TEST_EMAIL);
     }
 
     @Test
