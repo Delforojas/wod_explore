@@ -21,11 +21,13 @@ import javax.crypto.spec.SecretKeySpec;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.wodexplorer.config.CorsConfig;
@@ -36,8 +38,6 @@ import com.wodexplorer.controller.ExerciseController;
 import com.wodexplorer.controller.UserController;
 import com.wodexplorer.dto.LoginResponse;
 import com.wodexplorer.dto.UserResponse;
-import com.wodexplorer.entity.ExerciseCategory;
-import com.wodexplorer.entity.MeasurementType;
 import com.wodexplorer.exception.GlobalExceptionHandler;
 import com.wodexplorer.service.AuthService;
 import com.wodexplorer.service.ExerciseService;
@@ -47,6 +47,7 @@ import com.wodexplorer.service.UserService;
 import io.jsonwebtoken.Jwts;
 
 @WebMvcTest({ExerciseController.class, UserController.class, AuthController.class})
+@ImportAutoConfiguration(exclude = UserDetailsServiceAutoConfiguration.class)
 @Import({
         CorsConfig.class,
         GlobalExceptionHandler.class,
@@ -72,13 +73,13 @@ class SecurityHttpTest {
     @Autowired
     private JwtService jwtService;
 
-    @MockBean
+    @MockitoBean
     private ExerciseService exerciseService;
 
-    @MockBean
+    @MockitoBean
     private UserService userService;
 
-    @MockBean
+    @MockitoBean
     private AuthService authService;
 
     @BeforeEach

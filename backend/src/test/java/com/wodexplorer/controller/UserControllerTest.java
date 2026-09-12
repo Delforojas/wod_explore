@@ -10,6 +10,9 @@ import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
@@ -19,9 +22,12 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import com.wodexplorer.dto.UserResponse;
 import com.wodexplorer.exception.EmailAlreadyExistsException;
 import com.wodexplorer.exception.GlobalExceptionHandler;
+import com.wodexplorer.service.JwtService;
 import com.wodexplorer.service.UserService;
 
 @WebMvcTest(UserController.class)
+@AutoConfigureMockMvc(addFilters = false)
+@ImportAutoConfiguration(exclude = UserDetailsServiceAutoConfiguration.class)
 @Import(GlobalExceptionHandler.class)
 class UserControllerTest {
 
@@ -30,6 +36,9 @@ class UserControllerTest {
 
     @MockitoBean
     private UserService userService;
+
+    @MockitoBean
+    private JwtService jwtService;
 
     @Test
     void register_ValidRequest_ReturnsCreatedWithoutSensitiveFields() throws Exception {

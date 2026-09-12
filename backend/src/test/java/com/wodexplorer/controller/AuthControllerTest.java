@@ -8,6 +8,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
@@ -18,8 +21,11 @@ import com.wodexplorer.dto.LoginResponse;
 import com.wodexplorer.exception.GlobalExceptionHandler;
 import com.wodexplorer.exception.InvalidCredentialsException;
 import com.wodexplorer.service.AuthService;
+import com.wodexplorer.service.JwtService;
 
 @WebMvcTest(AuthController.class)
+@AutoConfigureMockMvc(addFilters = false)
+@ImportAutoConfiguration(exclude = UserDetailsServiceAutoConfiguration.class)
 @Import(GlobalExceptionHandler.class)
 class AuthControllerTest {
 
@@ -28,6 +34,9 @@ class AuthControllerTest {
 
     @MockitoBean
     private AuthService authService;
+
+    @MockitoBean
+    private JwtService jwtService;
 
     @Test
     void login_ValidRequest_ReturnsTokenWithoutSensitiveFields() throws Exception {
