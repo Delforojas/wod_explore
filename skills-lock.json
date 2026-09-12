@@ -61,6 +61,18 @@
       "skillPath": "skills/java-springboot/SKILL.md",
       "computedHash": "f1b9c6b1277178fc33e5a612761c1cd1cf6ab5f946d05d69d52026d142c0a0c1"
     },
+    "jpa-patterns": {
+      "source": "affaan-m/ecc",
+      "sourceType": "github",
+      "skillPath": "skills/jpa-patterns/SKILL.md",
+      "computedHash": "b006c947d019f2e90ec305a9d08d1b4b74fc56c4f245d5796abac316931d871c"
+    },
+    "junit-mockito-patterns": {
+      "source": "full-stack-skills/java-skills",
+      "sourceType": "github",
+      "skillPath": "skills/junit-mockito-patterns/SKILL.md",
+      "computedHash": "fe9b4036b40e930f3f4a8f78c8fd3328a376993052dd9068a93b4a44937e6db1"
+    },
     "mysql": {
       "source": "planetscale/database-skills",
       "sourceType": "github",
@@ -72,6 +84,12 @@
       "sourceType": "github",
       "skillPath": "community/spring-boot-3/SKILL.md",
       "computedHash": "bc247f857dbb34cf56f11132d786390e0d1b224105c0d8f8c1869cbe5e1c8b33"
+    },
+    "springboot-security": {
+      "source": "affaan-m/ecc",
+      "sourceType": "github",
+      "skillPath": "skills/springboot-security/SKILL.md",
+      "computedHash": "c518a86c3a473e0545c35065d82284d13a5d99d6f7a0e17780594f3a44af38ad"
     },
     "tailwind-css-patterns": {
       "source": "giuseppe-trisciuoglio/developer-kit",

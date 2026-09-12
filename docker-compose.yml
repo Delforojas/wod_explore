@@ -37,6 +37,10 @@ services:
 
       DB_PASSWORD: ${MYSQL_PASSWORD}
 
+      JWT_SECRET: ${JWT_SECRET}
+
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-3600000}
+
     ports:
       - "8080:8080"
 

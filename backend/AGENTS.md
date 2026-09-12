@@ -2,392 +2,363 @@
 
 ## Ámbito
 
-Este archivo define las reglas específicas para cualquier trabajo realizado
-dentro del backend de `wod-explorer`.
+Este archivo aplica a todo el contenido dentro de `backend/`.
 
-Se aplica a tareas relacionadas con:
+Las reglas globales definidas en el `AGENTS.md` raíz siguen siendo obligatorias.
 
-- Java
-- Spring Boot
-- Spring Data JPA
-- Hibernate
-- APIs REST
-- lógica de negocio
-- acceso a persistencia desde el backend
-- validación
-- manejo de errores
-- configuración del backend
-- testing del backend
-- Maven o Gradle cuando corresponda
+Si existe conflicto entre este archivo y el `AGENTS.md` raíz, prevalecen las reglas globales salvo que una spec autorice explícitamente una excepción.
 
-Estas reglas complementan el `AGENTS.md` raíz y
-`docs/constitution.md`.
-
-No sustituyen la spec activa.
+---
 
 ## Stack
 
-El backend utilizará:
+El backend utiliza:
 
 - Java 21
-- Spring Boot 3.x
+- Spring Boot 3.5.x
+- Maven Wrapper
+- Spring Web
 - Spring Data JPA
-- Hibernate
+- Jakarta Validation
 - MySQL 8.4
+- JUnit 5
+- Mockito
 
-No introducir tecnologías adicionales salvo que exista una necesidad técnica
-justificada por la spec activa.
+La persistencia principal es MySQL.
 
-## Java
-
-Todo el código Java debe ser compatible con Java 21.
-
-No utilices:
-
-- características exclusivas de versiones posteriores
-- APIs introducidas después de Java 21
-- configuraciones que requieran una versión posterior del JDK
-
-Utiliza nombres descriptivos en inglés para:
-
-- clases
-- interfaces
-- records
-- enums
-- métodos
-- variables
-- paquetes
-
-Prioriza:
-
-- tipos explícitos y claros
-- modelos de dominio comprensibles
-- composición frente a herencia cuando sea apropiado
-- clases y métodos con responsabilidades concretas
-- inmutabilidad cuando aporte claridad
-- APIs internas simples y predecibles
-
-Evita:
-
-- abstracciones prematuras
-- jerarquías de herencia innecesarias
-- interfaces sin una necesidad concreta
-- genéricos innecesariamente complejos
-- patrones de diseño aplicados de forma mecánica
-- clases genéricas que acumulen responsabilidades
-
-## Spring Boot
-
-Utiliza Spring Boot 3.x.
-
-Prioriza las convenciones y mecanismos proporcionados por Spring Boot frente
-a configuraciones personalizadas innecesarias.
-
-Utiliza inyección de dependencias mediante constructor.
-
-Evita field injection.
-
-No añadas starters o dependencias sin una necesidad técnica relacionada con
-la spec activa.
-
-No introduzcas automáticamente:
-
-- Spring Security
-- JWT
-- OAuth2
-- microservicios
-- Kafka
-- Redis
-- mensajería
-- cachés distribuidas
-- arquitectura distribuida
-- infraestructura adicional
-
-Estas tecnologías solo podrán añadirse cuando la spec activa las requiera.
+---
 
 ## Arquitectura
 
-Mantén responsabilidades claras entre las diferentes partes del backend.
+Mantener la separación:
 
-Cuando sean necesarias, las responsabilidades habituales serán:
+```text
+Controller
+    ↓
+Service
+    ↓
+Repository
+    ↓
+Database
+```
 
-- controller: entrada y salida HTTP
-- service: casos de uso y lógica de negocio
-- repository: acceso a persistencia
-- domain/model: representación del dominio
-- dto: contratos de entrada y salida cuando aporten separación real
-- configuration: configuración técnica de Spring
+### Controller
 
-Esta lista no obliga a crear todas estas capas para cada funcionalidad.
+Responsabilidades:
 
-No crees:
+- Recibir requests HTTP.
+- Validar entrada mediante DTOs.
+- Delegar en servicios.
+- Devolver respuestas HTTP.
 
-- services sin lógica o responsabilidad real
-- repositories adicionales sin necesidad de persistencia
-- interfaces únicamente para envolver una implementación
-- DTOs duplicados sin aportar separación
-- factories, strategies, builders u otros patrones sin una necesidad concreta
+No debe contener lógica de negocio.
 
-La arquitectura debe crecer según las necesidades de la spec.
+### Service
+
+Responsabilidades:
+
+- Lógica de negocio.
+- Coordinación entre repositories.
+- Transformaciones necesarias.
+- Gestión de transacciones cuando corresponda.
+
+La lógica reutilizable debe permanecer fuera de los controllers.
+
+### Repository
+
+Responsabilidades:
+
+- Acceso a persistencia.
+- Consultas JPA.
+- Consultas específicas cuando sean necesarias.
+
+No debe contener lógica de negocio.
+
+### Entity
+
+Las entidades representan el modelo de persistencia.
+
+No utilizar entidades JPA directamente como contratos públicos de la API cuando exista riesgo de acoplamiento o exposición de campos internos.
+
+### DTO
+
+Usar DTOs específicos para requests y responses.
+
+Preferir `record` cuando el DTO sea inmutable y no exista una razón técnica para utilizar una clase convencional.
+
+---
+
+## Java
+
+Utilizar características compatibles con Java 21.
+
+Priorizar:
+
+- Código legible.
+- Nombres descriptivos.
+- Métodos pequeños.
+- Responsabilidad única.
+- Inmutabilidad cuando sea posible.
+- Tipado claro.
+
+Evitar:
+
+- Métodos excesivamente largos.
+- Clases con múltiples responsabilidades.
+- Duplicación innecesaria.
+- Abstracciones prematuras.
+- Reflection salvo necesidad justificada.
+
+---
+
+## Spring Boot
+
+Seguir las convenciones estándar de Spring Boot.
+
+Preferir inyección por constructor.
+
+Correcto:
+
+```java
+public ExerciseService(ExerciseRepository exerciseRepository) {
+    this.exerciseRepository = exerciseRepository;
+}
+```
+
+Evitar field injection:
+
+```java
+@Autowired
+private ExerciseRepository exerciseRepository;
+```
+
+No añadir dependencias nuevas salvo que:
+
+1. Sean necesarias para cumplir la spec activa.
+2. Exista una justificación técnica clara.
+3. No exista ya una solución disponible en el stack actual.
+
+---
+
+## JPA / Hibernate
+
+Hibernate no debe gestionar automáticamente cambios de esquema.
+
+Mantener:
+
+```properties
+spring.jpa.hibernate.ddl-auto=none
+```
+
+Las entidades deben respetar el esquema MySQL existente.
+
+Antes de asumir columnas, tipos, índices o relaciones, utilizar el MCP `wodsql` cuando sea relevante.
+
+No modificar el esquema desde JPA para adaptar la base de datos al código.
+
+---
+
+## MySQL
+
+La base de datos es una fuente real de información del proyecto.
+
+Cuando una tarea dependa del esquema o de datos existentes:
+
+- Consultar mediante `wodsql`.
+- No asumir el estado de la BD únicamente por entidades o scripts SQL.
+- Comprobar constraints y foreign keys cuando sean relevantes.
+
+No utilizar el usuario `root` desde el backend.
+
+No incluir credenciales reales en código ni archivos versionados.
+
+---
+
+## Seguridad
+
+Nunca:
+
+- Almacenar contraseñas en texto plano.
+- Devolver hashes de contraseña.
+- Registrar secretos.
+- Incluir tokens o credenciales en logs.
+- Exponer stack traces al cliente.
+
+Para contraseñas utilizar algoritmos específicamente diseñados para hashing de passwords según la spec activa.
+
+No introducir autenticación, JWT, roles o autorización salvo que estén incluidos explícitamente en una spec.
+
+---
 
 ## API REST
 
-Cuando la spec requiera endpoints HTTP:
+Utilizar rutas consistentes bajo:
 
-- utiliza rutas consistentes y orientadas a recursos
-- utiliza los métodos HTTP apropiados
-- devuelve códigos de estado HTTP coherentes
-- valida los datos de entrada
-- evita exponer detalles internos innecesarios
-- mantén controllers pequeños
-- delega la lógica de negocio fuera del controller cuando exista lógica real
-- utiliza contratos de entrada y salida claros
+```text
+/api/**
+```
 
-No diseñes endpoints que no estén requeridos por la spec activa.
+Utilizar códigos HTTP apropiados.
+
+Ejemplos:
+
+```text
+200 OK
+201 Created
+204 No Content
+400 Bad Request
+404 Not Found
+409 Conflict
+```
+
+No devolver `200 OK` indiscriminadamente para todos los casos.
+
+Los errores expuestos al usuario deberán mantener una estructura consistente.
+
+---
 
 ## Validación
 
-Valida los datos en las fronteras apropiadas de la aplicación.
+Utilizar Jakarta Validation para validaciones de request cuando corresponda.
 
-Cuando corresponda, utiliza Jakarta Validation y las capacidades estándar
-de Spring Boot.
+Ejemplos:
 
-No dependas únicamente de validaciones realizadas por el frontend.
+```java
+@NotBlank
+@Email
+@Size
+```
 
-Las restricciones críticas de integridad también deben estar protegidas
-por la capa de persistencia cuando corresponda.
+No duplicar en controllers validaciones que puedan expresarse declarativamente mediante DTOs.
 
-Los mensajes visibles para el usuario deben mantenerse en español cuando
-formen parte de la interfaz o respuesta funcional definida por el proyecto.
+Las reglas de negocio deben permanecer en servicios.
 
-## Manejo de errores
+---
 
-Los errores HTTP deben ser consistentes y predecibles.
+## Gestión de errores
 
-Cuando exista una necesidad real de manejo global de errores, utiliza los
-mecanismos estándar proporcionados por Spring.
+Centralizar errores HTTP cuando sea posible mediante:
 
-No expongas al cliente:
+```text
+@RestControllerAdvice
+```
 
-- stack traces
-- credenciales
-- secretos
-- detalles internos de infraestructura
-- información sensible de la base de datos
+No añadir `try/catch` repetitivos en cada controller.
 
-No ocultes excepciones inesperadas sin registrarlas o tratarlas de forma
-adecuada.
+No devolver detalles internos innecesarios.
 
-## Persistencia
-
-Spring Data JPA y Hibernate serán utilizados para la integración entre el
-backend y MySQL cuando la spec correspondiente lo requiera.
-
-No modifiques el esquema de MySQL únicamente mediante cambios accidentales
-producidos por Hibernate.
-
-Los cambios estructurales de base de datos deben seguir las reglas definidas
-en:
-
-`Docker/mysql/AGENTS.md`
-
-MySQL debe mantenerse como fuente de verdad para cualquier funcionalidad
-que ya haya sido migrada desde los archivos JSON.
-
-Evita:
-
-- consultas innecesarias
-- cargas completas de datos cuando no sean necesarias
-- relaciones bidireccionales sin una necesidad clara
-- cascadas JPA demasiado amplias
-- acceso accidental a datos fuera de los límites de una transacción
-
-Las decisiones de modelado JPA deben reflejar el modelo relacional y las
-necesidades reales del dominio.
-
-## Transacciones
-
-Define límites transaccionales donde exista una operación de negocio que
-requiera atomicidad.
-
-No utilices transacciones de forma indiscriminada.
-
-Mantén las transacciones tan pequeñas como sea razonablemente posible.
-
-No coloques lógica HTTP dentro de las operaciones de persistencia.
-
-## Configuración
-
-No almacenes en el repositorio:
-
-- contraseñas reales
-- credenciales de MySQL
-- tokens
-- secretos
-- claves privadas
-
-Utiliza variables de entorno para información sensible y configuración
-dependiente del entorno.
-
-No conectes el backend a MySQL utilizando `root`.
-
-Utiliza un usuario de aplicación con los permisos necesarios y nada más.
-
-Los archivos de configuración versionados deben contener únicamente valores
-seguros o referencias a variables de entorno.
-
-## Build
-
-Antes de ejecutar comandos, inspecciona la estructura real del backend.
-
-No asumas Maven o Gradle si todavía no se ha definido uno.
-
-Si el proyecto utiliza Maven:
-
-- utiliza únicamente comandos disponibles para el proyecto
-- sigue `110-java-maven-best-practices`
-- no añadas plugins sin una necesidad técnica clara
-
-Si el proyecto utiliza Gradle:
-
-- no apliques reglas específicas de Maven
-- utiliza únicamente la configuración y comandos realmente existentes
-
-No cambies de build tool sin autorización explícita.
+---
 
 ## Testing
 
-Utiliza las herramientas de testing realmente configuradas en el backend.
+Toda funcionalidad nueva deberá incluir tests proporcionales a su impacto.
 
-Para tests unitarios Java, aplica las prácticas definidas por
-`131-java-testing-unit-testing`.
+Priorizar:
 
-Prioriza tests sobre:
+- Tests unitarios para servicios.
+- `@WebMvcTest` para controllers.
+- Tests de repository cuando exista lógica de consulta relevante.
+- Tests de integración únicamente cuando aporten valor real.
 
-- lógica de negocio
-- validaciones relevantes
-- casos límite
-- manejo de errores
-- comportamiento especificado por la spec
+Utilizar JUnit 5 y Mockito.
 
-No crees tests únicamente para aumentar cobertura.
+Los tests unitarios no deberán depender de MySQL real salvo que la spec lo requiera explícitamente.
 
-Los tests deben comprobar comportamiento observable y requisitos reales.
+---
 
-Utiliza integración con Spring únicamente cuando el comportamiento probado
-requiera realmente el contexto de Spring.
+## Maven
 
-No conviertas automáticamente todos los tests en tests de integración.
+Utilizar siempre el wrapper del proyecto:
+
+```bash
+./mvnw
+```
+
+No asumir que Maven global está instalado.
+
+Antes de considerar una tarea backend completada ejecutar, cuando corresponda:
+
+```bash
+./mvnw validate
+./mvnw test
+./mvnw package
+```
+
+Todos los comandos deben ejecutarse desde `backend/`.
+
+---
 
 ## Skills
 
-Antes de trabajar en el backend, utiliza únicamente las skills relevantes
-para la tarea.
+Cuando sean relevantes, utilizar las skills disponibles relacionadas con:
 
-### Java
+- Java.
+- Spring Boot.
+- JPA.
+- Spring Security.
+- JUnit.
+- Mockito.
 
-Skills disponibles:
+Las skills proporcionan patrones y conocimiento técnico.
 
-- `java-21`
-- `121-java-object-oriented-design`
-- `122-java-type-design`
-- `128-java-generics`
-- `123-java-design-patterns`
-- `131-java-testing-unit-testing`
-- `110-java-maven-best-practices`
+No pueden contradecir:
 
-Utiliza:
+1. La spec activa.
+2. Este `AGENTS.md`.
+3. El `AGENTS.md` raíz.
 
-- `java-21` como referencia para Java 21
-- `121-java-object-oriented-design` cuando la tarea implique diseño OO
-- `122-java-type-design` cuando implique modelado de tipos o dominio
-- `128-java-generics` únicamente cuando exista una necesidad real de genéricos
-- `123-java-design-patterns` cuando un patrón resuelva un problema concreto
-- `131-java-testing-unit-testing` para testing unitario
-- `110-java-maven-best-practices` únicamente cuando el proyecto utilice Maven
+---
 
-No es obligatorio utilizar todas las skills Java en cada tarea.
+## MCP
 
-### Spring Boot
+### `wodsql`
 
-Skills disponibles:
+Utilizar para:
 
-- `spring-boot-3`
-- `java-springboot`
+- Inspeccionar tablas.
+- Comprobar columnas.
+- Revisar foreign keys.
+- Consultar índices.
+- Validar datos existentes.
+- Comprobar resultados cuando la tarea lo necesite.
 
-Utiliza:
+No utilizarlo para modificaciones destructivas salvo autorización explícita.
 
-- `spring-boot-3` como referencia principal para Spring Boot 3.x
-- `java-springboot` para arquitectura REST, configuración, DTOs, validación,
-  manejo de errores, persistencia y testing con Spring Boot
+### `delfohub`
 
-Aplica además las skills Java que sean relevantes para la tarea.
+Utilizar para:
 
-Las recomendaciones de las skills no pueden:
+- Consultar Issues.
+- Comprobar requisitos.
+- Revisar Pull Requests.
+- Consultar ramas y estado remoto.
+- Verificar que una implementación cubre una Issue.
 
-- modificar el alcance de la spec
-- introducir dependencias no justificadas
-- cambiar la versión de Java
-- introducir nuevas capas sin necesidad
-- introducir infraestructura adicional no solicitada
+No cerrar Issues, realizar merge ni ejecutar acciones destructivas salvo instrucción explícita.
 
-Si una recomendación de una skill contradice una regla superior del proyecto,
-prevalece la regla superior.
+---
 
-## Verificaciones
+## Specs
 
-Después de modificar el backend, ejecuta únicamente las verificaciones
-aplicables y disponibles realmente en el proyecto.
+La spec activa define el alcance.
 
-Como mínimo, cuando corresponda:
+No implementar funcionalidad fuera de la spec aunque:
 
-- ejecuta los tests del backend
-- ejecuta la compilación
-- comprueba que no existen errores de compilación
-- comprueba compatibilidad con Java 21
-- comprueba que el backend arranca cuando la tarea lo requiera
+- Parezca necesaria.
+- Exista una Issue relacionada.
+- Facilite una implementación futura.
 
-Si la tarea afecta también a MySQL:
+Si se detecta una contradicción entre la spec y otra fuente de requisitos, detener la implementación y documentarla.
 
-- aplica además `Docker/mysql/AGENTS.md`
-- ejecuta las verificaciones de base de datos definidas allí
+---
 
-No marques una tarea como terminada mientras fallen verificaciones aplicables.
+## Verificación final
 
-## Reglas de implementación
+Antes de completar una tarea:
 
-Antes de modificar el backend:
-
-1. Lee `docs/constitution.md`.
-2. Lee la spec activa.
-3. Lee `PRODUCT.md`.
-4. Lee el `AGENTS.md` raíz.
-5. Lee este `backend/AGENTS.md`.
-6. Lee `Docker/mysql/AGENTS.md` si la tarea afecta a persistencia o MySQL.
-7. Lee únicamente las skills relevantes para la tarea.
-
-Durante la implementación:
-
-- no amplíes el alcance de la spec
-- no añadas funcionalidades por anticipado
-- no añadas dependencias por conveniencia
-- no realices refactors grandes no relacionados
-- no modifiques el frontend salvo que la tarea lo requiera
-- no modifiques el esquema MySQL sin autorización de la spec
-- no hagas commits ni push automáticamente
-
-## Al finalizar
-
-Indica:
-
-- archivos creados
-- archivos modificados
-- archivos eliminados, si los hubiera
-- skills utilizadas
-- verificaciones ejecutadas
-- resultado de cada verificación
-- cualquier requisito que no haya podido cumplirse
-
-Si existe una contradicción entre la spec, la constitución, el `AGENTS.md`
-raíz, este archivo o una skill, no improvises: detén la implementación e
-indica claramente el conflicto.
+1. Revisar los cambios realizados.
+2. Ejecutar los tests relevantes.
+3. Ejecutar el build cuando corresponda.
+4. Comprobar que no existen secretos versionados.
+5. Comprobar que no se ha ampliado el alcance.
+6. Verificar el cumplimiento de la spec activa.
