@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -43,6 +44,30 @@ public class GlobalExceptionHandler {
                 .body(error);
     }
 
+    @ExceptionHandler(AuthenticatedUserNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleAuthenticatedUserNotFound(
+            AuthenticatedUserNotFoundException exception) {
+        Map<String, Object> error = Map.of(
+                "error", "UNAUTHORIZED",
+                "message", exception.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    @ExceptionHandler(InvalidWodResultException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidWodResult(
+            InvalidWodResultException exception) {
+        Map<String, String> details = Map.of("result", exception.getMessage());
+        Map<String, Object> error = Map.of(
+                "error", "VALIDATION_ERROR",
+                "message", "Datos inválidos",
+                "details", details
+        );
+
+        return ResponseEntity.badRequest().body(error);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationError(
             MethodArgumentNotValidException exception) {
@@ -71,6 +96,21 @@ public class GlobalExceptionHandler {
                 exception.getName(), "El parámetro no tiene un valor válido"
         );
 
+        Map<String, Object> error = Map.of(
+                "error", "VALIDATION_ERROR",
+                "message", "Datos inválidos",
+                "details", details
+        );
+
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, Object>> handleUnreadableMessage(
+            HttpMessageNotReadableException exception) {
+        Map<String, String> details = Map.of(
+                "body", "El body no tiene un formato válido"
+        );
         Map<String, Object> error = Map.of(
                 "error", "VALIDATION_ERROR",
                 "message", "Datos inválidos",
