@@ -20,6 +20,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
@@ -36,6 +38,7 @@ import com.wodexplorer.config.SecurityConfig;
 import com.wodexplorer.controller.AuthController;
 import com.wodexplorer.controller.ExerciseController;
 import com.wodexplorer.controller.UserController;
+import com.wodexplorer.controller.WodController;
 import com.wodexplorer.dto.LoginResponse;
 import com.wodexplorer.dto.UserResponse;
 import com.wodexplorer.exception.GlobalExceptionHandler;
@@ -43,10 +46,11 @@ import com.wodexplorer.service.AuthService;
 import com.wodexplorer.service.ExerciseService;
 import com.wodexplorer.service.JwtService;
 import com.wodexplorer.service.UserService;
+import com.wodexplorer.service.WodService;
 
 import io.jsonwebtoken.Jwts;
 
-@WebMvcTest({ExerciseController.class, UserController.class, AuthController.class})
+@WebMvcTest({ExerciseController.class, UserController.class, AuthController.class, WodController.class})
 @ImportAutoConfiguration(exclude = UserDetailsServiceAutoConfiguration.class)
 @Import({
         CorsConfig.class,
@@ -81,6 +85,9 @@ class SecurityHttpTest {
 
     @MockitoBean
     private AuthService authService;
+
+    @MockitoBean
+    private WodService wodService;
 
     @BeforeEach
     void setUp() {
@@ -140,6 +147,28 @@ class SecurityHttpTest {
                 .andExpect(status().isOk());
 
         then(exerciseService).should().findAll();
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"/api/wods", "/api/wods/1"})
+    void wods_WithoutJwt_ReturnsJsonUnauthorized(String path) throws Exception {
+        mockMvc.perform(get(path))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.error").value("UNAUTHORIZED"));
+
+        then(wodService).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void wods_WithValidJwt_AllowsCatalogAccess() throws Exception {
+        given(wodService.findAll(null, null, null)).willReturn(List.of());
+        String token = jwtService.generateToken(TEST_EMAIL);
+
+        mockMvc.perform(get("/api/wods")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk());
+
+        then(wodService).should().findAll(null, null, null);
     }
 
     @Test

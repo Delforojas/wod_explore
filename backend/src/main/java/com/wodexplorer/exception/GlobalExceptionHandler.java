@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -17,6 +18,20 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ExerciseNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleExerciseNotFound(
             ExerciseNotFoundException exception) {
+
+        Map<String, Object> error = Map.of(
+                "status", HttpStatus.NOT_FOUND.value(),
+                "message", exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(error);
+    }
+
+    @ExceptionHandler(WodNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleWodNotFound(
+            WodNotFoundException exception) {
 
         Map<String, Object> error = Map.of(
                 "status", HttpStatus.NOT_FOUND.value(),
@@ -39,6 +54,22 @@ public class GlobalExceptionHandler {
                         (firstMessage, ignoredMessage) -> firstMessage,
                         LinkedHashMap::new
                 ));
+
+        Map<String, Object> error = Map.of(
+                "error", "VALIDATION_ERROR",
+                "message", "Datos inválidos",
+                "details", details
+        );
+
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Map<String, Object>> handleParameterTypeMismatch(
+            MethodArgumentTypeMismatchException exception) {
+        Map<String, String> details = Map.of(
+                exception.getName(), "El parámetro no tiene un valor válido"
+        );
 
         Map<String, Object> error = Map.of(
                 "error", "VALIDATION_ERROR",
