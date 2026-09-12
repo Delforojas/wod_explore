@@ -22,7 +22,10 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.wodexplorer.dto.WodDetailResponse;
+import com.wodexplorer.dto.WodExerciseResponse;
 import com.wodexplorer.dto.WodSummaryResponse;
+import com.wodexplorer.entity.ExerciseCategory;
+import com.wodexplorer.entity.MeasurementType;
 import com.wodexplorer.entity.WodLevel;
 import com.wodexplorer.entity.WodType;
 import com.wodexplorer.exception.GlobalExceptionHandler;
@@ -84,7 +87,22 @@ class WodControllerTest {
                 1200,
                 null,
                 WodLevel.RX,
-                LocalDateTime.of(2026, 9, 7, 22, 7, 31)));
+                LocalDateTime.of(2026, 9, 7, 22, 7, 31),
+                List.of(
+                        new WodExerciseResponse(
+                                125,
+                                "Burpee",
+                                ExerciseCategory.GYMNASTICS,
+                                MeasurementType.REPS,
+                                25,
+                                1),
+                        new WodExerciseResponse(
+                                146,
+                                "Medicine Ball Run",
+                                ExerciseCategory.WEIGHTLIFTING,
+                                MeasurementType.WEIGHT_DISTANCE,
+                                null,
+                                2))));
 
         mockMvc.perform(get("/api/wods/18"))
                 .andExpect(status().isOk())
@@ -94,7 +112,34 @@ class WodControllerTest {
                 .andExpect(jsonPath("$.timeLimit").value(1200))
                 .andExpect(jsonPath("$.rounds").value(nullValue()))
                 .andExpect(jsonPath("$.level").value("RX"))
-                .andExpect(jsonPath("$.createdAt").value("2026-09-07T22:07:31"));
+                .andExpect(jsonPath("$.createdAt").value("2026-09-07T22:07:31"))
+                .andExpect(jsonPath("$.exercises[0].id").value(125))
+                .andExpect(jsonPath("$.exercises[0].name").value("Burpee"))
+                .andExpect(jsonPath("$.exercises[0].category").value("GYMNASTICS"))
+                .andExpect(jsonPath("$.exercises[0].measurementType").value("REPS"))
+                .andExpect(jsonPath("$.exercises[0].reps").value(25))
+                .andExpect(jsonPath("$.exercises[0].position").value(1))
+                .andExpect(jsonPath("$.exercises[1].id").value(146))
+                .andExpect(jsonPath("$.exercises[1].reps").value(nullValue()))
+                .andExpect(jsonPath("$.exercises[1].position").value(2));
+    }
+
+    @Test
+    void findById_WhenWodHasNoExercises_ReturnsEmptyArray() throws Exception {
+        given(wodService.findById(13)).willReturn(new WodDetailResponse(
+                13,
+                "Carse",
+                WodType.FOR_TIME,
+                null,
+                null,
+                WodLevel.RX,
+                null,
+                List.of()));
+
+        mockMvc.perform(get("/api/wods/13"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.exercises").isArray())
+                .andExpect(jsonPath("$.exercises").isEmpty());
     }
 
     @Test
