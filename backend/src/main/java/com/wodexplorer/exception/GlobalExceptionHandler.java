@@ -55,6 +55,16 @@ public class GlobalExceptionHandler {
         return conflictResponse();
     }
 
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidCredentials(
+            InvalidCredentialsException exception) {
+        Map<String, Object> error = Map.of(
+                "error", "INVALID_CREDENTIALS",
+                "message", exception.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, Object>> handleDataIntegrityViolation(
             DataIntegrityViolationException exception) {

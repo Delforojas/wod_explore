@@ -77,9 +77,11 @@ class JwtServiceTest {
     @Test
     void isTokenValid_ForManipulatedToken_ReturnsFalse() {
         String token = jwtService.generateToken(TEST_EMAIL);
-        char lastCharacter = token.charAt(token.length() - 1);
-        char replacement = lastCharacter == 'a' ? 'b' : 'a';
-        String manipulatedToken = token.substring(0, token.length() - 1) + replacement;
+        String[] tokenParts = token.split("\\.");
+        char firstSignatureCharacter = tokenParts[2].charAt(0);
+        char replacement = firstSignatureCharacter == 'a' ? 'b' : 'a';
+        String manipulatedSignature = replacement + tokenParts[2].substring(1);
+        String manipulatedToken = tokenParts[0] + "." + tokenParts[1] + "." + manipulatedSignature;
 
         assertThat(jwtService.isTokenValid(manipulatedToken)).isFalse();
     }
