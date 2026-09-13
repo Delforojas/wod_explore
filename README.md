@@ -37,6 +37,12 @@ Docker Compose lee un archivo `.env` local, que está excluido de Git. Define la
 variables siguientes con valores propios y seguros; no copies credenciales reales
 en documentación ni en archivos versionados:
 
+```bash
+cp .env.example .env
+```
+
+Después sustituye los placeholders `change-me` por valores locales aleatorios.
+
 | Variable | Uso |
 | --- | --- |
 | `MYSQL_DATABASE` | Base creada por el contenedor MySQL. |
@@ -48,11 +54,20 @@ en documentación ni en archivos versionados:
 | `DB_PASSWORD` | Contraseña JDBC del backend local. |
 | `JWT_SECRET` | Secreto JWT de al menos 32 bytes. |
 | `JWT_EXPIRATION` | Duración del JWT en milisegundos. |
+| `CORS_ALLOWED_ORIGIN` | Origen del navegador permitido por el backend. |
 | `VITE_API_URL` | URL base opcional del frontend; por defecto `http://localhost:8080/api`. |
 
 Para un backend dentro de Docker, Compose configura `DB_URL` como
 `jdbc:mysql://mysql:3306/wod_explorer`. Para un backend local, MySQL se alcanza
 por `jdbc:mysql://localhost:3307/wod_explorer`.
+
+### Rotación de credenciales locales
+
+Si una contraseña, secreto JWT o cualquier otro valor del `.env` se comparte
+fuera del entorno local, considéralo expuesto: genera valores nuevos, actualiza
+`.env` y reinicia los servicios. No reutilices esos valores en producción ni los
+añadas al historial de Git. El archivo `.env.example` solo contiene placeholders
+que deben sustituirse.
 
 ## Arranque con Docker
 
@@ -66,6 +81,9 @@ Esto inicia:
 
 - MySQL en `localhost:3307`.
 - Backend en `http://localhost:8080`.
+
+El backend espera a que el healthcheck de MySQL confirme que el servidor acepta
+conexiones antes de iniciar.
 
 El volumen `mysql_data` conserva los datos. Los scripts de
 `Docker/mysql/init/` se ejecutan automáticamente solo al inicializar un volumen

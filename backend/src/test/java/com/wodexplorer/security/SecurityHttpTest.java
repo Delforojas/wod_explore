@@ -75,7 +75,8 @@ import io.jsonwebtoken.Jwts;
 })
 @TestPropertySource(properties = {
         "jwt.secret=01234567890123456789012345678901",
-        "jwt.expiration=3600000"
+        "jwt.expiration=3600000",
+        "cors.allowed-origin=http://localhost:4173"
 })
 class SecurityHttpTest {
 
@@ -364,11 +365,11 @@ class SecurityHttpTest {
     @Test
     void api_PreflightFromConfiguredOrigin_IsAllowedWithoutAuthentication() throws Exception {
         mockMvc.perform(options("/api/exercises")
-                        .header("Origin", "http://localhost:5173")
+                        .header("Origin", "http://localhost:4173")
                         .header("Access-Control-Request-Method", "GET")
                         .header("Access-Control-Request-Headers", "Authorization"))
                 .andExpect(status().isOk())
-                .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"))
+                .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:4173"))
                 .andExpect(header().string("Access-Control-Allow-Headers", "Authorization"));
     }
 
