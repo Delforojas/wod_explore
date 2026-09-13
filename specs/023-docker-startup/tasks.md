@@ -31,9 +31,10 @@
   credenciales locales.
 - [x] Ejecutar las verificaciones aplicables y documentar sus resultados.
 - [x] Revisar `git diff` y `git status`, excluyendo cambios ajenos.
-- [ ] Crear el commit específico de la Issue #23 y conservar su hash.
-- [ ] Documentar la Issue #23 con rama, commit, verificaciones y estado abierto
-  pendiente de validación manual.
+- [x] Crear el commit específico de la Issue #23 y conservar su hash:
+  `d07b97b`.
+- [x] Documentar la Issue #23 con rama, commit, verificaciones y estado abierto;
+  la validación manual quedó completada.
 
 ## Resultados de verificación
 
@@ -54,3 +55,4 @@
   y `JWT_SECRET` configurado en `.env`.
 - MCP MySQL: `pong` y tablas existentes accesibles; no se modificó el esquema.
 - `git diff --check`: correcto; `.env` ignorado y no trackeado.
+- Comentario publicado en GitHub: https://github.com/Delforojas/wod_explore/issues/23#issuecomment-5652490836.
