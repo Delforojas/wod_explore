@@ -1,143 +1,214 @@
 # WOD Explorer
 
-WOD Explorer es una aplicación web estática para explorar WODs y ejercicios de
-CrossFit, encontrar entrenamientos, guardar favoritos y revisar sesiones
-realizadas. Utiliza exclusivamente datos locales en JSON y no requiere backend,
-autenticación, base de datos ni APIs externas.
+WOD Explorer es una aplicación web full stack para explorar WODs y ejercicios de
+CrossFit, registrar resultados y consultar el historial, las marcas personales y
+la evolución del rendimiento. El frontend consume el backend REST y MySQL es la
+fuente de verdad de los datos migrados.
 
 ## Stack
 
-- React 19
-- TypeScript en modo estricto
-- Vite
-- Tailwind CSS
-- React Router
-- Zod
-- Vitest y Testing Library
+- Frontend: React 19.2.8, TypeScript estricto, Vite 8.2.2, Zod 4.6.4,
+  Vitest 5.0.0 y ESLint.
+- Estilos: CSS del proyecto en `frontend/src/index.css`.
+- Backend: Java 21, Spring Boot 3.5.5, Spring Web, Spring Security, Spring Data
+  JPA, Jakarta Validation y JWT.
+- Persistencia: MySQL 8.4 mediante Docker Compose.
+- Build backend: Maven Wrapper incluido en `backend/mvnw`.
+
+El frontend actual no declara React Router, Tailwind CSS ni Testing Library como
+dependencias. Usa un router hash local, CSS propio y Vitest para sus tests.
 
 ## Dirección visual
 
-La interfaz sigue la dirección **Pizarra de Intervalos**: superficies oscuras,
-acentos naranja, jerarquía tipográfica marcada y contenido organizado para
-escanear rápidamente. El lenguaje visual busca transmitir energía y rendimiento
-sin adoptar la apariencia de un panel empresarial genérico.
+La interfaz sigue la dirección **Pizarra de Intervalos** definida en `DESIGN.md`:
+superficies de papel, acentos naranja, jerarquía tipográfica marcada y contenido
+organizado para escanear rápidamente. La experiencia es responsive, mobile-first,
+usable mediante teclado y basada en HTML semántico.
 
-La experiencia es mobile-first y responsive, con layouts adaptados a móvil,
-tablet y escritorio. Se utilizan HTML semántico, navegación por teclado, focus
-visible, labels asociados y nombres accesibles para los controles principales.
+## Requisitos
 
-## Instalación
+- Node.js y npm para el frontend.
+- Java 21 para ejecutar el backend localmente.
+- Docker y Docker Compose para MySQL y el backend contenerizado.
 
-Requiere Node.js y npm.
+## Configuración
+
+Docker Compose lee un archivo `.env` local, que está excluido de Git. Define las
+variables siguientes con valores propios y seguros; no copies credenciales reales
+en documentación ni en archivos versionados:
+
+| Variable | Uso |
+| --- | --- |
+| `MYSQL_DATABASE` | Base creada por el contenedor MySQL. |
+| `MYSQL_USER` | Usuario de aplicación creado por MySQL. |
+| `MYSQL_PASSWORD` | Contraseña del usuario de aplicación. |
+| `MYSQL_ROOT_PASSWORD` | Contraseña administrativa requerida por la imagen MySQL. |
+| `DB_URL` | JDBC para ejecutar el backend fuera de Docker. |
+| `DB_USER` | Usuario JDBC del backend local. |
+| `DB_PASSWORD` | Contraseña JDBC del backend local. |
+| `JWT_SECRET` | Secreto JWT de al menos 32 bytes. |
+| `JWT_EXPIRATION` | Duración del JWT en milisegundos. |
+| `VITE_API_URL` | URL base opcional del frontend; por defecto `http://localhost:8080/api`. |
+
+Para un backend dentro de Docker, Compose configura `DB_URL` como
+`jdbc:mysql://mysql:3306/wod_explorer`. Para un backend local, MySQL se alcanza
+por `jdbc:mysql://localhost:3307/wod_explorer`.
+
+## Arranque con Docker
+
+Desde la raíz del repositorio, con `.env` configurado:
 
 ```bash
-npm install
+docker compose up --build
 ```
 
-## Desarrollo
+Esto inicia:
+
+- MySQL en `localhost:3307`.
+- Backend en `http://localhost:8080`.
+
+El volumen `mysql_data` conserva los datos. Los scripts de
+`Docker/mysql/init/` se ejecutan automáticamente solo al inicializar un volumen
+vacío. No uses `docker compose down -v` salvo que quieras borrar explícitamente
+los datos locales.
+
+## Arranque del frontend
+
+En otra terminal:
 
 ```bash
+cd frontend
+npm install
 npm run dev
 ```
 
-Vite mostrará la URL local para abrir la aplicación en el navegador.
+Vite mostrará la URL local, normalmente `http://localhost:5173`. El cliente usa
+`http://localhost:8080/api` por defecto. Para otro origen, define `VITE_API_URL`
+antes de iniciar Vite.
 
-## Tests
+## Ejecución local del backend
+
+Con MySQL disponible y las variables `DB_URL`, `DB_USER`, `DB_PASSWORD`,
+`JWT_SECRET` y `JWT_EXPIRATION` exportadas en el entorno:
+
+```bash
+cd backend
+./mvnw spring-boot:run
+```
+
+Hibernate está configurado con `spring.jpa.hibernate.ddl-auto=none`; el backend
+no crea ni modifica automáticamente el esquema.
+
+## Comandos de verificación
+
+Frontend, desde `frontend/`:
 
 ```bash
 npm test
-```
-
-La suite cubre validación de datos, filtros, búsqueda de WODs, favoritos,
-historial de entrenamientos, persistencia local, estados vacíos y de error,
-catálogos, detalle y navegación.
-
-## Build
-
-```bash
+npm run lint
 npm run build
 ```
 
-También está disponible `npm run lint` para revisar el código. El tipado
-TypeScript se comprueba durante el build.
+Backend, desde `backend/`:
 
-## Funcionalidades actuales
+```bash
+./mvnw validate
+./mvnw test
+./mvnw package
+```
 
-- Consulta de WODs desde `src/data/wods.json`.
-- Búsqueda por nombre con coincidencias parciales, exactas y sin distinguir mayúsculas.
-- Combinación de búsqueda con los filtros `All`, `For Time`, `AMRAP` y `EMOM`.
-- Marcado y desmarcado de favoritos desde las tarjetas y el detalle de cada WOD.
-- Filtro `Solo favoritos`, compatible con búsqueda y filtros de tipo.
-- Vista de detalle de cada WOD con acceso desde los favoritos.
-- Registro de WODs realizados desde su vista de detalle.
-- Fecha local actual o anterior, con rechazo de fechas futuras e inválidas.
-- Resultado y notas opcionales para cada entrenamiento.
-- Historial ordenado de los entrenamientos más recientes a los más antiguos.
-- Eliminación individual de registros sin modificar el WOD ni sus favoritos.
-- Catálogo de ejercicios por categoría.
-- Navegación interna entre Inicio, WODs, Ejercicios e Historial.
-- Estados vacíos diferenciados y errores controlados.
-- Interfaz responsive y accesible mediante teclado.
+## Funcionalidades disponibles
 
-## Arquitectura frontend
+- Registro y login con JWT.
+- Catálogo de WODs con filtros por nombre, tipo y nivel.
+- Detalle de WOD con ejercicios asociados.
+- Catálogo y detalle de ejercicios.
+- Registro y consulta de resultados propios de WODs.
+- Registro, consulta y mejor marca de ejercicios.
+- Historial autenticado de resultados.
+- Estadísticas, marcas personales y evolución.
+- Estados de carga, error, vacío y sesión expirada.
 
-La aplicación está organizada como un frontend React con páginas, componentes
-reutilizables, hooks de estado, utilidades, esquemas Zod y tipos TypeScript.
-Los WODs y ejercicios se cargan desde `src/data/*.json` y se validan antes de
-usarse. Favoritos e historial se guardan únicamente en el navegador mediante
-`localStorage`.
+Favoritos no están disponibles en la arquitectura actual. La Spec 002 describe
+la etapa histórica de favoritos locales y no representa un flujo operativo del
+frontend actual.
 
-## Favoritos locales
+## Rutas del frontend
 
-Los favoritos se guardan en el navegador mediante `localStorage`, usando la
-clave estable `wod-explorer:favorites`. Solo se almacenan los identificadores
-de los WODs, nunca los objetos completos.
+El frontend usa `window.location.hash` y un router local; no usa React Router.
 
-Al recuperar los datos, la aplicación valida el contenido, elimina IDs
-duplicados y descarta IDs que ya no existan en el catálogo. Si el almacenamiento
-está vacío, corrupto o tiene una estructura inválida, la aplicación continúa
-funcionando y utiliza una lista vacía.
+| Ruta hash | Vista |
+| --- | --- |
+| `#/` | Inicio |
+| `#/login` | Inicio de sesión |
+| `#/register` | Registro |
+| `#/wods` | Catálogo de WODs |
+| `#/wods/:id` | Detalle de WOD |
+| `#/exercises` | Catálogo de ejercicios |
+| `#/exercises/:id` | Detalle de ejercicio |
+| `#/history` | Historial autenticado |
+| `#/statistics` | Estadísticas y evolución |
 
-## Historial de entrenamientos
+## API REST actual
 
-Desde el detalle de un WOD se puede registrar un entrenamiento realizado indicando
-su fecha, un resultado opcional y notas opcionales. La fecha propuesta es la fecha
-local actual; también se permiten fechas anteriores, pero no fechas futuras ni
-fechas inválidas. Los campos de texto se recortan y los valores vacíos no se
-guardan.
+Todas las rutas bajo `/api/**` requieren JWT salvo el registro y el login.
 
-El historial está disponible en `/history`. Sus entradas muestran el nombre y tipo
-del WOD, la fecha, el resultado y las notas cuando existen. Cada registro es
-independiente, por lo que el mismo WOD puede registrarse varias veces, incluso el
-mismo día. Las entradas se ordenan desde la más reciente a la más antigua y pueden
-eliminarse individualmente.
+| Método y ruta | Uso |
+| --- | --- |
+| `POST /api/users` | Registrar usuario, público. |
+| `POST /api/auth/login` | Iniciar sesión, público. |
+| `GET /api/users/me` | Obtener usuario autenticado. |
+| `GET /api/users/me/history` | Obtener historial propio. |
+| `GET /api/users/me/statistics` | Obtener estadísticas y marcas personales. |
+| `GET /api/users/me/evolution` | Obtener evolución. |
+| `GET /api/wods` | Listar WODs con filtros opcionales `name`, `type` y `level`. |
+| `GET /api/wods/{id}` | Obtener detalle de WOD. |
+| `POST /api/wods/{wodId}/results` | Registrar resultado WOD propio. |
+| `GET /api/wods/{wodId}/results` | Listar resultados WOD propios. |
+| `GET /api/exercises` | Listar ejercicios. |
+| `GET /api/exercises/{id}` | Obtener detalle de ejercicio. |
+| `POST /api/exercises/{exerciseId}/results` | Registrar marca propia. |
+| `GET /api/exercises/{exerciseId}/results` | Listar marcas propias. |
+| `GET /api/exercises/{exerciseId}/results/best` | Obtener mejor marca propia, con `recordType` opcional. |
+| `POST /api/exercises` | Crear ejercicio; existe en backend, pero no tiene flujo frontend. |
+| `PUT /api/exercises/{id}` | Actualizar ejercicio; existe en backend, pero no tiene flujo frontend. |
+| `DELETE /api/exercises/{id}` | Eliminar ejercicio; existe en backend, pero no tiene flujo frontend. |
 
-El historial se guarda en el navegador mediante `localStorage`, usando la clave
-estable `wod-explorer:workout-history`. Solo se almacena el `wodId` junto con los
-datos del registro, no una copia completa del WOD. Al cargar la aplicación, los
-datos se validan con Zod; si el JSON está corrupto, tiene una estructura inválida,
-IDs duplicados o fechas no válidas, se recupera un historial vacío sin romper la
-aplicación. Si un WOD ya no existe en el catálogo, su registro se conserva y se
-indica que no está disponible, sin crear un enlace inexistente.
+No existe actualmente `GET /api/health`. Su implementación pertenece a una
+Issue posterior.
 
-## Rutas
+## Fuente de verdad
 
-- `/`: Inicio.
-- `/wods`: catálogo de WODs.
-- `/wods/:id`: detalle de un WOD.
-- `/exercises`: catálogo de ejercicios.
-- `/history`: historial local de entrenamientos.
+- WODs, ejercicios, usuarios y resultados: MySQL mediante el backend.
+- Contratos de respuestas frontend: schemas Zod en `frontend/src/api/schemas.ts`.
+- Acceso HTTP: `frontend/src/api/client.ts`.
+- JWT de sesión: `sessionStorage`, clave `wod-explorer.jwt`.
+- JSON históricos descritos por las Specs 001–004: datos de la versión inicial,
+  no fuente activa para las funcionalidades migradas.
+- `localStorage`: no almacena catálogo, historial, resultados ni estadísticas.
 
-## Estructura básica
+## Estructura
 
 ```text
-src/
-  components/   Componentes de interfaz reutilizables
-  data/         Datos locales JSON
-  hooks/        Estado reutilizable de React
-  lib/          Carga, validación y utilidades
-  pages/        Páginas y vistas de rutas
-  schemas/      Esquemas de validación Zod
-  types/        Tipos TypeScript
-tests/          Tests de lógica, datos y componentes
+backend/
+  src/main/java/com/wodexplorer/
+    controller/   Endpoints REST
+    service/      Lógica de aplicación
+    repository/   Acceso JPA
+    entity/       Modelo de persistencia
+    dto/          Contratos HTTP
+    security/     Filtro JWT y errores de seguridad
+frontend/
+  src/api/        Cliente HTTP y schemas Zod
+  src/auth/       Sesión y contexto de autenticación
+  src/app/        Router hash local
+  src/pages/      Vistas de la aplicación
+  src/components/ Componentes de interfaz
+  src/index.css   Estilos responsive y dirección visual
+Docker/mysql/init/ Scripts de inicialización MySQL
+specs/            Specs funcionales e históricas
 ```
+
+Las Specs 001–004 documentan etapas previas basadas en JSON y `localStorage`.
+Sus requisitos se conservan como historial; la arquitectura operativa actual se
+describe en este README y en `PRODUCT.md`.

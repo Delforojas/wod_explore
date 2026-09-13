@@ -237,3 +237,14 @@ La Spec 001 se considerará completada cuando:
 9. El lint pase correctamente.
 
 10. `npm run build` finalice correctamente.
+
+## Nota de transición arquitectónica
+
+Esta Spec describe la primera etapa histórica de WOD Explorer, cuando el producto
+era un frontend local basado en JSON y sin backend. Sus requisitos funcionales se
+conservan sin reescritura para documentar esa etapa.
+
+Después de las Specs posteriores y, especialmente, de la Issue #21, el estado
+operativo actual utiliza frontend React, backend Spring Boot, JWT y MySQL. Los
+JSON de esta Spec ya no son la fuente de verdad activa para las funcionalidades
+migradas. La arquitectura vigente se documenta en `PRODUCT.md` y `README.md`.
