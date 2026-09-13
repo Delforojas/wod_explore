@@ -38,6 +38,6 @@
 - [x] Revisar `git diff` y `git status`, incluyendo exclusión explícita de
   cambios ajenos.
 - [x] Ejecutar las verificaciones aplicables y documentar sus resultados.
-- [ ] Crear el commit específico de la Issue #22 y conservar su hash.
-- [ ] Documentar la Issue #22 con la rama, commit, verificaciones y estado
+- [x] Crear el commit específico de la Issue #22 y conservar su hash.
+- [x] Documentar la Issue #22 con la rama, commit, verificaciones y estado
   posterior.
