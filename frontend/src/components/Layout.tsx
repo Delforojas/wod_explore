@@ -18,8 +18,13 @@ const navigation = [
 export function Layout({ children, currentPage }: LayoutProps) {
   const { user, logout } = useAuth();
 
+  function isCurrentPage(path: string) {
+    return currentPage === path.slice(1) || (path === "/" && currentPage === "home");
+  }
+
   return (
     <div className="app-shell">
+      <a className="skip-link" href="#main-content">Saltar al contenido</a>
       <header className="topbar">
         <a className="brand" href="#/">
           <span className="brand-mark" aria-hidden="true">W</span>
@@ -53,21 +58,27 @@ export function Layout({ children, currentPage }: LayoutProps) {
           <span className="nav-caption">Archivo de entrenamiento</span>
           {navigation.map(([label, path]) => (
             <a
-              className={`nav-link ${currentPage === path.slice(1) || (path === "/" && currentPage === "home") ? "nav-link--active" : ""}`}
+              className={`nav-link ${isCurrentPage(path) ? "nav-link--active" : ""}`}
               key={path}
               href={`#${path}`}
+              aria-current={isCurrentPage(path) ? "page" : undefined}
             >
               <span>{label}</span>
               <span aria-hidden="true">-&gt;</span>
             </a>
           ))}
         </nav>
-        <main className="page-content">{children}</main>
+        <main className="page-content" id="main-content" tabIndex={-1}>{children}</main>
       </div>
 
       <nav className="bottom-nav" aria-label="Navegación móvil">
         {navigation.map(([label, path]) => (
-          <a key={path} href={`#${path}`}>
+          <a
+            className={`bottom-nav__link ${isCurrentPage(path) ? "bottom-nav__link--active" : ""}`}
+            key={path}
+            href={`#${path}`}
+            aria-current={isCurrentPage(path) ? "page" : undefined}
+          >
             <span>{label}</span>
           </a>
         ))}

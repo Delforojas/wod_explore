@@ -17,6 +17,8 @@ describe("Layout", () => {
   it("shows public authentication actions when there is no session", () => {
     renderWithAuth(<Layout currentPage="home"><p>Contenido</p></Layout>);
 
+    expect(screen.getByRole("link", { name: "Saltar al contenido" }).getAttribute("href")).toBe("#main-content");
+    expect(screen.getByRole("main").getAttribute("id")).toBe("main-content");
     expect(screen.getByRole("link", { name: "Entrar" }).getAttribute("href")).toBe("#/login");
     expect(screen.getByRole("link", { name: "Crear cuenta" }).getAttribute("href")).toBe("#/register");
     const primaryNavigation = screen.getByRole("navigation", { name: "Navegación principal" });
@@ -36,5 +38,15 @@ describe("Layout", () => {
     expect(screen.getByRole("link", { name: "Abrir perfil de Delfin" }).getAttribute("aria-current")).toBe("page");
     await user.click(screen.getByRole("button", { name: "Salir" }));
     expect(logout).toHaveBeenCalledOnce();
+  });
+
+  it("marks the active destination in desktop and mobile navigation", () => {
+    renderWithAuth(<Layout currentPage="wods"><p>Contenido</p></Layout>);
+
+    const primaryNavigation = screen.getByRole("navigation", { name: "Navegación principal" });
+    const mobileNavigation = screen.getByRole("navigation", { name: "Navegación móvil" });
+    expect(within(primaryNavigation).getByRole("link", { name: "WODs" }).getAttribute("aria-current")).toBe("page");
+    expect(within(mobileNavigation).getByRole("link", { name: "WODs" }).getAttribute("aria-current")).toBe("page");
+    expect(within(primaryNavigation).getByRole("link", { name: "Inicio" }).getAttribute("aria-current")).toBeNull();
   });
 });
