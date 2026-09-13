@@ -13,6 +13,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import com.wodexplorer.entity.User;
 import com.wodexplorer.entity.Wod;
@@ -77,6 +80,30 @@ class WodResultRepositoryTest extends MySqlIntegrationTest {
         assertThat(results).extracting(WodResult::getId)
                 .containsExactly(olderResult.getId(), newerResult.getId());
         assertThat(Hibernate.isInitialized(results.getFirst().getWod())).isTrue();
+    }
+
+    @Test
+    void findByUserPage_ReturnsRequestedSliceWithStableMetadata() {
+        User user = persistUser();
+        Wod wod = persistWod();
+        LocalDateTime older = LocalDateTime.of(2026, 9, 10, 10, 0);
+        LocalDateTime newer = LocalDateTime.of(2026, 9, 12, 10, 0);
+        WodResult oldest = persistResult(user, wod, older, 400);
+        persistResult(user, wod, newer, 300);
+        entityManager.flush();
+        entityManager.clear();
+
+        Page<WodResult> result = wodResultRepository.findByUser_Id(
+                user.getId(),
+                PageRequest.of(1, 1, Sort.by(
+                        Sort.Order.desc("completedAt"), Sort.Order.desc("id"))));
+
+        assertThat(result.getContent()).extracting(WodResult::getId)
+                .containsExactly(oldest.getId());
+        assertThat(result.getTotalElements()).isEqualTo(2);
+        assertThat(result.getTotalPages()).isEqualTo(2);
+        assertThat(result.hasNext()).isFalse();
+        assertThat(Hibernate.isInitialized(result.getContent().getFirst().getWod())).isTrue();
     }
 
     private User persistUser() {

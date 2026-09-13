@@ -3,6 +3,8 @@ package com.wodexplorer.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -16,6 +18,9 @@ public interface ExerciseResultRepository extends JpaRepository<ExerciseResult, 
             Integer exerciseId);
 
     List<ExerciseResult> findByUser_IdOrderByPerformedAtDescIdDesc(Integer userId);
+
+    @EntityGraph(attributePaths = "exercise")
+    Page<ExerciseResult> findByUser_Id(Integer userId, Pageable pageable);
 
     @EntityGraph(attributePaths = "exercise")
     List<ExerciseResult> findByUser_IdOrderByPerformedAtAscIdAsc(Integer userId);

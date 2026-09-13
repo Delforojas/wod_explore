@@ -25,6 +25,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import java.util.List;
 
 import com.wodexplorer.dto.UserHistoryResponse;
+import com.wodexplorer.dto.PageResponse;
 import com.wodexplorer.dto.UserResponse;
 import com.wodexplorer.exception.EmailAlreadyExistsException;
 import com.wodexplorer.exception.GlobalExceptionHandler;
@@ -178,18 +179,34 @@ class UserControllerTest {
 
     @Test
     void currentUserHistory_ReturnsSeparateResultCollections() throws Exception {
-        given(userHistoryService.findOwnHistory("athlete@example.com"))
-                .willReturn(new UserHistoryResponse(List.of(), List.of()));
+        given(userHistoryService.findOwnHistory("athlete@example.com", 0, 20))
+                .willReturn(emptyHistory());
 
         mockMvc.perform(get("/api/users/me/history")
                         .principal(authenticatedUser())
                         .queryParam("userId", "999"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.wodResults").isEmpty())
-                .andExpect(jsonPath("$.exerciseResults").isEmpty())
+                .andExpect(jsonPath("$.wodResults.items").isEmpty())
+                .andExpect(jsonPath("$.exerciseResults.items").isEmpty())
                 .andExpect(jsonPath("$.userId").doesNotExist());
 
-        then(userHistoryService).should().findOwnHistory("athlete@example.com");
+        then(userHistoryService).should().findOwnHistory("athlete@example.com", 0, 20);
+    }
+
+    @Test
+    void currentUserHistory_WithNegativePage_ReturnsBadRequest() throws Exception {
+        mockMvc.perform(get("/api/users/me/history")
+                        .principal(authenticatedUser())
+                        .param("page", "-1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.details.page").exists());
+    }
+
+    private UserHistoryResponse emptyHistory() {
+        return new UserHistoryResponse(
+                new PageResponse<>(List.of(), 0, 20, 0, 0, false),
+                new PageResponse<>(List.of(), 0, 20, 0, 0, false));
     }
 
     private UsernamePasswordAuthenticationToken authenticatedUser() {

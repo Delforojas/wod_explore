@@ -54,6 +54,7 @@ CREATE TABLE wod_results (
     PRIMARY KEY (id),
     KEY user_id (user_id),
     KEY wod_id (wod_id),
+    KEY wod_results_user_completed_id_idx (user_id, completed_at, id),
     CONSTRAINT wod_results_user_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     CONSTRAINT wod_results_wod_fk FOREIGN KEY (wod_id) REFERENCES wods (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -69,6 +70,7 @@ CREATE TABLE exercise_results (
     PRIMARY KEY (id),
     KEY user_id (user_id),
     KEY exercise_id (exercise_id),
+    KEY exercise_results_user_performed_id_idx (user_id, performed_at, id),
     CONSTRAINT exercise_results_user_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     CONSTRAINT exercise_results_exercise_fk FOREIGN KEY (exercise_id) REFERENCES exercises (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

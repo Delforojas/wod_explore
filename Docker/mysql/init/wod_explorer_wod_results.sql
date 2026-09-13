@@ -34,6 +34,7 @@ CREATE TABLE `wod_results` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `wod_id` (`wod_id`),
+  KEY `wod_results_user_completed_id_idx` (`user_id`, `completed_at`, `id`),
   CONSTRAINT `wod_results_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `wod_results_ibfk_2` FOREIGN KEY (`wod_id`) REFERENCES `wods` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

@@ -71,8 +71,10 @@ h2 { color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-siz
 
 .page-heading, .detail-heading { align-items: end; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; margin-bottom: 28px; padding-bottom: 26px; }
 .page-heading h1, .detail-heading h1 { margin-bottom: 0; }
-.search-field { color: var(--ink-soft); display: block; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; margin-bottom: 26px; text-transform: uppercase; }
+.search-field { align-items: end; color: var(--ink-soft); display: grid; font-size: 11px; font-weight: 800; gap: 12px; grid-template-columns: minmax(0, 1fr) auto; letter-spacing: 0.08em; margin-bottom: 26px; text-transform: uppercase; }
+.search-field label { grid-column: 1 / -1; }
 .search-field input, .filter-strip input, .filter-strip select { background: var(--white); border: 1px solid var(--line); color: var(--ink); display: block; font-size: 15px; margin-top: 8px; padding: 13px 14px; text-transform: none; width: 100%; }
+.search-field input { margin-top: 0; }
 .catalog-list { border-top: 1px solid var(--ink); }
 .catalog-row { align-items: center; border-bottom: 1px solid var(--line); color: var(--ink); display: grid; gap: 18px; grid-template-columns: 50px minmax(0, 1fr) 150px 28px; padding: 20px 4px; text-align: left; text-decoration: none; width: 100%; }
 .catalog-row:hover { background: rgba(239, 91, 37, 0.08); padding-inline: 12px; }
@@ -139,6 +141,9 @@ h2 { color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-siz
 .history-row strong, .record-row strong { font-size: 14px; }
 .history-row small, .record-row small { color: var(--ink-soft); font-size: 11px; }
 .history-row b, .record-row b { font-family: Georgia, serif; font-size: 19px; font-weight: 400; text-align: right; }
+.pagination-controls { align-items: center; border-top: 1px solid var(--line); display: flex; justify-content: space-between; margin-top: 30px; padding-top: 18px; }
+.pagination-controls .button { margin-top: 0; }
+.pagination-status { color: var(--ink-soft); font-size: 12px; font-weight: 750; }
 .stat-strip { border-bottom: 1px solid var(--ink); border-top: 1px solid var(--ink); display: grid; grid-template-columns: repeat(3, 1fr); margin-bottom: 42px; }
 .stat-value { border-right: 1px solid var(--line); display: flex; flex-direction: column; gap: 5px; padding: 20px 14px 20px 0; }
 .stat-value:last-child { border-right: 0; padding-left: 14px; }
@@ -187,6 +192,9 @@ h2 { color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-siz
   .feature-panel--dark { grid-row: auto; min-height: 300px; }
   .feature-panel { min-height: 190px; }
   .filter-strip { grid-template-columns: 1fr; }
+  .search-field { grid-template-columns: 1fr; }
+  .search-field label { grid-column: auto; }
+  .search-field .button { width: 100%; }
   .catalog-row { gap: 9px; grid-template-columns: 34px minmax(0, 1fr) 24px; padding-block: 17px; }
   .row-meta { display: none; }
   .row-main strong { font-size: 20px; }

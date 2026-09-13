@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { ApiError, getCurrentUser, getStatistics } from "./client";
+import { ApiError, getCurrentUser, getExercises, getHistory, getStatistics, getWods } from "./client";
 import { statisticsSchema } from "./schemas";
 
 describe("API client", () => {
@@ -70,6 +70,61 @@ describe("API client", () => {
 
     await expect(getStatistics("expired-token")).rejects.toMatchObject({ status: 401 });
     expect(expiredSession).toHaveBeenCalledOnce();
+  });
+
+  it("requests a filtered WOD page with explicit pagination", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      items: [],
+      page: 2,
+      size: 5,
+      totalElements: 0,
+      totalPages: 0,
+      hasNext: false,
+    }), { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(getWods(
+      { name: "Fran", type: "FOR_TIME", level: "RX" },
+      "token-page",
+      { page: 2, size: 5 },
+    )).resolves.toMatchObject({ page: 2, size: 5 });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "http://localhost:8080/api/wods?page=2&size=5&name=Fran&type=FOR_TIME&level=RX",
+      expect.objectContaining({ headers: expect.any(Headers) }),
+    );
+  });
+
+  it("sends exercise search to the paginated API", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      items: [],
+      page: 0,
+      size: 20,
+      totalElements: 0,
+      totalPages: 0,
+      hasNext: false,
+    }), { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await getExercises("token-exercises", { name: "snatch" });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "http://localhost:8080/api/exercises?page=0&size=20&name=snatch",
+      expect.objectContaining({ headers: expect.any(Headers) }),
+    );
+  });
+
+  it("validates independent paginated history collections", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      wodResults: { items: [], page: 1, size: 10, totalElements: 0, totalPages: 0, hasNext: false },
+      exerciseResults: { items: [], page: 1, size: 10, totalElements: 0, totalPages: 0, hasNext: false },
+    }), { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(getHistory("token-history", { page: 1, size: 10 })).resolves.toMatchObject({
+      wodResults: { page: 1, size: 10 },
+      exerciseResults: { page: 1, size: 10 },
+    });
   });
 });
 

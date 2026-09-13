@@ -33,6 +33,7 @@ CREATE TABLE `exercise_results` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `exercise_id` (`exercise_id`),
+  KEY `exercise_results_user_performed_id_idx` (`user_id`, `performed_at`, `id`),
   CONSTRAINT `exercise_results_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
   CONSTRAINT `exercise_results_ibfk_2` FOREIGN KEY (`exercise_id`) REFERENCES `exercises` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

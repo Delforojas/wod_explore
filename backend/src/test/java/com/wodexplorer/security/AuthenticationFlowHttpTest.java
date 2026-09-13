@@ -37,6 +37,7 @@ import com.wodexplorer.controller.AuthController;
 import com.wodexplorer.controller.ExerciseController;
 import com.wodexplorer.controller.UserController;
 import com.wodexplorer.entity.User;
+import com.wodexplorer.dto.PageResponse;
 import com.wodexplorer.exception.GlobalExceptionHandler;
 import com.wodexplorer.repository.UserRepository;
 import com.wodexplorer.service.AuthService;
@@ -113,12 +114,12 @@ class AuthenticationFlowHttpTest {
         User registeredUser = captureRegisteredUser();
         assertThat(passwordEncoder.matches(PASSWORD, registeredUser.getPasswordHash())).isTrue();
         given(userRepository.findByEmail(EMAIL)).willReturn(Optional.of(registeredUser));
-        given(exerciseService.findAll()).willAnswer(invocation -> {
+        given(exerciseService.findAll(null, 0, 20)).willAnswer(invocation -> {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             assertThat(authentication).isNotNull();
             assertThat(authentication.getPrincipal()).isEqualTo(EMAIL);
             assertThat(authentication.getAuthorities()).isEmpty();
-            return List.of();
+            return new PageResponse<>(List.of(), 0, 20, 0, 0, false);
         });
 
         String loginResponse = mockMvc.perform(post("/api/auth/login")
@@ -144,7 +145,7 @@ class AuthenticationFlowHttpTest {
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk());
 
-        then(exerciseService).should().findAll();
+        then(exerciseService).should().findAll(null, 0, 20);
     }
 
     private User captureRegisteredUser() {

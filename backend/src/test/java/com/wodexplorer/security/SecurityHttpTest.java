@@ -39,6 +39,7 @@ import com.wodexplorer.config.CorsConfig;
 import com.wodexplorer.config.JwtConfiguration;
 import com.wodexplorer.config.SecurityConfig;
 import com.wodexplorer.dto.ExerciseResponse;
+import com.wodexplorer.dto.PageResponse;
 import com.wodexplorer.controller.AuthController;
 import com.wodexplorer.controller.ExerciseController;
 import com.wodexplorer.controller.ExerciseResultController;
@@ -123,7 +124,8 @@ class SecurityHttpTest {
 
     @BeforeEach
     void setUp() {
-        given(exerciseService.findAll()).willReturn(List.of());
+        given(exerciseService.findAll(null, 0, 20))
+                .willReturn(new PageResponse<>(List.of(), 0, 20, 0, 0, false));
         given(authService.login(any())).willReturn(new LoginResponse("test-token"));
         given(userService.register(any())).willReturn(new UserResponse(
                 1, "Delfin", "Rojas", TEST_EMAIL, null));
@@ -178,7 +180,7 @@ class SecurityHttpTest {
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk());
 
-        then(exerciseService).should().findAll();
+        then(exerciseService).should().findAll(null, 0, 20);
     }
 
     @Test
@@ -277,14 +279,15 @@ class SecurityHttpTest {
 
     @Test
     void wods_WithValidJwt_AllowsCatalogAccess() throws Exception {
-        given(wodService.findAll(null, null, null)).willReturn(List.of());
+        given(wodService.findAll(null, null, null, 0, 20))
+                .willReturn(new PageResponse<>(List.of(), 0, 20, 0, 0, false));
         String token = jwtService.generateToken(TEST_EMAIL);
 
         mockMvc.perform(get("/api/wods")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk());
 
-        then(wodService).should().findAll(null, null, null);
+        then(wodService).should().findAll(null, null, null, 0, 20);
     }
 
     @Test
@@ -368,17 +371,19 @@ class SecurityHttpTest {
 
     @Test
     void currentUserHistory_WithValidJwt_UsesJwtSubject() throws Exception {
-        given(userHistoryService.findOwnHistory(TEST_EMAIL)).willReturn(
-                new UserHistoryResponse(List.of(), List.of()));
+        given(userHistoryService.findOwnHistory(TEST_EMAIL, 0, 20)).willReturn(
+                new UserHistoryResponse(
+                        new PageResponse<>(List.of(), 0, 20, 0, 0, false),
+                        new PageResponse<>(List.of(), 0, 20, 0, 0, false)));
         String token = jwtService.generateToken(TEST_EMAIL);
 
         mockMvc.perform(get("/api/users/me/history")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.wodResults").isEmpty())
-                .andExpect(jsonPath("$.exerciseResults").isEmpty());
+                .andExpect(jsonPath("$.wodResults.items").isEmpty())
+                .andExpect(jsonPath("$.exerciseResults.items").isEmpty());
 
-        then(userHistoryService).should().findOwnHistory(TEST_EMAIL);
+        then(userHistoryService).should().findOwnHistory(TEST_EMAIL, 0, 20);
     }
 
     @Test

@@ -2,11 +2,14 @@ package com.wodexplorer.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wodexplorer.dto.WodDetailResponse;
 import com.wodexplorer.dto.WodExerciseResponse;
+import com.wodexplorer.dto.PageResponse;
 import com.wodexplorer.dto.WodSummaryResponse;
 import com.wodexplorer.entity.Wod;
 import com.wodexplorer.entity.WodExercise;
@@ -30,13 +33,16 @@ public class WodService {
     }
 
     @Transactional(readOnly = true)
-    public List<WodSummaryResponse> findAll(String name, WodType type, WodLevel level) {
+    public PageResponse<WodSummaryResponse> findAll(
+            String name, WodType type, WodLevel level, int page, int size) {
         String normalizedName = normalizeName(name);
 
-        return wodRepository.findByFilters(normalizedName, type, level)
-                .stream()
-                .map(this::toSummaryResponse)
-                .toList();
+        return PageResponse.from(wodRepository.findByFilters(
+                normalizedName,
+                type,
+                level,
+                PageRequest.of(page, size, Sort.by(Sort.Order.asc("id"))))
+                .map(this::toSummaryResponse));
     }
 
     @Transactional(readOnly = true)

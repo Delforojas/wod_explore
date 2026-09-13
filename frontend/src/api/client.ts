@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import {
   apiErrorSchema,
+  exercisePageSchema,
   exerciseResultSchema,
   exerciseSchema,
   evolutionSchema,
@@ -10,13 +11,18 @@ import {
   statisticsSchema,
   userSchema,
   wodDetailSchema,
+  wodPageSchema,
   wodResultSchema,
-  wodSummarySchema,
   type ExerciseResultRequest,
   type LoginRequest,
   type RegisterRequest,
   type WodResultRequest,
 } from "./schemas";
+
+interface PaginationOptions {
+  page?: number;
+  size?: number;
+}
 
 const API_BASE_URL = (import.meta.env.VITE_API_URL ?? "http://localhost:8080/api").replace(
   /\/$/,
@@ -110,21 +116,36 @@ export function getCurrentUser(token: string) {
   return request("/users/me", userSchema, {}, token);
 }
 
-export function getExercises(token: string) {
-  return request("/exercises", z.array(exerciseSchema), {}, token);
+export function getExercises(
+  token: string,
+  filters: { name?: string } = {},
+  pagination: PaginationOptions = {},
+) {
+  const params = new URLSearchParams({
+    page: String(pagination.page ?? 0),
+    size: String(pagination.size ?? 20),
+  });
+  if (filters.name) params.set("name", filters.name);
+  return request(`/exercises?${params.toString()}`, exercisePageSchema, {}, token);
 }
 
 export function getExercise(id: number, token: string) {
   return request(`/exercises/${id}`, exerciseSchema, {}, token);
 }
 
-export function getWods(filters: { name?: string; type?: string; level?: string } = {}, token: string) {
-  const params = new URLSearchParams();
+export function getWods(
+  filters: { name?: string; type?: string; level?: string } = {},
+  token: string,
+  pagination: PaginationOptions = {},
+) {
+  const params = new URLSearchParams({
+    page: String(pagination.page ?? 0),
+    size: String(pagination.size ?? 20),
+  });
   if (filters.name) params.set("name", filters.name);
   if (filters.type) params.set("type", filters.type);
   if (filters.level) params.set("level", filters.level);
-  const query = params.toString();
-  return request(`/wods${query ? `?${query}` : ""}`, z.array(wodSummarySchema), {}, token);
+  return request(`/wods?${params.toString()}`, wodPageSchema, {}, token);
 }
 
 export function getWod(id: number, token: string) {
@@ -156,8 +177,12 @@ export function getBestExerciseResult(id: number, recordType: string, token: str
   );
 }
 
-export function getHistory(token: string) {
-  return request("/users/me/history", historySchema, {}, token);
+export function getHistory(token: string, pagination: PaginationOptions = {}) {
+  const params = new URLSearchParams({
+    page: String(pagination.page ?? 0),
+    size: String(pagination.size ?? 20),
+  });
+  return request(`/users/me/history?${params.toString()}`, historySchema, {}, token);
 }
 
 export function getStatistics(token: string) {

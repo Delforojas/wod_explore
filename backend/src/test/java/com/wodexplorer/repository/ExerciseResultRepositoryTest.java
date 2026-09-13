@@ -14,6 +14,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import com.wodexplorer.entity.Exercise;
 import com.wodexplorer.entity.ExerciseCategory;
@@ -127,6 +130,31 @@ class ExerciseResultRepositoryTest extends MySqlIntegrationTest {
         assertThat(results).extracting(ExerciseResult::getId)
                 .containsExactly(olderResult.getId(), newerResult.getId());
         assertThat(Hibernate.isInitialized(results.getFirst().getExercise())).isTrue();
+    }
+
+    @Test
+    void findByUserPage_ReturnsRequestedSliceWithStableMetadata() {
+        User user = persistUser();
+        Exercise exercise = persistExercise("WEIGHT");
+        LocalDateTime older = LocalDateTime.of(2026, 9, 10, 10, 0);
+        LocalDateTime newer = LocalDateTime.of(2026, 9, 12, 10, 0);
+        ExerciseResult oldest = persistResult(
+                user, exercise, "100.00", ExerciseRecordType.ONE_RM, older);
+        persistResult(user, exercise, "120.00", ExerciseRecordType.ONE_RM, newer);
+        entityManager.flush();
+        entityManager.clear();
+
+        Page<ExerciseResult> result = exerciseResultRepository.findByUser_Id(
+                user.getId(),
+                PageRequest.of(1, 1, Sort.by(
+                        Sort.Order.desc("performedAt"), Sort.Order.desc("id"))));
+
+        assertThat(result.getContent()).extracting(ExerciseResult::getId)
+                .containsExactly(oldest.getId());
+        assertThat(result.getTotalElements()).isEqualTo(2);
+        assertThat(result.getTotalPages()).isEqualTo(2);
+        assertThat(result.hasNext()).isFalse();
+        assertThat(Hibernate.isInitialized(result.getContent().getFirst().getExercise())).isTrue();
     }
 
     private User persistUser() {

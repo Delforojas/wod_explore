@@ -1,12 +1,14 @@
 package com.wodexplorer.service;
 
-import java.util.List;
 import java.util.Locale;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.wodexplorer.dto.ExerciseResultResponse;
+import com.wodexplorer.dto.PageResponse;
 import com.wodexplorer.dto.UserHistoryResponse;
 import com.wodexplorer.dto.WodResultResponse;
 import com.wodexplorer.entity.ExerciseResult;
@@ -34,19 +36,20 @@ public class UserHistoryService {
     }
 
     @Transactional(readOnly = true)
-    public UserHistoryResponse findOwnHistory(String authenticatedEmail) {
+    public UserHistoryResponse findOwnHistory(String authenticatedEmail, int page, int size) {
         User user = findAuthenticatedUser(authenticatedEmail);
 
-        List<WodResultResponse> wodResults = wodResultRepository
-                .findByUser_IdOrderByCompletedAtDescIdDesc(user.getId())
-                .stream()
-                .map(this::toWodResponse)
-                .toList();
-        List<ExerciseResultResponse> exerciseResults = exerciseResultRepository
-                .findByUser_IdOrderByPerformedAtDescIdDesc(user.getId())
-                .stream()
-                .map(this::toExerciseResponse)
-                .toList();
+        PageResponse<WodResultResponse> wodResults = PageResponse.from(wodResultRepository.findByUser_Id(
+                user.getId(),
+                PageRequest.of(page, size, Sort.by(
+                        Sort.Order.desc("completedAt"), Sort.Order.desc("id"))))
+                .map(this::toWodResponse));
+        PageResponse<ExerciseResultResponse> exerciseResults = PageResponse.from(
+                exerciseResultRepository.findByUser_Id(
+                        user.getId(),
+                        PageRequest.of(page, size, Sort.by(
+                                Sort.Order.desc("performedAt"), Sort.Order.desc("id"))))
+                .map(this::toExerciseResponse));
 
         return new UserHistoryResponse(wodResults, exerciseResults);
     }

@@ -2,12 +2,15 @@ package com.wodexplorer.service;
 import com.wodexplorer.entity.Exercise;
 import com.wodexplorer.repository.ExerciseRepository;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.wodexplorer.exception.ExerciseNotFoundException;
 
 import com.wodexplorer.dto.ExerciseRequest;
+import com.wodexplorer.dto.PageResponse;
 import com.wodexplorer.dto.ExerciseResponse;
 
 @Service
@@ -20,17 +23,15 @@ public class ExerciseService {
         this.exerciseRepository = exerciseRepository;
     }
 
-    public List<ExerciseResponse> findAll() {
+    @Transactional(readOnly = true)
+    public PageResponse<ExerciseResponse> findAll(String name, int page, int size) {
+        String normalizedName = normalizeName(name);
 
-    return exerciseRepository.findAll()
-
-            .stream()
-
-            .map(this::toResponse)
-
-            .toList();
-
-}
+        return PageResponse.from(exerciseRepository.findByNameFilter(
+                normalizedName,
+                PageRequest.of(page, size, Sort.by(Sort.Order.asc("id"))))
+                .map(this::toResponse));
+    }
 
     public ExerciseResponse findById(Integer id) {
 
@@ -82,7 +83,7 @@ public void delete(Integer id) {
     exerciseRepository.delete(exercise);
 
 }
-private ExerciseResponse toResponse(Exercise exercise) {
+    private ExerciseResponse toResponse(Exercise exercise) {
 
     return new ExerciseResponse(
 
@@ -96,5 +97,12 @@ private ExerciseResponse toResponse(Exercise exercise) {
 
     );
 
-}
+    }
+
+    private String normalizeName(String name) {
+        if (name == null || name.isBlank()) {
+            return null;
+        }
+        return name.trim();
+    }
 }
