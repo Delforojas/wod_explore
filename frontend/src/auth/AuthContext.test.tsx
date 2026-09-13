@@ -22,12 +22,13 @@ const currentUser: User = {
 };
 
 function AuthProbe() {
-  const { user, token, isLoading, login: loginUser, register: registerUser, logout } = useAuth();
+  const { user, token, isLoading, sessionExpired, login: loginUser, register: registerUser, logout } = useAuth();
 
   return (
     <div>
       <output>{isLoading ? "cargando" : user?.name ?? "sin sesión"}</output>
       <output>{token ?? "sin token"}</output>
+      <output>{sessionExpired ? "sesión caducada" : "sesión activa"}</output>
       <button type="button" onClick={() => loginUser({ email: currentUser.email, password: "secret" })}>
         iniciar
       </button>
@@ -120,6 +121,7 @@ describe("AuthProvider", () => {
     act(() => window.dispatchEvent(new Event("wod-explorer:session-expired")));
 
     await waitFor(() => expect(screen.getByText("sin sesión")).toBeTruthy());
+    expect(screen.getByText("sesión caducada")).toBeTruthy();
     expect(sessionStorage.getItem("wod-explorer.jwt")).toBeNull();
     expect(window.location.hash).toBe("#/login");
   });

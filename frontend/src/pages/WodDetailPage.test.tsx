@@ -96,8 +96,8 @@ describe("WodDetailPage", () => {
     await user.type(screen.getByLabelText("Tiempo en segundos"), "60");
     await user.click(screen.getByRole("button", { name: "Guardar resultado" }));
 
-    expect(await screen.findByRole("status")).toBeTruthy();
-    expect(screen.getByRole("status").textContent).toBe("Resultado guardado correctamente.");
+    expect(await screen.findByRole("status", { name: "Resultado guardado" })).toBeTruthy();
+    expect(screen.getByText("Resultado guardado correctamente.")).toBeTruthy();
   });
 
   it("sends the AMRAP payload", async () => {

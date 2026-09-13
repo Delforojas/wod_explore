@@ -16,6 +16,7 @@
   --orange: #ef5b25;
   --orange-soft: #f7b28f;
   --navy: #1c3240;
+  --green: #17633d;
   --white: #fffdf8;
 }
 
@@ -104,10 +105,27 @@ h2 { color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-siz
 .filter-strip label, .form-panel label { color: var(--ink-soft); display: block; font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
 .filter-strip label input, .filter-strip label select, .form-panel input, .form-panel select { margin-top: 8px; }
 
-.state-message { background: var(--white); border: 1px solid var(--line); padding: 28px; }
+.state-message { align-items: start; background: var(--white); border: 1px solid var(--line); display: grid; gap: 16px; grid-template-columns: 16px minmax(0, 1fr); min-height: 132px; padding: 24px; }
+.state-message__marker { border: 2px solid currentColor; color: var(--ink-soft); display: block; height: 14px; margin-top: 6px; width: 14px; }
+.state-message__marker--loading { animation: state-message-spin 900ms linear infinite; border-radius: 50%; border-right-color: transparent; color: var(--orange); }
+.state-message__marker--empty { border-style: dashed; }
+.state-message__marker--error { background: var(--orange); border-radius: 50%; border-color: var(--orange); color: var(--orange); }
+.state-message__marker--network-error { border-radius: 2px; color: var(--navy); transform: rotate(45deg); }
+.state-message__marker--private { border-radius: 50% 50% 2px 2px; color: var(--navy); }
+.state-message__marker--session-expired { border-radius: 50%; border-style: double; color: var(--orange); }
+.state-message__marker--success { border-color: var(--green); border-radius: 50%; border-width: 4px; color: var(--green); }
+.state-message__content { min-width: 0; }
 .state-message h2 { margin-bottom: 8px; }
 .state-message p { color: var(--ink-soft); line-height: 1.5; margin-bottom: 0; }
+.state-message--loading { background: var(--paper-deep); border-style: dashed; }
 .state-message--error { border-color: var(--orange); }
+.state-message--network-error { border-color: var(--navy); }
+.state-message--private { border-color: var(--navy); }
+.state-message--session-expired { border-color: var(--orange); }
+.state-message--success { border-color: var(--green); }
+.form-panel > .state-message { min-height: 0; padding: 16px; }
+.history-column > .state-message, .record-column > .state-message, .evolution-grid section > .state-message { background: transparent; border-width: 0 0 1px; min-height: 0; padding: 18px 0; }
+@keyframes state-message-spin { to { transform: rotate(360deg); } }
 .auth-page { display: grid; gap: clamp(36px, 8vw, 120px); grid-template-columns: minmax(0, 1fr) minmax(300px, 440px); margin: 7vh auto; max-width: 920px; }
 .auth-copy p:last-child { color: var(--ink-soft); line-height: 1.5; max-width: 34ch; }
 .form-panel { background: var(--white); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 17px; padding: 28px; }
@@ -115,7 +133,6 @@ h2 { color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-siz
 .form-heading span { color: var(--orange); font-size: 10px; font-weight: 800; letter-spacing: 0.13em; text-transform: uppercase; }
 .form-heading strong { color: var(--ink); font-family: Georgia, serif; font-size: 28px; font-weight: 400; letter-spacing: -0.04em; }
 .form-panel input, .form-panel select { background: var(--paper); border: 1px solid var(--line); color: var(--ink); display: block; font-size: 15px; padding: 12px; width: 100%; }
-.form-error { color: #b3261e; font-size: 13px; line-height: 1.4; margin: 0; }
 .form-switch { align-self: center; color: var(--ink-soft); }
 
 .back-link { margin-bottom: 30px; }
@@ -149,8 +166,6 @@ h2 { color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-siz
 .form-field { display: grid; gap: 8px; }
 .form-field label { margin: 0; }
 .form-field input, .form-field select { margin: 0; }
-.form-error, .form-success { line-height: 1.4; }
-.form-success { color: #17633d; font-size: 13px; margin: 0; }
 .result-list { margin-top: 0; }
 .section-heading { align-items: baseline; border-bottom: 1px solid var(--ink); display: flex; justify-content: space-between; margin-bottom: 0; padding-bottom: 12px; }
 .section-heading h2 { font-size: 25px; margin: 0; }

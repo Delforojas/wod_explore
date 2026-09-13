@@ -10,6 +10,7 @@ export function createAuthValue(overrides: Partial<AuthContextValue> = {}): Auth
     user: null,
     token: null,
     isLoading: false,
+    sessionExpired: false,
     login: async () => undefined,
     register: async () => undefined,
     logout: () => undefined,

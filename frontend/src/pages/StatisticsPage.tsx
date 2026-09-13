@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { getEvolution, getStatistics } from "../api/client";
 import { useAuth } from "../auth/useAuth";
 import { LoadingMessage, StateMessage } from "../components/StateMessage";
+import { getErrorStateKind } from "../components/stateMessageUtils";
 import type { UserEvolution, UserStatistics } from "../api/schemas";
 
 export function StatisticsPage() {
@@ -11,6 +12,7 @@ export function StatisticsPage() {
   const [evolution, setEvolution] = useState<UserEvolution | null>(null);
   const [loadedToken, setLoadedToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [errorKind, setErrorKind] = useState<"error" | "network-error">("error");
 
   useEffect(() => {
     if (!token) return;
@@ -22,14 +24,18 @@ export function StatisticsPage() {
         setStatistics(loadedStatistics);
         setEvolution(loadedEvolution);
       })
-      .catch((caughtError: Error) => { if (active) setError(caughtError.message); })
+      .catch((caughtError: unknown) => {
+        if (!active) return;
+        setError(caughtError instanceof Error ? caughtError.message : "No se pudieron cargar tus estadísticas.");
+        setErrorKind(getErrorStateKind(caughtError));
+      })
       .finally(() => { if (active) setLoadedToken(token); });
     return () => { active = false; };
   }, [token]);
 
-  if (!token) return <StateMessage title="Tus marcas son privadas" message="Inicia sesión para consultar estadísticas y evolución." action={{ label: "Entrar", href: "#/login" }} />;
+  if (!token) return <StateMessage kind="private" title="Tus marcas son privadas" message="Inicia sesión para consultar estadísticas y evolución." action={{ label: "Entrar", href: "#/login" }} />;
   if (token && loadedToken !== token) return <LoadingMessage />;
-  if (error || !statistics || !evolution) return <StateMessage title="No pudimos cargar tus estadísticas" message={error ?? "Inténtalo de nuevo."} tone="error" action={{ label: "Reintentar", onClick: () => window.location.reload() }} />;
+  if (error || !statistics || !evolution) return <StateMessage kind={errorKind} title={errorKind === "network-error" ? "No hay conexión con tus estadísticas" : "No pudimos cargar tus estadísticas"} message={error ?? "Inténtalo de nuevo."} action={{ label: "Reintentar", onClick: () => window.location.reload() }} />;
 
   return (
     <section className="catalog-page statistics-page">
@@ -48,9 +54,9 @@ function StatValue({ value, label }: { value: number; label: string }) {
 interface RecordColumnProps { title: string; empty: string; items: Array<{ id: number; title: string; value: string; meta: string; href: string }>; }
 
 function RecordColumn({ title, empty, items }: RecordColumnProps) {
-  return <section className="record-column"><div className="section-heading"><h2>{title}</h2><span>{items.length}</span></div>{items.length === 0 ? <p className="muted">{empty}</p> : items.map((item) => <a className="record-row" href={item.href} key={item.id}><span><strong>{item.title}</strong><small>{item.meta}</small></span><b>{item.value}</b></a>)}</section>;
+  return <section className="record-column"><div className="section-heading"><h2>{title}</h2><span>{items.length}</span></div>{items.length === 0 ? <StateMessage kind="empty" title={empty} /> : items.map((item) => <a className="record-row" href={item.href} key={item.id}><span><strong>{item.title}</strong><small>{item.meta}</small></span><b>{item.value}</b></a>)}</section>;
 }
 
 function EvolutionColumn({ title, items }: { title: string; items: Array<{ id: number; date: string; title: string; value: string }> }) {
-  return <section><h3 className="subheading">{title}</h3>{items.length === 0 ? <p className="muted">Sin intentos todavía.</p> : <div className="evolution-list">{items.map((item) => <div className="evolution-row" key={item.id}><time>{new Date(item.date).toLocaleDateString("es-ES")}</time><strong>{item.title}</strong><b>{item.value}</b></div>)}</div>}</section>;
+  return <section><h3 className="subheading">{title}</h3>{items.length === 0 ? <StateMessage kind="empty" title="Sin intentos todavía." /> : <div className="evolution-list">{items.map((item) => <div className="evolution-row" key={item.id}><time>{new Date(item.date).toLocaleDateString("es-ES")}</time><strong>{item.title}</strong><b>{item.value}</b></div>)}</div>}</section>;
 }

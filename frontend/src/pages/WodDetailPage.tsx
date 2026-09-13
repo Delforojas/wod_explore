@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ApiError, createWodResult, getWod, getWodResults } from "../api/client";
 import { useAuth } from "../auth/useAuth";
 import { LoadingMessage, StateMessage } from "../components/StateMessage";
+import { getErrorStateKind } from "../components/stateMessageUtils";
 import type { MeasurementType, WodDetail, WodLevel, WodResult, WodResultRequest, WodType } from "../api/schemas";
 
 const WOD_TYPE_LABELS: Record<WodType, string> = {
@@ -37,6 +38,7 @@ export function WodDetailPage({ id }: { id: number }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [errorKind, setErrorKind] = useState<"error" | "network-error">("error");
   const [formError, setFormError] = useState<string | null>(null);
   const [timeSeconds, setTimeSeconds] = useState("");
   const [rounds, setRounds] = useState("");
@@ -59,8 +61,10 @@ export function WodDetailPage({ id }: { id: number }) {
         setWod(loadedWod);
         setResults(loadedResults);
       })
-      .catch((caughtError: Error) => {
-        if (active) setError(caughtError.message);
+      .catch((caughtError: unknown) => {
+        if (!active) return;
+        setError(caughtError instanceof Error ? caughtError.message : "No se pudo abrir este WOD.");
+        setErrorKind(getErrorStateKind(caughtError));
       })
       .finally(() => {
         if (active) setIsLoading(false);
@@ -101,9 +105,9 @@ export function WodDetailPage({ id }: { id: number }) {
     }
   }
 
-  if (!token) return <StateMessage title="El archivo es privado" message="Inicia sesión para consultar WODs y sus detalles." action={{ label: "Entrar", href: "#/login" }} />;
-  if (isLoading) return <LoadingMessage />;
-  if (error || !wod) return <StateMessage title="No pudimos abrir este WOD" message={error ?? "El WOD no existe."} tone="error" action={{ label: "Volver al catálogo", href: "#/wods" }} />;
+   if (!token) return <StateMessage kind="private" title="El archivo es privado" message="Inicia sesión para consultar WODs y sus detalles." action={{ label: "Entrar", href: "#/login" }} />;
+   if (isLoading) return <LoadingMessage />;
+   if (error || !wod) return <StateMessage kind={errorKind} title={errorKind === "network-error" ? "No hay conexión con este WOD" : "No pudimos abrir este WOD"} message={error ?? "El WOD no existe."} action={{ label: "Volver al catálogo", href: "#/wods" }} />;
 
   return (
     <section className="detail-page">
@@ -135,7 +139,7 @@ export function WodDetailPage({ id }: { id: number }) {
           </section>
           <section className="detail-section exercise-section" aria-labelledby="wod-exercises-title">
             <div className="section-heading"><h2 id="wod-exercises-title">Ejercicios de la sesión</h2><span>{wod.exercises.length}</span></div>
-            {wod.exercises.length === 0 ? <p className="muted">Este WOD no tiene ejercicios asociados.</p> : <ol className="exercise-list">{wod.exercises.map((exercise) => <li key={`${exercise.id}-${exercise.position}`}><span>{exercise.position ?? "-"}</span><strong>{exercise.name}</strong><small>{exercise.reps !== null ? `${exercise.reps} reps` : MEASUREMENT_LABELS[exercise.measurementType]}</small></li>)}</ol>}
+             {wod.exercises.length === 0 ? <StateMessage kind="empty" title="Este WOD no tiene ejercicios asociados." /> : <ol className="exercise-list">{wod.exercises.map((exercise) => <li key={`${exercise.id}-${exercise.position}`}><span>{exercise.position ?? "-"}</span><strong>{exercise.name}</strong><small>{exercise.reps !== null ? `${exercise.reps} reps` : MEASUREMENT_LABELS[exercise.measurementType]}</small></li>)}</ol>}
           </section>
         </article>
         <aside className="detail-side" aria-label="Registro y resultados">
@@ -147,12 +151,13 @@ export function WodDetailPage({ id }: { id: number }) {
               {wod.type === "EMOM" && <div className="form-field"><label htmlFor={`wod-reps-${wod.id}`}>Repeticiones</label><input id={`wod-reps-${wod.id}`} name="reps" type="number" autoComplete="off" min="0" value={reps} onChange={(event) => setReps(event.target.value)} required /></div>}
               <div className="form-field"><label htmlFor={`wod-level-${wod.id}`}>Nivel</label><select id={`wod-level-${wod.id}`} name="level" autoComplete="off" value={level} onChange={(event) => { const nextLevel = event.target.value; if (nextLevel === "BEGINNER" || nextLevel === "INTERMEDIATE" || nextLevel === "RX") setLevel(nextLevel); }}><option value="BEGINNER">Principiante</option><option value="INTERMEDIATE">Intermedio</option><option value="RX">RX</option></select></div>
               <div className="form-field"><label htmlFor={`wod-date-${wod.id}`}>Fecha y hora</label><input id={`wod-date-${wod.id}`} name="completedAt" type="datetime-local" autoComplete="off" value={completedAt} onChange={(event) => setCompletedAt(event.target.value)} /></div>
-              {formError && <p className="form-error" role="alert" aria-live="assertive">{formError}</p>}
-              {formSuccess && <p className="form-success" role="status" aria-live="polite">{formSuccess}</p>}
-              <button className="button button--accent button--wide" type="submit" disabled={isSaving} aria-busy={isSaving}>{isSaving ? "Guardando…" : "Guardar resultado"}</button>
-            </form>
-          ) : <StateMessage title="Registra tu sesión" message="Inicia sesión para guardar resultados y ver tu historial." action={{ label: "Entrar", href: "#/login" }} />}
-           <section className="result-list" aria-labelledby="wod-results-title"><div className="section-heading"><h2 id="wod-results-title">Tus intentos</h2><span>{results.length}</span></div>{results.length === 0 ? <p className="muted">Todavía no tienes resultados para este WOD.</p> : <ul className="result-items">{results.map((result) => <li className="result-row" key={result.id}><strong>{result.timeSeconds !== null ? `${result.timeSeconds} segundos` : `${result.rounds ?? 0} rondas + ${result.reps ?? 0} reps`}</strong><span>{result.level ? WOD_LEVEL_LABELS[result.level] : "-"}</span><small>{dateFormatter.format(new Date(result.completedAt))}</small></li>)}</ul>}</section>
+               {isSaving && <StateMessage kind="loading" title="Guardando" message="Estamos registrando tu resultado." />}
+               {formError && <StateMessage kind="error" title="No se pudo guardar el resultado" message={formError} />}
+               {formSuccess && <StateMessage kind="success" title="Resultado guardado" message={formSuccess} />}
+               <button className="button button--accent button--wide" type="submit" disabled={isSaving} aria-busy={isSaving}>{isSaving ? "Guardando…" : "Guardar resultado"}</button>
+             </form>
+           ) : <StateMessage kind="private" title="Registra tu sesión" message="Inicia sesión para guardar resultados y ver tu historial." action={{ label: "Entrar", href: "#/login" }} />}
+            <section className="result-list" aria-labelledby="wod-results-title"><div className="section-heading"><h2 id="wod-results-title">Tus intentos</h2><span>{results.length}</span></div>{results.length === 0 ? <StateMessage kind="empty" title="Todavía no tienes resultados para este WOD." /> : <ul className="result-items">{results.map((result) => <li className="result-row" key={result.id}><strong>{result.timeSeconds !== null ? `${result.timeSeconds} segundos` : `${result.rounds ?? 0} rondas + ${result.reps ?? 0} reps`}</strong><span>{result.level ? WOD_LEVEL_LABELS[result.level] : "-"}</span><small>{dateFormatter.format(new Date(result.completedAt))}</small></li>)}</ul>}</section>
          </aside>
       </div>
     </section>

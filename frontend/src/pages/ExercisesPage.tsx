@@ -4,6 +4,7 @@ import type { FormEvent } from "react";
 import { getExercises } from "../api/client";
 import { useAuth } from "../auth/useAuth";
 import { LoadingMessage, StateMessage } from "../components/StateMessage";
+import { getErrorStateKind } from "../components/stateMessageUtils";
 import { PaginationControls } from "../components/PaginationControls";
 import type { ExerciseCategory, ExercisePage, MeasurementType } from "../api/schemas";
 
@@ -33,6 +34,7 @@ export function ExercisesPage() {
   const [reloadToken, setReloadToken] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [errorKind, setErrorKind] = useState<"error" | "network-error">("error");
 
   useEffect(() => {
     let active = true;
@@ -41,7 +43,11 @@ export function ExercisesPage() {
     }
     getExercises(token, { name: appliedQuery }, { page, size: DEFAULT_PAGE_SIZE })
       .then((data) => { if (active) setCatalog(data); })
-      .catch((caughtError: Error) => { if (active) setError(caughtError.message); })
+      .catch((caughtError: unknown) => {
+        if (!active) return;
+        setError(caughtError instanceof Error ? caughtError.message : "No se pudieron cargar los ejercicios.");
+        setErrorKind(getErrorStateKind(caughtError));
+      })
       .finally(() => { if (active) setIsLoading(false); });
     return () => { active = false; };
   }, [token, appliedQuery, page, reloadToken]);
@@ -77,10 +83,10 @@ export function ExercisesPage() {
         <button className="button button--accent" type="submit">Buscar</button>
       </form>
       <p className="catalog-hint">Busca por nombre para ir directo al movimiento que necesitas.</p>
-      {!token && <StateMessage title="El catálogo es privado" message="Inicia sesión para consultar ejercicios y sus detalles." action={{ label: "Entrar", href: "#/login" }} />}
-      {token && isLoading && <LoadingMessage />}
-      {token && !isLoading && error && <StateMessage title="No pudimos cargar los ejercicios" message={error} tone="error" action={{ label: "Reintentar", onClick: () => { setIsLoading(true); setError(null); setReloadToken((currentToken) => currentToken + 1); } }} />}
-      {token && !isLoading && !error && catalog?.items.length === 0 && <StateMessage title="No hay coincidencias" message="Prueba con otro nombre de ejercicio." />}
+       {!token && <StateMessage kind="private" title="El catálogo es privado" message="Inicia sesión para consultar ejercicios y sus detalles." action={{ label: "Entrar", href: "#/login" }} />}
+       {token && isLoading && <LoadingMessage />}
+       {token && !isLoading && error && <StateMessage kind={errorKind} title={errorKind === "network-error" ? "No hay conexión con los ejercicios" : "No pudimos cargar los ejercicios"} message={error} action={{ label: "Reintentar", onClick: () => { setIsLoading(true); setError(null); setReloadToken((currentToken) => currentToken + 1); } }} />}
+       {token && !isLoading && !error && catalog?.items.length === 0 && <StateMessage kind="empty" title="No hay coincidencias" message="Prueba con otro nombre de ejercicio." />}
       {token && !isLoading && !error && catalog && catalog.items.length > 0 && (
         <div className="catalog-list">
           {catalog.items.map((exercise) => (

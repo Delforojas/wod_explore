@@ -4,6 +4,7 @@ import type { FormEvent } from "react";
 import { getWods } from "../api/client";
 import { useAuth } from "../auth/useAuth";
 import { LoadingMessage, StateMessage } from "../components/StateMessage";
+import { getErrorStateKind } from "../components/stateMessageUtils";
 import { PaginationControls } from "../components/PaginationControls";
 import type { WodLevel, WodPage, WodType } from "../api/schemas";
 
@@ -38,6 +39,7 @@ export function WodsPage() {
   const [reloadToken, setReloadToken] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [errorKind, setErrorKind] = useState<"error" | "network-error">("error");
 
   useEffect(() => {
     let active = true;
@@ -46,7 +48,11 @@ export function WodsPage() {
     }
     getWods(filters, token, { page, size: DEFAULT_PAGE_SIZE })
       .then((data) => { if (active) setCatalog(data); })
-      .catch((caughtError: Error) => { if (active) setError(caughtError.message); })
+      .catch((caughtError: unknown) => {
+        if (!active) return;
+        setError(caughtError instanceof Error ? caughtError.message : "No se pudieron cargar los WODs.");
+        setErrorKind(getErrorStateKind(caughtError));
+      })
       .finally(() => { if (active) setIsLoading(false); });
     return () => { active = false; };
   }, [token, filters, page, reloadToken]);
@@ -94,10 +100,10 @@ export function WodsPage() {
           <strong>Filtros activos:</strong> {activeFilters.join(" · ")}
         </p>
       )}
-      {!token && <StateMessage title="El archivo es privado" message="Inicia sesión para consultar WODs y sus detalles." action={{ label: "Entrar", href: "#/login" }} />}
-      {token && isLoading && <LoadingMessage />}
-      {token && !isLoading && error && <StateMessage title="No pudimos cargar los WODs" message={error} tone="error" action={{ label: "Reintentar", onClick: () => { setIsLoading(true); setError(null); setReloadToken((currentToken) => currentToken + 1); } }} />}
-      {token && !isLoading && !error && catalog?.items.length === 0 && <StateMessage title="No hay WODs para estos filtros" message="Prueba a ampliar tu búsqueda." />}
+       {!token && <StateMessage kind="private" title="El archivo es privado" message="Inicia sesión para consultar WODs y sus detalles." action={{ label: "Entrar", href: "#/login" }} />}
+       {token && isLoading && <LoadingMessage />}
+       {token && !isLoading && error && <StateMessage kind={errorKind} title={errorKind === "network-error" ? "No hay conexión con los WODs" : "No pudimos cargar los WODs"} message={error} action={{ label: "Reintentar", onClick: () => { setIsLoading(true); setError(null); setReloadToken((currentToken) => currentToken + 1); } }} />}
+       {token && !isLoading && !error && catalog?.items.length === 0 && <StateMessage kind="empty" title="No hay WODs para estos filtros" message="Prueba a ampliar tu búsqueda." />}
       {token && !isLoading && !error && catalog && catalog.items.length > 0 && (
         <div className="catalog-list">
           {catalog.items.map((wod) => (

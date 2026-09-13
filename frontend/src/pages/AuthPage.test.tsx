@@ -57,4 +57,11 @@ describe("AuthPage", () => {
 
     expect((await screen.findByRole("alert")).textContent).toContain("Credenciales inválidas");
   });
+
+  it("explains when the previous session has expired", () => {
+    renderWithAuth(<AuthPage mode="login" />, { sessionExpired: true });
+
+    expect(screen.getByText("Tu sesión ha caducado")).toBeTruthy();
+    expect(screen.getByRole("link", { name: "Volver a entrar" }).getAttribute("href")).toBe("#/login");
+  });
 });

@@ -106,8 +106,8 @@ describe("ExerciseDetailPage", () => {
     await user.type(screen.getByLabelText("Valor"), "100");
     await user.click(screen.getByRole("button", { name: "Guardar marca" }));
 
-    expect(await screen.findByRole("status")).toBeTruthy();
-    expect(screen.getByRole("status").textContent).toBe("Marca guardada correctamente.");
+    expect(await screen.findByRole("status", { name: "Marca guardada" })).toBeTruthy();
+    expect(screen.getByText("Marca guardada correctamente.")).toBeTruthy();
   });
 
   it("explains when an exercise measurement cannot be registered", async () => {

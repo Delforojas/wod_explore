@@ -4,12 +4,14 @@ import { getCurrentUser } from "../api/client";
 import type { User } from "../api/schemas";
 import { useAuth } from "../auth/useAuth";
 import { LoadingMessage, StateMessage } from "../components/StateMessage";
+import { getErrorStateKind } from "../components/stateMessageUtils";
 
 export function ProfilePage() {
   const { token } = useAuth();
   const [profile, setProfile] = useState<User | null>(null);
   const [loadedRequestKey, setLoadedRequestKey] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [errorKind, setErrorKind] = useState<"error" | "network-error">("error");
   const [retryCount, setRetryCount] = useState(0);
   const requestKey = token ? `${token}:${retryCount}` : null;
 
@@ -29,6 +31,7 @@ export function ProfilePage() {
         setError(caughtError instanceof Error
           ? caughtError.message
           : "No pudimos cargar los datos de tu perfil.");
+        setErrorKind(getErrorStateKind(caughtError));
       })
       .finally(() => {
         if (active) setLoadedRequestKey(`${token}:${retryCount}`);
@@ -42,6 +45,7 @@ export function ProfilePage() {
   if (!token) {
     return (
       <StateMessage
+        kind="private"
         title="Tu perfil es privado"
         message="Inicia sesión para consultar los datos de tu cuenta."
         action={{ label: "Entrar", href: "#/login" }}
@@ -54,9 +58,9 @@ export function ProfilePage() {
   if (error || !profile) {
     return (
       <StateMessage
-        title="No pudimos cargar tu perfil"
+        kind={errorKind}
+        title={errorKind === "network-error" ? "No hay conexión con tu perfil" : "No pudimos cargar tu perfil"}
         message={error ?? "La respuesta del servidor no está disponible."}
-        tone="error"
         action={{ label: "Reintentar", onClick: () => setRetryCount((count) => count + 1) }}
       />
     );
