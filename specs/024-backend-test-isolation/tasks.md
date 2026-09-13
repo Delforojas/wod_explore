@@ -36,8 +36,8 @@
 - [x] Confirmar que no se modifica `mysql_data`, la base local ni scripts de
   inicialización.
 - [x] Revisar `git diff`, `git status`, secretos y alcance del cambio.
-- [ ] Crear el commit específico de la Issue #24 y conservar su hash.
-- [ ] Documentar la Issue #24 con rama, commit, verificaciones y estado abierto
+- [x] Crear el commit específico de la Issue #24 y conservar su hash (`ad1dd3c`).
+- [x] Documentar la Issue #24 con rama, commit, verificaciones y estado abierto
   pendiente de validación manual.
 
 ## Resultados de verificación
