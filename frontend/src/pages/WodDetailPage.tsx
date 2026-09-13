@@ -110,7 +110,7 @@ export function WodDetailPage({ id }: { id: number }) {
    if (error || !wod) return <StateMessage kind={errorKind} title={errorKind === "network-error" ? "No hay conexión con este WOD" : "No pudimos abrir este WOD"} message={error ?? "El WOD no existe."} action={{ label: "Volver al catálogo", href: "#/wods" }} />;
 
   return (
-    <section className="detail-page">
+     <section className="detail-page detail-page--wod">
       <a className="back-link" href="#/wods">Volver a WODs</a>
       <header className="detail-heading">
         <div className="detail-heading__body">

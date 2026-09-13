@@ -306,6 +306,22 @@ h2 { color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-siz
 .profile-field dt { color: var(--ink-soft); font-size: 11px; font-weight: 800; letter-spacing: 0.08em; margin-bottom: 10px; text-transform: uppercase; }
 .profile-field dd { color: var(--ink); font-family: Georgia, serif; font-size: clamp(20px, 3vw, 28px); letter-spacing: -0.03em; margin: 0; overflow-wrap: anywhere; }
 
+.catalog-page--wods .page-heading, .catalog-page--exercises .page-heading, .history-page .page-heading, .statistics-page .page-heading, .profile-page .page-heading { background: var(--navy); border: 0; color: var(--white); margin-bottom: 36px; padding: clamp(24px, 4vw, 38px); }
+.catalog-page--wods .page-heading h1, .catalog-page--exercises .page-heading h1, .history-page .page-heading h1, .statistics-page .page-heading h1, .profile-page .page-heading h1 { color: var(--white); }
+.catalog-page--wods .heading-support, .catalog-page--exercises .heading-support, .history-page .heading-support, .statistics-page .heading-support, .profile-page .heading-note { color: rgba(255, 253, 248, 0.72); }
+.catalog-page--wods .heading-note, .catalog-page--exercises .heading-note { color: var(--orange-soft); }
+.catalog-page--wods .filter-strip, .catalog-page--exercises .search-field { border-bottom: 2px solid var(--ink); padding-bottom: 24px; }
+.catalog-page--wods .catalog-list, .catalog-page--exercises .catalog-list { border-top-color: var(--navy); }
+.history-page .history-grid { border-top: 2px solid var(--ink); padding-top: 24px; }
+.history-page .history-column { border-top: 1px solid var(--line); }
+.statistics-page__records, .statistics-page__evolution { border-top: 2px solid var(--ink); padding-top: 24px; }
+.statistics-page__overview { border-top: 3px solid var(--orange); }
+.detail-page .detail-heading { background: var(--navy); border: 0; color: var(--white); padding: clamp(24px, 4vw, 38px); }
+.detail-page .detail-heading h1 { color: var(--white); }
+.detail-page .detail-summary, .detail-page .detail-reference { color: rgba(255, 253, 248, 0.72); }
+.detail-page .tag--accent, .detail-page .detail-heading .tag { border-color: var(--orange-soft); color: var(--orange-soft); }
+.auth-page .auth-copy { border-top: 3px solid var(--orange); padding-top: 18px; }
+
 @media (max-width: 900px) {
   .app-frame { display: block; min-height: calc(100vh - var(--topbar-height)); }
   .side-nav { display: none; }

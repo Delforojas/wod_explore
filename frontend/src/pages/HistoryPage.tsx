@@ -45,7 +45,7 @@ export function HistoryPage() {
 
   return (
     <section className="catalog-page history-page" aria-labelledby="history-title">
-      <header className="page-heading">
+      <header className="page-heading history-page__heading">
         <div>
           <h1 id="history-title">Historial</h1>
           <p className="heading-support">Una lectura de todas las sesiones y marcas que has guardado.</p>

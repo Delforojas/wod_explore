@@ -121,7 +121,7 @@ export function ExerciseDetailPage({ id }: { id: number }) {
   const recordTypes = optionsByMeasurement[exercise.measurementType] ?? [];
 
   return (
-    <section className="detail-page">
+     <section className="detail-page detail-page--exercise">
       <a className="back-link" href="#/exercises">Volver a ejercicios</a>
       <header className="detail-heading">
         <div className="detail-heading__body">

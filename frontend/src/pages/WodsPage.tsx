@@ -78,7 +78,7 @@ export function WodsPage() {
   ].filter((value): value is string => value !== null);
 
   return (
-    <section className="catalog-page">
+    <section className="catalog-page catalog-page--wods">
       <div className="page-heading">
         <div>
           <h1>WODs</h1>

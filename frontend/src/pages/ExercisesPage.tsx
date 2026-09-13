@@ -67,7 +67,7 @@ export function ExercisesPage() {
   }
 
   return (
-    <section className="catalog-page">
+    <section className="catalog-page catalog-page--exercises">
       <div className="page-heading">
         <div>
           <h1>Ejercicios</h1>

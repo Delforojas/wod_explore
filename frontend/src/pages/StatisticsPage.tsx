@@ -45,13 +45,13 @@ export function StatisticsPage() {
 
   return (
     <section className="catalog-page statistics-page" aria-labelledby="statistics-title">
-      <header className="page-heading">
+      <header className="page-heading statistics-page__heading">
         <div>
           <h1 id="statistics-title">Estadísticas</h1>
           <p className="heading-support">Una lectura de tus sesiones, no una predicción.</p>
         </div>
       </header>
-      <section className="stats-overview" aria-labelledby="activity-title">
+      <section className="stats-overview statistics-page__overview" aria-labelledby="activity-title">
         <header className="section-heading">
           <div>
             <h2 id="activity-title">Actividad registrada</h2>
@@ -64,7 +64,7 @@ export function StatisticsPage() {
           <StatValue value={statistics.exerciseResultsCount} label="Marcas de ejercicios" />
         </div>
       </section>
-      <section className="personal-records" aria-labelledby="records-title">
+      <section className="personal-records statistics-page__records" aria-labelledby="records-title">
         <header className="section-heading section-heading--spacious">
           <div>
             <h2 id="records-title">Marcas personales</h2>
@@ -74,7 +74,7 @@ export function StatisticsPage() {
         </header>
         <div className="stats-columns"><RecordColumn title="Marcas WOD" empty="Todavía no hay marcas WOD." emptyAction={{ label: "Explorar WODs", href: "#/wods" }} items={statistics.wodPersonalRecords.map((record) => ({ id: record.resultId, title: record.wodName, type: "Marca WOD", value: record.timeSeconds !== null ? `${record.timeSeconds} s` : `${record.rounds ?? 0} rondas + ${record.reps ?? 0} repeticiones`, meta: `${WOD_TYPE_LABELS[record.wodType]} · ${WOD_LEVEL_LABELS[record.level]}`, date: record.completedAt, href: `#/wods/${record.wodId}`, ariaLabel: `${record.wodName}, marca WOD de ${record.timeSeconds !== null ? `${record.timeSeconds} segundos` : `${record.rounds ?? 0} rondas y ${record.reps ?? 0} repeticiones`}. Ver detalle del WOD` }))} /><RecordColumn title="Marcas de ejercicios" empty="Todavía no hay marcas de ejercicios." emptyAction={{ label: "Explorar ejercicios", href: "#/exercises" }} items={statistics.exercisePersonalRecords.map((record) => ({ id: record.resultId, title: record.exerciseName, type: "Marca de ejercicio", value: `${record.value} ${UNIT_LABELS[record.unit]}`, meta: RECORD_TYPE_LABELS[record.recordType], date: record.performedAt, href: `#/exercises/${record.exerciseId}`, ariaLabel: `${record.exerciseName}, ${RECORD_TYPE_LABELS[record.recordType]} de ${record.value} ${UNIT_LABELS[record.unit]}. Ver detalle del ejercicio` }))} /></div>
       </section>
-      <section className="evolution-section" aria-labelledby="evolution-title">
+      <section className="evolution-section statistics-page__evolution" aria-labelledby="evolution-title">
         <header className="section-heading section-heading--spacious">
           <div>
             <h2 id="evolution-title">Evolución</h2>
