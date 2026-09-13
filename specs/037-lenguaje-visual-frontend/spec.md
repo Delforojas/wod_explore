@@ -2,7 +2,7 @@
 
 ## Estado
 
-En implementacion.
+Implementada en la rama `feat/037-lenguaje-visual-frontend`.
 
 ## Objetivo
 

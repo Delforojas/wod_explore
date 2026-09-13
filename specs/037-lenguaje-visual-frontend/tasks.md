@@ -34,5 +34,5 @@
 - [x] Ejecutar `git diff --check` y el detector mecanico de Impeccable.
 - [x] Revisar manualmente de forma estatica 320 px, tablet, escritorio, zoom, teclado, estados,
   rutas, textos largos y ausencia de overflow.
-- [ ] Revisar diff y status, crear un commit exclusivo de la Issue #37 y
+- [x] Revisar diff y status, crear un commit exclusivo de la Issue #37 y
   documentarlo en GitHub sin cerrar la Issue ni hacer push.
