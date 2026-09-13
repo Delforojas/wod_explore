@@ -7,6 +7,7 @@ export type Route =
   | { page: "exercises" }
   | { page: "exercise-detail"; id: number }
   | { page: "history" }
+  | { page: "profile" }
   | { page: "statistics" };
 
 export function parseRoute(hash: string): Route {
@@ -25,6 +26,7 @@ export function parseRoute(hash: string): Route {
     return { page: "exercise-detail", id: Number(parts[1]) };
   }
   if (parts[0] === "history") return { page: "history" };
+  if (parts[0] === "profile") return { page: "profile" };
   if (parts[0] === "statistics") return { page: "statistics" };
   return { page: "home" };
 }

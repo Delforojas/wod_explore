@@ -29,6 +29,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .brand-mark { align-items: center; background: var(--orange); color: var(--white); display: inline-flex; font-family: Georgia, serif; font-size: 20px; height: 32px; justify-content: center; width: 32px; }
 .session-actions { align-items: center; display: flex; gap: 10px; }
 .user-name { color: var(--ink-soft); font-size: 13px; }
+.profile-link { align-items: center; border-bottom: 1px solid transparent; color: var(--ink-soft); display: inline-flex; font-size: 13px; gap: 7px; padding: 8px 0; text-decoration: none; }
+.profile-link:hover, .profile-link--active { border-bottom-color: var(--orange); color: var(--ink); }
 .app-frame { display: grid; grid-template-columns: 220px minmax(0, 1fr); margin: 0 auto; max-width: 1440px; min-height: calc(100vh - 69px); }
 .side-nav { border-right: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; padding: 42px 20px; }
 .nav-caption { color: var(--ink-soft); font-size: 10px; letter-spacing: 0.12em; margin-bottom: 20px; text-transform: uppercase; }
@@ -150,6 +152,16 @@ h2 { color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-siz
 .evolution-row { align-items: center; border-bottom: 1px solid var(--line); display: grid; gap: 10px; grid-template-columns: 100px 1fr auto; padding: 13px 0; }
 .evolution-row time, .evolution-row b { color: var(--ink-soft); font-size: 11px; }
 .evolution-row strong { font-size: 13px; }
+.profile-page { max-width: 980px; }
+.profile-sheet { background: var(--white); border-bottom: 1px solid var(--line); border-top: 1px solid var(--ink); display: grid; grid-template-columns: minmax(220px, 0.75fr) minmax(0, 1.25fr); }
+.profile-intro { border-right: 1px solid var(--line); padding: 32px clamp(20px, 4vw, 48px) 36px 0; }
+.profile-intro h2 { margin: 0 0 12px; }
+.profile-intro p { color: var(--ink-soft); line-height: 1.55; margin: 0; max-width: 30ch; }
+.profile-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; }
+.profile-field { border-bottom: 1px solid var(--line); min-width: 0; padding: 24px clamp(18px, 3vw, 34px); }
+.profile-field:nth-last-child(-n + 2) { border-bottom: 0; }
+.profile-field dt { color: var(--ink-soft); font-size: 11px; font-weight: 800; letter-spacing: 0.08em; margin-bottom: 10px; text-transform: uppercase; }
+.profile-field dd { color: var(--ink); font-family: Georgia, serif; font-size: clamp(20px, 3vw, 28px); letter-spacing: -0.03em; margin: 0; overflow-wrap: anywhere; }
 
 @media (max-width: 900px) {
   .app-frame { display: block; min-height: calc(100vh - 69px); }
@@ -185,4 +197,9 @@ h2 { color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-siz
   .stat-value:last-child { border-bottom: 0; }
   .evolution-row { grid-template-columns: 80px 1fr; }
   .evolution-row b { grid-column: 2; }
+  .profile-sheet { grid-template-columns: 1fr; }
+  .profile-intro { border-bottom: 1px solid var(--line); border-right: 0; padding: 28px 0; }
+  .profile-fields { grid-template-columns: 1fr; }
+  .profile-field:nth-last-child(-n + 2) { border-bottom: 1px solid var(--line); }
+  .profile-field:last-child { border-bottom: 0; }
 }

@@ -28,7 +28,15 @@ export function Layout({ children, currentPage }: LayoutProps) {
         <div className="session-actions">
           {user ? (
             <>
-              <span className="user-name">{user.name}</span>
+              <a
+                className={`profile-link ${currentPage === "profile" ? "profile-link--active" : ""}`}
+                href="#/profile"
+                aria-current={currentPage === "profile" ? "page" : undefined}
+                aria-label={`Abrir perfil de ${user.name}`}
+              >
+                <span>Perfil</span>
+                <span className="user-name">{user.name}</span>
+              </a>
               <button className="button button--quiet" type="button" onClick={logout}>Salir</button>
             </>
           ) : (

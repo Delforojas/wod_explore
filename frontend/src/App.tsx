@@ -9,6 +9,7 @@ import { ExerciseDetailPage } from "./pages/ExerciseDetailPage";
 import { ExercisesPage } from "./pages/ExercisesPage";
 import { HistoryPage } from "./pages/HistoryPage";
 import { HomePage } from "./pages/HomePage";
+import { ProfilePage } from "./pages/ProfilePage";
 import { StatisticsPage } from "./pages/StatisticsPage";
 import { WodDetailPage } from "./pages/WodDetailPage";
 import { WodsPage } from "./pages/WodsPage";
@@ -35,6 +36,7 @@ function App() {
       case "exercises": return <ExercisesPage />;
       case "exercise-detail": return <ExerciseDetailPage id={route.id} />;
       case "history": return <HistoryPage />;
+      case "profile": return <ProfilePage />;
       case "statistics": return <StatisticsPage />;
     }
   }

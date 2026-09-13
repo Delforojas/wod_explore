@@ -1,9 +1,32 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { ApiError, getStatistics } from "./client";
+import { ApiError, getCurrentUser, getStatistics } from "./client";
 import { statisticsSchema } from "./schemas";
 
 describe("API client", () => {
+  it("requests and validates the current user with the session token", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      id: 4,
+      name: "Delfin",
+      lastName: "Rojas",
+      email: "delfin@example.com",
+      createdAt: "2026-09-12T16:00:00",
+    }), { status: 200, headers: { "Content-Type": "application/json" } }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(getCurrentUser("token-profile")).resolves.toMatchObject({
+      name: "Delfin",
+      lastName: "Rojas",
+      email: "delfin@example.com",
+    });
+    expect(fetchMock).toHaveBeenCalledWith(
+      "http://localhost:8080/api/users/me",
+      expect.objectContaining({ headers: expect.any(Headers) }),
+    );
+    const headers = fetchMock.mock.calls[0]?.[1]?.headers as Headers;
+    expect(headers.get("Authorization")).toBe("Bearer token-profile");
+  });
+
   it("adds the bearer token and validates statistics responses", async () => {
     const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
       wodResultsCount: 2,
