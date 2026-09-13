@@ -173,24 +173,64 @@ Comprueba:
 - validación manual registrada;
 - Issue cerrada.
 
-## 7. Resumen final
+## 7. Archivos cambiados por la Issue
 
-Muestra:
+Esta sección es OBLIGATORIA.
+
+Antes de mostrar el resumen final:
+
+1. Identifica la rama base real desde la que se creó la rama actual.
+
+2. Obtén la lista de archivos cambiados por la Issue respecto a esa rama base.
+
+3. Usa una comparación equivalente a:
+
+   `git diff --name-status <rama-base>...HEAD`
+
+4. No uses `main` automáticamente si la rama fue creada desde otra rama de dependencia.
+
+5. Incluye todos los archivos añadidos, modificados o eliminados por la Issue.
+
+La salida debe mostrar explícitamente:
+
+- rama base;
+
+- `A` para archivos añadidos;
+
+- `M` para archivos modificados;
+
+- `D` para archivos eliminados.
+
+Si no puede determinarse con seguridad la rama base:
+
+- indícalo claramente;
+
+- no inventes una rama base;
+
+- intenta resolverla mediante el historial Git antes de continuar.
+
+No omitas esta sección aunque la Issue ya esté cerrada.
+
+## 8. Resumen final
+
+La salida final DEBE incluir obligatoriamente:
 
 - Issue;
+
 - rama;
-- hash y mensaje del commit;
+
+- rama base;
+
+- hash y mensaje del commit final;
+
+- archivos cambiados por la Issue;
+
 - estado del working tree;
+
 - estado del push;
+
 - validación manual;
+
 - estado final de la Issue.
 
-El workflow `/finish-issue $1` solo se considera COMPLETADO si:
-
-1. la rama correcta ya existía;
-2. el commit de la Issue ya existía;
-3. no quedaban cambios de la Issue sin commit;
-4. el usuario había aprobado la validación manual;
-5. el push se realizó correctamente;
-6. la Issue quedó correctamente documentada;
-7. la Issue está cerrada.
+No finalices el comando sin mostrar la lista de archivos cambiados.
