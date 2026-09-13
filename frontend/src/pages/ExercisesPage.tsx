@@ -90,7 +90,7 @@ export function ExercisesPage() {
       {token && !isLoading && !error && catalog && catalog.items.length > 0 && (
         <div className="catalog-list">
           {catalog.items.map((exercise) => (
-            <a className="catalog-row" key={exercise.id} href={`#/exercises/${exercise.id}`}>
+            <a className="catalog-row catalog-row--exercise" key={exercise.id} href={`#/exercises/${exercise.id}`}>
               <span className="row-number">{String(exercise.id).padStart(3, "0")}</span>
               <span className="row-main"><strong>{exercise.name}</strong><small>{EXERCISE_CATEGORY_LABELS[exercise.category]}</small></span>
               <span className="row-meta"><small>Medición</small>{MEASUREMENT_LABELS[exercise.measurementType]}</span>

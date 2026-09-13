@@ -19,7 +19,10 @@ export function Layout({ children, currentPage }: LayoutProps) {
   const { user, logout } = useAuth();
 
   function isCurrentPage(path: string) {
-    return currentPage === path.slice(1) || (path === "/" && currentPage === "home");
+    const page = path === "/" ? "home" : path.slice(1);
+    return currentPage === page
+      || (path === "/wods" && currentPage === "wod-detail")
+      || (path === "/exercises" && currentPage === "exercise-detail");
   }
 
   return (

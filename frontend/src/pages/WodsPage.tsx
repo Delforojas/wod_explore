@@ -107,9 +107,9 @@ export function WodsPage() {
       {token && !isLoading && !error && catalog && catalog.items.length > 0 && (
         <div className="catalog-list">
           {catalog.items.map((wod) => (
-            <a className="catalog-row" key={wod.id} href={`#/wods/${wod.id}`}>
+            <a className="catalog-row catalog-row--wod" key={wod.id} href={`#/wods/${wod.id}`}>
               <span className="row-number">{String(wod.id).padStart(3, "0")}</span>
-              <span className="row-main"><strong>{wod.name}</strong><small>{WOD_TYPE_LABELS[wod.type]} · {wod.level ? WOD_LEVEL_LABELS[wod.level] : "Todos los niveles"}</small></span>
+              <span className="row-main"><strong>{wod.name}</strong><small>{WOD_TYPE_LABELS[wod.type]}</small></span>
               <span className="row-meta"><small>Nivel</small>{wod.level ? WOD_LEVEL_LABELS[wod.level] : "Todos"}</span>
               <span className="row-arrow" aria-hidden="true">-&gt;</span>
             </a>

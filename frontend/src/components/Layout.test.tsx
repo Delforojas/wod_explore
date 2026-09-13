@@ -49,4 +49,12 @@ describe("Layout", () => {
     expect(within(mobileNavigation).getByRole("link", { name: "WODs" }).getAttribute("aria-current")).toBe("page");
     expect(within(primaryNavigation).getByRole("link", { name: "Inicio" }).getAttribute("aria-current")).toBeNull();
   });
+
+  it("keeps the parent catalog active on detail pages", () => {
+    renderWithAuth(<Layout currentPage="exercise-detail"><p>Contenido</p></Layout>);
+
+    const primaryNavigation = screen.getByRole("navigation", { name: "Navegación principal" });
+    expect(within(primaryNavigation).getByRole("link", { name: "Ejercicios" }).getAttribute("aria-current")).toBe("page");
+    expect(within(primaryNavigation).getByRole("link", { name: "WODs" }).getAttribute("aria-current")).toBeNull();
+  });
 });
