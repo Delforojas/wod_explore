@@ -3,6 +3,7 @@ package com.wodexplorer.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.wodexplorer.entity.ExerciseRecordType;
@@ -15,6 +16,9 @@ public interface ExerciseResultRepository extends JpaRepository<ExerciseResult, 
             Integer exerciseId);
 
     List<ExerciseResult> findByUser_IdOrderByPerformedAtDescIdDesc(Integer userId);
+
+    @EntityGraph(attributePaths = "exercise")
+    List<ExerciseResult> findByUser_IdOrderByPerformedAtAscIdAsc(Integer userId);
 
     Optional<ExerciseResult>
             findFirstByUser_IdAndExercise_IdAndRecordTypeOrderByValueDescPerformedAtDescIdDesc(

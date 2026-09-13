@@ -39,11 +39,13 @@ import com.wodexplorer.controller.AuthController;
 import com.wodexplorer.controller.ExerciseController;
 import com.wodexplorer.controller.ExerciseResultController;
 import com.wodexplorer.controller.UserController;
+import com.wodexplorer.controller.UserStatisticsController;
 import com.wodexplorer.controller.WodController;
 import com.wodexplorer.controller.WodResultController;
 import com.wodexplorer.dto.LoginResponse;
 import com.wodexplorer.dto.UserHistoryResponse;
 import com.wodexplorer.dto.UserResponse;
+import com.wodexplorer.dto.UserStatisticsResponse;
 import com.wodexplorer.exception.GlobalExceptionHandler;
 import com.wodexplorer.service.AuthService;
 import com.wodexplorer.service.ExerciseService;
@@ -51,13 +53,15 @@ import com.wodexplorer.service.ExerciseResultService;
 import com.wodexplorer.service.JwtService;
 import com.wodexplorer.service.UserService;
 import com.wodexplorer.service.UserHistoryService;
+import com.wodexplorer.service.UserStatisticsService;
 import com.wodexplorer.service.WodService;
 import com.wodexplorer.service.WodResultService;
 
 import io.jsonwebtoken.Jwts;
 
 @WebMvcTest({ExerciseController.class, UserController.class, AuthController.class,
-        WodController.class, WodResultController.class, ExerciseResultController.class})
+        UserStatisticsController.class, WodController.class, WodResultController.class,
+        ExerciseResultController.class})
 @ImportAutoConfiguration(exclude = UserDetailsServiceAutoConfiguration.class)
 @Import({
         CorsConfig.class,
@@ -95,6 +99,9 @@ class SecurityHttpTest {
 
     @MockitoBean
     private UserHistoryService userHistoryService;
+
+    @MockitoBean
+    private UserStatisticsService userStatisticsService;
 
     @MockitoBean
     private AuthService authService;
@@ -279,6 +286,38 @@ class SecurityHttpTest {
                 .andExpect(jsonPath("$.exerciseResults").isEmpty());
 
         then(userHistoryService).should().findOwnHistory(TEST_EMAIL);
+    }
+
+    @Test
+    void userStatistics_WithoutJwt_ReturnsJsonUnauthorized() throws Exception {
+        mockMvc.perform(get("/api/users/me/statistics"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.error").value("UNAUTHORIZED"));
+
+        then(userStatisticsService).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void userStatistics_WithValidJwt_UsesJwtSubject() throws Exception {
+        given(userStatisticsService.findStatistics(TEST_EMAIL))
+                .willReturn(new UserStatisticsResponse(0, 0, List.of(), List.of()));
+        String token = jwtService.generateToken(TEST_EMAIL);
+
+        mockMvc.perform(get("/api/users/me/statistics")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.wodResultsCount").value(0));
+
+        then(userStatisticsService).should().findStatistics(TEST_EMAIL);
+    }
+
+    @Test
+    void userEvolution_WithoutJwt_ReturnsJsonUnauthorized() throws Exception {
+        mockMvc.perform(get("/api/users/me/evolution"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.error").value("UNAUTHORIZED"));
+
+        then(userStatisticsService).shouldHaveNoInteractions();
     }
 
     @Test

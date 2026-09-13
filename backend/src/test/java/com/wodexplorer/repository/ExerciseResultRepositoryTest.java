@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
@@ -104,6 +105,27 @@ class ExerciseResultRepositoryTest {
 
         assertThat(result.getId()).isEqualTo(best.getId());
         assertThat(result.getValue()).isEqualByComparingTo("342.00");
+    }
+
+    @Test
+    void findByUserAscending_LoadsExerciseAndOrdersByDateAndId() {
+        User user = persistUser();
+        Exercise exercise = persistExercise("WEIGHT");
+        LocalDateTime older = LocalDateTime.of(2026, 9, 10, 10, 0);
+        LocalDateTime newer = LocalDateTime.of(2026, 9, 12, 10, 0);
+        ExerciseResult olderResult = persistResult(
+                user, exercise, "100.00", ExerciseRecordType.ONE_RM, older);
+        ExerciseResult newerResult = persistResult(
+                user, exercise, "120.00", ExerciseRecordType.ONE_RM, newer);
+        entityManager.flush();
+        entityManager.clear();
+
+        List<ExerciseResult> results = exerciseResultRepository
+                .findByUser_IdOrderByPerformedAtAscIdAsc(user.getId());
+
+        assertThat(results).extracting(ExerciseResult::getId)
+                .containsExactly(olderResult.getId(), newerResult.getId());
+        assertThat(Hibernate.isInitialized(results.getFirst().getExercise())).isTrue();
     }
 
     private User persistUser() {

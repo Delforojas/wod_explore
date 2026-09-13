@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
@@ -56,6 +57,25 @@ class WodResultRepositoryTest {
                 .findByUser_IdOrderByCompletedAtDescIdDesc(firstUser.getId());
         assertThat(userResults).extracting(WodResult::getId)
                 .containsExactly(otherWodResult.getId(), newerResult.getId(), olderResult.getId());
+    }
+
+    @Test
+    void findByUserAscending_LoadsWodAndOrdersByDateAndId() {
+        User user = persistUser();
+        Wod wod = persistWod();
+        LocalDateTime older = LocalDateTime.of(2026, 9, 10, 10, 0);
+        LocalDateTime newer = LocalDateTime.of(2026, 9, 12, 10, 0);
+        WodResult olderResult = persistResult(user, wod, older, 400);
+        WodResult newerResult = persistResult(user, wod, newer, 300);
+        entityManager.flush();
+        entityManager.clear();
+
+        List<WodResult> results = wodResultRepository
+                .findByUser_IdOrderByCompletedAtAscIdAsc(user.getId());
+
+        assertThat(results).extracting(WodResult::getId)
+                .containsExactly(olderResult.getId(), newerResult.getId());
+        assertThat(Hibernate.isInitialized(results.getFirst().getWod())).isTrue();
     }
 
     private User persistUser() {
