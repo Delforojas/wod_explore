@@ -12,12 +12,13 @@ de esas funcionalidades.
 - Vite 8.2.2.
 - Zod 4.6.4 para validar respuestas de la API.
 - Vitest 5.0.0 para tests.
+- Testing Library para renderizar componentes React y simular interacciones.
+- jsdom para ejecutar los tests de comportamiento en un DOM de prueba.
 - ESLint 10 para lint.
 - CSS propio en `src/index.css`.
 
-El proyecto no declara React Router, Tailwind CSS ni Testing Library como
-dependencias. La navegación se implementa con un router hash local y los tests
-actuales usan Vitest directamente.
+El proyecto no declara React Router ni Tailwind CSS como dependencias. La
+navegación se implementa con un router hash local.
 
 ## Requisitos
 
@@ -106,3 +107,16 @@ npm run build
 ```
 
 `npm run build` ejecuta la comprobación TypeScript y genera el bundle Vite.
+
+## Estrategia de tests
+
+Los tests de `src/` verifican comportamiento visible de autenticación, sesión,
+navegación, catálogos, detalles, formularios de resultados, historial,
+estadísticas y evolución. Usan mocks locales y datos declarados en cada escenario;
+no requieren backend, Docker, MySQL, `.env` ni datos personales.
+
+Vitest usa `jsdom` mediante `vitest.config.ts`. El setup de
+`src/test/setup.ts` limpia el DOM después de cada test para mantener el
+aislamiento entre escenarios. Las APIs de página se mockean por módulo y el
+cliente HTTP conserva tests específicos para headers, errores de red, `401` y
+payloads inválidos.

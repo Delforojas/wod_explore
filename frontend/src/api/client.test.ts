@@ -1,9 +1,13 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { ApiError, getCurrentUser, getExercises, getHistory, getStatistics, getWods } from "./client";
 import { statisticsSchema } from "./schemas";
 
 describe("API client", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it("requests and validates the current user with the session token", async () => {
     const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
       id: 4,
@@ -70,6 +74,24 @@ describe("API client", () => {
 
     await expect(getStatistics("expired-token")).rejects.toMatchObject({ status: 401 });
     expect(expiredSession).toHaveBeenCalledOnce();
+  });
+
+  it("turns network failures into a user-facing ApiError", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("offline")));
+
+    await expect(getStatistics("token-a")).rejects.toMatchObject({
+      status: 0,
+      message: "No se pudo conectar con el servidor. Comprueba tu conexión.",
+    });
+  });
+
+  it("rejects invalid successful payloads with a safe ApiError", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(JSON.stringify({ invalid: true }), { status: 200 })));
+
+    await expect(getStatistics("token-a")).rejects.toMatchObject({
+      status: 200,
+      message: "La respuesta del servidor no tiene un formato válido.",
+    });
   });
 
   it("requests a filtered WOD page with explicit pagination", async () => {
