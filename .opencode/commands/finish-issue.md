@@ -84,9 +84,45 @@ Si quedan cambios pertenecientes a la Issue sin commit:
 
 DETENTE.
 
-Informa de que `/issue $1` no completó correctamente el workflow.
+Informa de que `/issue $1` no completó correctamente el workflow
 
-## 3. Publicar la rama
+## 3. Archivos cambiados por la Issue
+
+Esta sección es OBLIGATORIA.
+
+Identifica la rama base real desde la que se creó la rama actual.
+
+Obtén la lista completa de archivos pertenecientes a la Issue respecto a esa rama base mediante una comparación equivalente a:
+
+`git diff --name-status <rama-base>...HEAD`
+
+No uses `main` automáticamente si la rama fue creada desde otra rama válida de dependencia.
+
+Clasifica los resultados como:
+
+- `A` — archivo añadido;
+
+- `M` — archivo modificado;
+
+- `D` — archivo eliminado;
+
+- `R` — archivo renombrado.
+
+Conserva esta lista para:
+
+1. documentarla posteriormente en la GitHub Issue;
+
+2. mostrarla en el resumen final.
+
+No incluyas cambios locales ajenos a la Issue.
+
+Si no puede determinarse con seguridad la rama base:
+
+DETENTE.
+
+No inventes una rama base.
+
+## 4. Publicar la rama
 
 Únicamente después de superar todas las comprobaciones anteriores, publica la rama actual.
 
@@ -115,27 +151,69 @@ DETENTE.
 No documentes la validación como finalizada.
 No cierres la Issue.
 
-## 4. Registrar la validación manual
+## 5. Registrar la validación manual
 
 Actualiza la GitHub Issue #$1 indicando que:
 
 - la implementación fue completada durante `/issue $1`;
+
 - las verificaciones automáticas fueron realizadas durante `/issue $1`;
+
 - el usuario ha realizado y aprobado la validación manual;
+
 - la rama ha sido publicada correctamente;
+
 - el commit final asociado es el detectado anteriormente.
 
 Incluye:
 
 - nombre de la rama;
+
+- rama base;
+
 - hash del commit;
-- mensaje del commit.
+
+- mensaje del commit;
+
+- archivos cambiados por la Issue.
+
+Incluye obligatoriamente un apartado:
+
+### Archivos cambiados
+
+Muestra todos los archivos detectados anteriormente, conservando su estado:
+
+- `A` — añadido;
+
+- `M` — modificado;
+
+- `D` — eliminado;
+
+- `R` — renombrado.
+
+Ejemplo:
+
+### Archivos cambiados
+
+- `M frontend/src/pages/ExercisesPage.tsx`
+
+- `A frontend/src/components/Pagination.tsx`
+
+- `A frontend/src/components/Pagination.test.tsx`
+
+- `M frontend/src/api/exercises.ts`
+
+- `A specs/031-frontend-redesign/spec.md`
+
+- `A specs/031-frontend-redesign/plan.md`
+
+- `A specs/031-frontend-redesign/tasks.md`
 
 No inventes pruebas manuales que el usuario no haya indicado.
 
 No vuelvas a documentar detalles técnicos innecesariamente si ya fueron registrados durante `/issue $1`.
 
-## 5. Cerrar la Issue
+## 6. Cerrar la Issue
 
 El cierre de la Issue debe ser siempre el último paso.
 
@@ -161,7 +239,7 @@ Si la Issue ya estaba cerrada antes de ejecutar este comando:
 - completa igualmente todas las comprobaciones Git y de publicación;
 - no vuelvas a cerrarla innecesariamente.
 
-## 6. Verificación final
+## 7. Verificación final
 
 Comprueba:
 
@@ -172,44 +250,6 @@ Comprueba:
 - commit disponible en remoto;
 - validación manual registrada;
 - Issue cerrada.
-
-## 7. Archivos cambiados por la Issue
-
-Esta sección es OBLIGATORIA.
-
-Antes de mostrar el resumen final:
-
-1. Identifica la rama base real desde la que se creó la rama actual.
-
-2. Obtén la lista de archivos cambiados por la Issue respecto a esa rama base.
-
-3. Usa una comparación equivalente a:
-
-   `git diff --name-status <rama-base>...HEAD`
-
-4. No uses `main` automáticamente si la rama fue creada desde otra rama de dependencia.
-
-5. Incluye todos los archivos añadidos, modificados o eliminados por la Issue.
-
-La salida debe mostrar explícitamente:
-
-- rama base;
-
-- `A` para archivos añadidos;
-
-- `M` para archivos modificados;
-
-- `D` para archivos eliminados.
-
-Si no puede determinarse con seguridad la rama base:
-
-- indícalo claramente;
-
-- no inventes una rama base;
-
-- intenta resolverla mediante el historial Git antes de continuar.
-
-No omitas esta sección aunque la Issue ya esté cerrada.
 
 ## 8. Resumen final
 

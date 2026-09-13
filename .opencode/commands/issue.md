@@ -385,7 +385,93 @@ No informes que la Issue está completada.
 
 No cierres la Issue.
 
-## 14. Finalizar el workflow de desarrollo
+## 14. Indicar validaciones manuales pendientes
+
+Después de completar la implementación, las verificaciones automáticas y el commit,
+
+indica qué validaciones manuales debe realizar el usuario antes de ejecutar
+
+`/finish-issue $1`.
+
+Esta sección es obligatoria.
+
+Las validaciones manuales deben derivarse específicamente de:
+
+- criterios de aceptación de la Issue;
+
+- comportamiento implementado;
+
+- capas modificadas;
+
+- endpoints modificados;
+
+- cambios visuales o de navegación;
+
+- autenticación o autorización;
+
+- persistencia;
+
+- infraestructura;
+
+- cualquier riesgo funcional relevante.
+
+No generes una checklist genérica idéntica para todas las Issues.
+
+No repitas tests automáticos que ya hayan sido ejecutados correctamente salvo que
+
+sea necesario comprobar manualmente un comportamiento concreto.
+
+Si la Issue afecta frontend, indica las comprobaciones visuales o de interacción
+
+que debe realizar el usuario.
+
+Si afecta backend/API, indica los endpoints o comportamientos que debe probar
+
+manualmente.
+
+Si afecta autenticación o autorización, diferencia los casos relevantes:
+
+sin autenticación, usuario normal, administrador u otros permisos.
+
+Si afecta Docker o infraestructura, indica las comprobaciones manuales de
+
+arranque, healthcheck, persistencia o configuración necesarias.
+
+Si la Issue es únicamente documental o de diseño técnico, indica qué decisiones
+
+o documentación debe revisar el usuario.
+
+Si no existe ninguna validación manual razonable, indícalo explícitamente.
+
+### Formato obligatorio
+
+Muestra al final una sección:
+
+## Validaciones manuales pendientes
+
+Incluye una lista concreta y breve.
+
+Ejemplo:
+
+- [ ] `GET /api/health` sin autenticación devuelve `200`.
+
+- [ ] `GET /api/users/me` sin JWT devuelve `401`.
+
+- [ ] La navegación móvil funciona correctamente a 390px.
+
+- [ ] Los botones Anterior/Siguiente cambian correctamente de página.
+
+- [ ] No existe scroll horizontal inesperado.
+
+Las casillas representan validaciones pendientes del usuario.
+
+NO las marques como completadas automáticamente.
+
+NO registres todavía la validación manual como aprobada.
+
+NO ejecutes `/finish-issue`.
+
+## 15. Finalizar el workflow de desarrollo
 
 NO cierres automáticamente la GitHub Issue #$1.
 
@@ -443,7 +529,7 @@ Finaliza mostrando:
 
 - tasks completadas;
 
-- verificaciones realizadas;
+- verificaciones automáticas realizadas;
 
 - hash y mensaje del commit;
 
@@ -451,4 +537,14 @@ Finaliza mostrando:
 
 - estado de la Issue;
 
-- siguiente paso: `/finish-issue $1`.
+- validación manual pendiente;
+
+- checklist de pruebas manuales que debe realizar el usuario;
+
+- comando recomendado para preparar el entorno cuando corresponda:
+
+  `/dev-frontend`, `/dev-restart` o `/dev-full`;
+
+- siguiente paso después de aprobar manualmente todas las pruebas:
+
+  `/finish-issue $1`.
