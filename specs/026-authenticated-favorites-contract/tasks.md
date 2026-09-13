@@ -41,8 +41,9 @@
 - [x] Validar tamaños y contenido de `spec.md`, `plan.md` y `tasks.md`.
 - [x] Revisar `git diff`, `git status`, secretos y exclusión de archivos ajenos.
 - [x] Marcar todas las tasks documentales completadas y registrar la auditoría.
-- [ ] Crear el commit específico de la Issue #26 y conservar su hash.
-- [ ] Documentar la Issue #26 con rama, commit, verificaciones y estado abierto
+- [x] Crear el commit específico de la Issue #26 y conservar su hash
+  (`15bf35a`).
+- [x] Documentar la Issue #26 con rama, commit, verificaciones y estado abierto
   pendiente de validación manual.
 
 ## Resultados de auditoría
@@ -57,3 +58,7 @@
   datos ni scripts.
 - La especificación histórica 002 se conserva sin cambios y queda explícitamente
   superada para favoritos por la autoridad API/MySQL de esta spec.
+- Los tres archivos SDD tienen contenido válido: `spec.md` 7848 bytes,
+  `plan.md` 3143 bytes y `tasks.md` 2120 bytes antes de esta actualización.
+- `git diff --check` y la búsqueda de secretos no detectaron problemas.
+- No se ejecutaron tests, lint ni build porque no se modificó código.
