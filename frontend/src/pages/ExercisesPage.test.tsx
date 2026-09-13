@@ -63,8 +63,12 @@ describe("ExercisesPage", () => {
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: "Reintentar" }));
 
-    expect(await screen.findByRole("link", { name: /Back Squat/ })).toBeTruthy();
-    expect(screen.getByText("1 movimientos disponibles")).toBeTruthy();
+    const exerciseLink = await screen.findByRole("link", { name: /Back Squat/ });
+    expect(exerciseLink.getAttribute("href")).toBe("#/exercises/2");
+    expect(screen.getByText("Halterofilia")).toBeTruthy();
+    expect(screen.getByText("Peso")).toBeTruthy();
+    expect(screen.getByText("1 movimiento disponibles")).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Resultados de ejercicios" })).toBeTruthy();
   });
 
   it("sends the search query and page navigation to the API", async () => {
@@ -81,6 +85,7 @@ describe("ExercisesPage", () => {
       { name: "snatch" },
       { page: 0, size: 20 },
     ));
+    expect(screen.getByText('Resultados para “snatch”')).toBeTruthy();
   });
 
   it("invites an anonymous visitor to log in", () => {
