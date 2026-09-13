@@ -9,4 +9,4 @@
 - [x] T7. Actualizar schemas Zod y cliente API para los contratos paginados.
 - [x] T8. Añadir navegación anterior/siguiente y reinicio al cambiar filtros en WODs, ejercicios e historial.
 - [x] T9. Cubrir frontend y estados de paginación con los tests disponibles.
-- [ ] T10. Ejecutar verificaciones completas, revisar alcance y crear el commit de la Issue.
+- [x] T10. Ejecutar verificaciones completas, revisar alcance y crear el commit de la Issue.
