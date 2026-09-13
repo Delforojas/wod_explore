@@ -2,7 +2,7 @@
 
 ## Estado
 
-En desarrollo sobre la rama `feat/031-redisenar-shell-navegacion-responsive`.
+Completada en la rama `feat/031-redisenar-shell-navegacion-responsive`.
 
 ## Contexto
 

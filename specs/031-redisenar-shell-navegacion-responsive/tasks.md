@@ -126,7 +126,7 @@ Estado: completada.
 - No quedan cambios de la Issue sin commit.
 - La Issue contiene el resumen, archivos, verificaciones, hash y rama.
 
-Estado: pendiente.
+Estado: completada.
 
 ## Orden de ejecución
 
