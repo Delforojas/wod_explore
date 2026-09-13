@@ -98,6 +98,18 @@ describe("ExerciseDetailPage", () => {
     ));
   });
 
+  it("shows accessible feedback after saving a mark", async () => {
+    const user = userEvent.setup();
+    renderLoadedExercise("WEIGHT");
+    await screen.findByRole("heading", { name: "Back Squat" });
+
+    await user.type(screen.getByLabelText("Valor"), "100");
+    await user.click(screen.getByRole("button", { name: "Guardar marca" }));
+
+    expect(await screen.findByRole("status")).toBeTruthy();
+    expect(screen.getByRole("status").textContent).toBe("Marca guardada correctamente.");
+  });
+
   it("explains when an exercise measurement cannot be registered", async () => {
     renderLoadedExercise("DISTANCE");
 

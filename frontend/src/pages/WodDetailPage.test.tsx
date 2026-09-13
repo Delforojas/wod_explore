@@ -88,6 +88,18 @@ describe("WodDetailPage", () => {
     ));
   });
 
+  it("shows accessible feedback after saving a result", async () => {
+    const user = userEvent.setup();
+    renderLoadedWod("FOR_TIME");
+    await screen.findByRole("heading", { name: "Fran" });
+
+    await user.type(screen.getByLabelText("Tiempo en segundos"), "60");
+    await user.click(screen.getByRole("button", { name: "Guardar resultado" }));
+
+    expect(await screen.findByRole("status")).toBeTruthy();
+    expect(screen.getByRole("status").textContent).toBe("Resultado guardado correctamente.");
+  });
+
   it("sends the AMRAP payload", async () => {
     const user = userEvent.setup();
     renderLoadedWod("AMRAP");
