@@ -28,7 +28,10 @@ export function Layout({ children, currentPage }: LayoutProps) {
       <header className="topbar">
         <a className="brand" href="#/">
           <span className="brand-mark" aria-hidden="true">W</span>
-          <span>WOD Explorer</span>
+          <span className="brand-copy">
+            <strong>WOD Explorer</strong>
+            <small>Archivo de entrenamiento</small>
+          </span>
         </a>
         <div className="session-actions">
           {user ? (
@@ -63,7 +66,9 @@ export function Layout({ children, currentPage }: LayoutProps) {
               href={`#${path}`}
               aria-current={isCurrentPage(path) ? "page" : undefined}
             >
-              <span>{label}</span>
+              <span className="nav-link__body">
+                <span>{label}</span>
+              </span>
               <span aria-hidden="true">-&gt;</span>
             </a>
           ))}
