@@ -7,18 +7,18 @@ Finaliza la GitHub Issue #$1 del repositorio actual.
 Este comando se ejecuta únicamente después de que:
 
 - `/issue $1` haya completado correctamente el desarrollo;
+
 - exista una rama específica correspondiente a la Issue;
+
 - exista un commit correspondiente a la Issue;
-- el usuario haya realizado y aprobado la validación manual.
 
-Este comando NO implementa trabajo.
+- el usuario haya realizado la validación manual.
 
-No vuelvas a implementar la Issue.
-No vuelvas a generar ni modificar el SDD.
-No repitas el análisis completo del proyecto.
-No repitas tests, build o lint salvo que sea necesario para comprobar un problema detectado.
-No crees nuevas ramas.
-No crees nuevos commits salvo autorización explícita del usuario.
+La ejecución de `/finish-issue $1` implica explícitamente que el usuario aprueba la validación manual.
+
+No solicites una confirmación adicional de la validación manual.
+
+No detengas el workflow por falta de una segunda confirmación.
 
 ## 1. Comprobar la Issue
 
@@ -117,23 +117,21 @@ No cierres la Issue.
 
 ## 4. Registrar la validación manual
 
+Considera la validación manual como aprobada por el hecho de que el usuario ha ejecutado `/finish-issue $1`.
+
 Actualiza la GitHub Issue #$1 indicando que:
 
 - la implementación fue completada durante `/issue $1`;
+
 - las verificaciones automáticas fueron realizadas durante `/issue $1`;
-- el usuario ha realizado y aprobado la validación manual;
+
+- la validación manual fue realizada y aprobada por el usuario antes de ejecutar `/finish-issue $1`;
+
 - la rama ha sido publicada correctamente;
+
 - el commit final asociado es el detectado anteriormente.
 
-Incluye:
-
-- nombre de la rama;
-- hash del commit;
-- mensaje del commit.
-
-No inventes pruebas manuales que el usuario no haya indicado.
-
-No vuelvas a documentar detalles técnicos innecesariamente si ya fueron registrados durante `/issue $1`.
+No solicites confirmación adicional al usuario.
 
 ## 5. Cerrar la Issue
 
@@ -142,11 +140,17 @@ El cierre de la Issue debe ser siempre el último paso.
 Cierra la GitHub Issue #$1 únicamente si se cumplen TODAS estas condiciones:
 
 - la rama corresponde a la Issue;
+
 - existe un commit válido correspondiente a la Issue;
+
 - no quedan cambios de la Issue sin commit;
-- el usuario ha aprobado la validación manual;
+
+- la ejecución de `/finish-issue $1` confirma que la validación manual ya fue realizada y aprobada;
+
 - el push se ha completado correctamente;
+
 - la rama y el commit existen en remoto;
+
 - no existen bloqueos pendientes.
 
 Si cualquiera de estas condiciones no se cumple:
@@ -154,12 +158,6 @@ Si cualquiera de estas condiciones no se cumple:
 DETENTE.
 
 NO cierres la Issue.
-
-Si la Issue ya estaba cerrada antes de ejecutar este comando:
-
-- no asumas que el workflow estaba correctamente finalizado;
-- completa igualmente todas las comprobaciones Git y de publicación;
-- no vuelvas a cerrarla innecesariamente.
 
 ## 6. Verificación final
 
@@ -188,9 +186,15 @@ Muestra:
 El workflow `/finish-issue $1` solo se considera COMPLETADO si:
 
 1. la rama correcta ya existía;
+
 2. el commit de la Issue ya existía;
+
 3. no quedaban cambios de la Issue sin commit;
-4. el usuario había aprobado la validación manual;
+
+4. la ejecución de `/finish-issue $1` confirma la aprobación de la validación manual;
+
 5. el push se realizó correctamente;
+
 6. la Issue quedó correctamente documentada;
+
 7. la Issue está cerrada.
