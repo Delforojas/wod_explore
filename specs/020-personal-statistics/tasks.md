@@ -62,4 +62,4 @@
 - [x] Revisar `git diff` y confirmar alcance limitado a Issue #20.
 - [x] Confirmar que no se modificó el esquema MySQL.
 - [x] Marcar todos los criterios de aceptación como completados.
-- [ ] Crear y documentar el commit de la Issue #20.
+- [x] Crear y documentar el commit de la Issue #20.

@@ -73,3 +73,5 @@ y #18.
 - Resultado: 125 tests correctos; `validate` y `package` correctos.
 - Los tests de repositorio confirmaron el orden temporal y la carga explícita
   de las relaciones contra MySQL 8.4.11.
+- Commit de implementación: `eb21909063cb09238f3f24e0ad0025e5a248fea9` —
+  `feat(statistics): implement personal statistics for issue #20`.

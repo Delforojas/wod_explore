@@ -4,6 +4,7 @@
 
 Implementación completada y validada en la rama `feat/020-personal-statistics`.
 La Issue permanece abierta hasta la validación manual y `/finish-issue 20`.
+Commit de implementación: `eb21909063cb09238f3f24e0ad0025e5a248fea9`.
 
 La funcionalidad depende de los resultados autenticados implementados en las
 Issues #17 y #18 y del patrón de identidad de la Issue #19.
