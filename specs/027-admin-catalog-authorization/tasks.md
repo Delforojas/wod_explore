@@ -19,8 +19,9 @@
 - [x] Ejecutar `./mvnw test`.
 - [x] Ejecutar `./mvnw package`.
 - [x] Revisar diff, status, secretos y alcance antes del commit.
-- [ ] Crear el commit específico de la Issue #27 y conservar su hash.
-- [ ] Documentar la Issue #27 con cambios, verificaciones, rama y commit,
+- [x] Crear el commit específico de la Issue #27 y conservar su hash
+  (`0fe502b`).
+- [x] Documentar la Issue #27 con cambios, verificaciones, rama y commit,
   manteniéndola abierta para validación manual.
 
 ## Resultados
@@ -29,3 +30,5 @@ Implementación y verificaciones completadas. `./mvnw validate`, `./mvnw test`
 (129 tests, 0 fallos y 0 errores) y `./mvnw package` terminaron correctamente.
 La allowlist está vacía por defecto y se configura mediante `ADMIN_EMAILS`.
 El esquema MySQL y los scripts de inicialización no fueron modificados.
+El commit de implementación es `0fe502b` y la Issue quedó documentada abierta,
+pendiente de validación manual y de `/finish-issue 27`.
