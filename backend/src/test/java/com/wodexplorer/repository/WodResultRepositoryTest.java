@@ -19,10 +19,11 @@ import com.wodexplorer.entity.Wod;
 import com.wodexplorer.entity.WodLevel;
 import com.wodexplorer.entity.WodResult;
 import com.wodexplorer.entity.WodType;
+import com.wodexplorer.support.MySqlIntegrationTest;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-class WodResultRepositoryTest {
+class WodResultRepositoryTest extends MySqlIntegrationTest {
 
     @Autowired
     private TestEntityManager entityManager;

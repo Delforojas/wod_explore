@@ -117,6 +117,29 @@ cd backend
 Hibernate está configurado con `spring.jpa.hibernate.ddl-auto=none`; el backend
 no crea ni modifica automáticamente el esquema.
 
+## Tests backend aislados
+
+La suite backend usa Testcontainers para levantar una instancia MySQL 8.4
+efímera con credenciales y base propias de test. No necesita el `.env`, el
+contenedor `wod-explorer-db` ni el volumen `mysql_data` del entorno local; Docker
+debe estar disponible.
+
+Desde `backend/`:
+
+```bash
+./mvnw test
+```
+
+Los tests JPA usan rollback transaccional y el contenedor se destruye al terminar
+cada clase. El esquema de `backend/src/test/resources/db/test-schema.sql` solo
+contiene definiciones compatibles con MySQL y no carga los fixtures de desarrollo
+de `Docker/mysql/init/`.
+
+Los fixtures de test son efímeros y sirven únicamente para validar entidades y
+repositorios. Los datos de desarrollo viven en el volumen local y los datos de
+producción deben gestionarse fuera de este flujo; ningún test debe conectarse a
+ellos.
+
 ## Comandos de verificación
 
 Frontend, desde `frontend/`:

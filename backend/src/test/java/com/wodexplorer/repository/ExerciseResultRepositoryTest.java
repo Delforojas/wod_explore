@@ -22,10 +22,11 @@ import com.wodexplorer.entity.ExerciseResult;
 import com.wodexplorer.entity.ExerciseResultUnit;
 import com.wodexplorer.entity.MeasurementType;
 import com.wodexplorer.entity.User;
+import com.wodexplorer.support.MySqlIntegrationTest;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-class ExerciseResultRepositoryTest {
+class ExerciseResultRepositoryTest extends MySqlIntegrationTest {
 
     @Autowired
     private TestEntityManager entityManager;
