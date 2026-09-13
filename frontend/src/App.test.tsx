@@ -15,7 +15,7 @@ describe("App navigation", () => {
     renderWithAuth(<App />);
 
     expect(screen.getByRole("heading", { name: "Tu archivo de WODs empieza aquí." })).toBeTruthy();
-    expect(screen.getByRole("link", { name: /Catálogo principal.*WODs/ }).getAttribute("href")).toBe("#/wods");
+    expect(screen.getByRole("link", { name: /Movimiento.*Ejercicios/ }).getAttribute("href")).toBe("#/exercises");
     expect(screen.getByRole("link", { name: /Tu rendimiento.*Evolución/ }).getAttribute("href")).toBe("#/statistics");
     expect(screen.getByRole("link", { name: /Lo que ya hiciste.*Historial/ }).getAttribute("href")).toBe("#/history");
     await user.click(screen.getByRole("link", { name: "Explorar WODs" }));
