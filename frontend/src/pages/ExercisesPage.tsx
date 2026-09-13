@@ -117,7 +117,7 @@ export function ExercisesPage() {
               <li className="catalog-list__item" key={exercise.id}>
                 <a className="catalog-row catalog-row--exercise" href={`#/exercises/${exercise.id}`}>
                   <span className="row-number">{String(exercise.id).padStart(3, "0")}</span>
-                  <span className="row-main"><strong>{exercise.name}</strong><small>{EXERCISE_CATEGORY_LABELS[exercise.category]}</small></span>
+                  <span className="row-main"><strong>{exercise.name}</strong><small className="row-main__category"><span>Categoría</span>{EXERCISE_CATEGORY_LABELS[exercise.category]}</small></span>
                   <span className="row-meta"><small>Medición</small>{MEASUREMENT_LABELS[exercise.measurementType]}</span>
                   <span className="row-arrow" aria-hidden="true">-&gt;</span>
                 </a>
