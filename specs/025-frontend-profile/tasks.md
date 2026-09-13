@@ -37,8 +37,9 @@
 - [x] Ejecutar `npm run build` sin errores de TypeScript.
 - [x] Revisar diff, status y alcance; confirmar que no se modificó backend.
 - [x] Marcar las tareas de implementación y documentar los resultados reales.
-- [ ] Crear el commit específico de la Issue #25 y conservar su hash.
-- [ ] Documentar la Issue #25 con rama, commit, verificaciones y estado abierto
+- [x] Crear el commit específico de la Issue #25 y conservar su hash
+  (`e150e5a`).
+- [x] Documentar la Issue #25 con rama, commit, verificaciones y estado abierto
   pendiente de validación manual.
 
 ## Resultados de verificación
