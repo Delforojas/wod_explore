@@ -42,6 +42,7 @@ import com.wodexplorer.controller.UserController;
 import com.wodexplorer.controller.WodController;
 import com.wodexplorer.controller.WodResultController;
 import com.wodexplorer.dto.LoginResponse;
+import com.wodexplorer.dto.UserHistoryResponse;
 import com.wodexplorer.dto.UserResponse;
 import com.wodexplorer.exception.GlobalExceptionHandler;
 import com.wodexplorer.service.AuthService;
@@ -49,6 +50,7 @@ import com.wodexplorer.service.ExerciseService;
 import com.wodexplorer.service.ExerciseResultService;
 import com.wodexplorer.service.JwtService;
 import com.wodexplorer.service.UserService;
+import com.wodexplorer.service.UserHistoryService;
 import com.wodexplorer.service.WodService;
 import com.wodexplorer.service.WodResultService;
 
@@ -90,6 +92,9 @@ class SecurityHttpTest {
 
     @MockitoBean
     private UserService userService;
+
+    @MockitoBean
+    private UserHistoryService userHistoryService;
 
     @MockitoBean
     private AuthService authService;
@@ -226,6 +231,54 @@ class SecurityHttpTest {
                 .andExpect(jsonPath("$").isEmpty());
 
         then(exerciseResultService).should().findOwnResults(18, TEST_EMAIL);
+    }
+
+    @Test
+    void currentUser_WithoutJwt_ReturnsJsonUnauthorized() throws Exception {
+        mockMvc.perform(get("/api/users/me"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.error").value("UNAUTHORIZED"))
+                .andExpect(jsonPath("$.message").value("Autenticación requerida"));
+
+        then(userService).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void currentUser_WithValidJwt_UsesJwtSubject() throws Exception {
+        given(userService.findCurrentUser(TEST_EMAIL)).willReturn(new UserResponse(
+                1, "Delfin", "Rojas", TEST_EMAIL, null));
+        String token = jwtService.generateToken(TEST_EMAIL);
+
+        mockMvc.perform(get("/api/users/me")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email").value(TEST_EMAIL));
+
+        then(userService).should().findCurrentUser(TEST_EMAIL);
+    }
+
+    @Test
+    void currentUserHistory_WithoutJwt_ReturnsJsonUnauthorized() throws Exception {
+        mockMvc.perform(get("/api/users/me/history"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.error").value("UNAUTHORIZED"));
+
+        then(userHistoryService).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void currentUserHistory_WithValidJwt_UsesJwtSubject() throws Exception {
+        given(userHistoryService.findOwnHistory(TEST_EMAIL)).willReturn(
+                new UserHistoryResponse(List.of(), List.of()));
+        String token = jwtService.generateToken(TEST_EMAIL);
+
+        mockMvc.perform(get("/api/users/me/history")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.wodResults").isEmpty())
+                .andExpect(jsonPath("$.exerciseResults").isEmpty());
+
+        then(userHistoryService).should().findOwnHistory(TEST_EMAIL);
     }
 
     @Test

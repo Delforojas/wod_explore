@@ -14,6 +14,8 @@ public interface ExerciseResultRepository extends JpaRepository<ExerciseResult, 
             Integer userId,
             Integer exerciseId);
 
+    List<ExerciseResult> findByUser_IdOrderByPerformedAtDescIdDesc(Integer userId);
+
     Optional<ExerciseResult>
             findFirstByUser_IdAndExercise_IdAndRecordTypeOrderByValueDescPerformedAtDescIdDesc(
                     Integer userId,

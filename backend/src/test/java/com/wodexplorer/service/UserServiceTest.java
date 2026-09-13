@@ -8,6 +8,8 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
@@ -18,10 +20,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import com.wodexplorer.dto.UserRegistrationRequest;
 import com.wodexplorer.dto.UserResponse;
 import com.wodexplorer.entity.User;
+import com.wodexplorer.exception.AuthenticatedUserNotFoundException;
 import com.wodexplorer.exception.EmailAlreadyExistsException;
 import com.wodexplorer.repository.UserRepository;
 
@@ -84,5 +88,35 @@ class UserServiceTest {
 
         assertThatThrownBy(() -> userService.register(request))
                 .isInstanceOf(EmailAlreadyExistsException.class);
+    }
+
+    @Test
+    void findCurrentUser_NormalizesEmailAndReturnsSafeResponse() {
+        User user = new User();
+        ReflectionTestUtils.setField(user, "id", 4);
+        ReflectionTestUtils.setField(user, "createdAt", LocalDateTime.of(2026, 9, 12, 16, 0));
+        user.setName("Delfin");
+        user.setLastName("Rojas");
+        user.setEmail("athlete@example.com");
+        user.setPasswordHash("secret-hash");
+        given(userRepository.findByEmail("athlete@example.com")).willReturn(Optional.of(user));
+
+        UserResponse response = userService.findCurrentUser(" ATHLETE@EXAMPLE.COM ");
+
+        assertThat(response).isEqualTo(new UserResponse(
+                4,
+                "Delfin",
+                "Rojas",
+                "athlete@example.com",
+                LocalDateTime.of(2026, 9, 12, 16, 0)));
+        then(userRepository).should().findByEmail("athlete@example.com");
+    }
+
+    @Test
+    void findCurrentUser_WhenUserDoesNotExist_RejectsAuthentication() {
+        given(userRepository.findByEmail("athlete@example.com")).willReturn(Optional.empty());
+
+        assertThatThrownBy(() -> userService.findCurrentUser("athlete@example.com"))
+                .isInstanceOf(AuthenticatedUserNotFoundException.class);
     }
 }

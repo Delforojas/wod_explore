@@ -41,7 +41,7 @@ class WodResultRepositoryTest {
         WodResult olderResult = persistResult(firstUser, wod, older, 400);
         WodResult newerResult = persistResult(firstUser, wod, newer, 300);
         persistResult(secondUser, wod, newer, 200);
-        persistResult(firstUser, otherWod, newer, 100);
+        WodResult otherWodResult = persistResult(firstUser, otherWod, newer, 100);
         entityManager.flush();
         entityManager.clear();
 
@@ -51,6 +51,11 @@ class WodResultRepositoryTest {
 
         assertThat(results).extracting(WodResult::getId)
                 .containsExactly(newerResult.getId(), olderResult.getId());
+
+        List<WodResult> userResults = wodResultRepository
+                .findByUser_IdOrderByCompletedAtDescIdDesc(firstUser.getId());
+        assertThat(userResults).extracting(WodResult::getId)
+                .containsExactly(otherWodResult.getId(), newerResult.getId(), olderResult.getId());
     }
 
     private User persistUser() {

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.wodexplorer.dto.UserRegistrationRequest;
 import com.wodexplorer.dto.UserResponse;
 import com.wodexplorer.entity.User;
+import com.wodexplorer.exception.AuthenticatedUserNotFoundException;
 import com.wodexplorer.exception.EmailAlreadyExistsException;
 import com.wodexplorer.exception.EmailConstraintViolationDetector;
 import com.wodexplorer.repository.UserRepository;
@@ -48,6 +49,24 @@ public class UserService {
             }
             throw exception;
         }
+    }
+
+    @Transactional(readOnly = true)
+    public UserResponse findCurrentUser(String authenticatedEmail) {
+        return toResponse(findAuthenticatedUser(authenticatedEmail));
+    }
+
+    private User findAuthenticatedUser(String authenticatedEmail) {
+        String normalizedEmail = authenticatedEmail == null
+                ? ""
+                : authenticatedEmail.trim().toLowerCase(Locale.ROOT);
+
+        if (normalizedEmail.isBlank()) {
+            throw new AuthenticatedUserNotFoundException();
+        }
+
+        return userRepository.findByEmail(normalizedEmail)
+                .orElseThrow(AuthenticatedUserNotFoundException::new);
     }
 
     private UserResponse toResponse(User user) {

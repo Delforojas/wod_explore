@@ -46,7 +46,8 @@ class ExerciseResultRepositoryTest {
         ExerciseResult newerResult = persistResult(
                 firstUser, exercise, "120.00", ExerciseRecordType.ONE_RM, newer);
         persistResult(secondUser, exercise, "140.00", ExerciseRecordType.ONE_RM, newer);
-        persistResult(firstUser, otherExercise, "160.00", ExerciseRecordType.ONE_RM, newer);
+        ExerciseResult otherExerciseResult = persistResult(
+                firstUser, otherExercise, "160.00", ExerciseRecordType.ONE_RM, newer);
         entityManager.flush();
         entityManager.clear();
 
@@ -56,6 +57,11 @@ class ExerciseResultRepositoryTest {
 
         assertThat(results).extracting(ExerciseResult::getId)
                 .containsExactly(newerResult.getId(), olderResult.getId());
+
+        List<ExerciseResult> userResults = exerciseResultRepository
+                .findByUser_IdOrderByPerformedAtDescIdDesc(firstUser.getId());
+        assertThat(userResults).extracting(ExerciseResult::getId)
+                .containsExactly(otherExerciseResult.getId(), newerResult.getId(), olderResult.getId());
     }
 
     @Test

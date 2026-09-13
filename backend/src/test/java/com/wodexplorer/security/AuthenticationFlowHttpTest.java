@@ -42,6 +42,7 @@ import com.wodexplorer.repository.UserRepository;
 import com.wodexplorer.service.AuthService;
 import com.wodexplorer.service.ExerciseService;
 import com.wodexplorer.service.JwtService;
+import com.wodexplorer.service.UserHistoryService;
 import com.wodexplorer.service.UserService;
 
 @WebMvcTest({ExerciseController.class, UserController.class, AuthController.class})
@@ -85,6 +86,9 @@ class AuthenticationFlowHttpTest {
 
     @MockitoBean
     private ExerciseService exerciseService;
+
+    @MockitoBean
+    private UserHistoryService userHistoryService;
 
     @Test
     void registerLoginAndAccessProtectedEndpoint_UsesCompleteAuthenticationFlow() throws Exception {

@@ -2,6 +2,8 @@ package com.wodexplorer.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -16,13 +18,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
+import java.util.List;
+
+import com.wodexplorer.dto.UserHistoryResponse;
 import com.wodexplorer.dto.UserResponse;
 import com.wodexplorer.exception.EmailAlreadyExistsException;
 import com.wodexplorer.exception.GlobalExceptionHandler;
 import com.wodexplorer.service.JwtService;
+import com.wodexplorer.service.UserHistoryService;
 import com.wodexplorer.service.UserService;
 
 @WebMvcTest(UserController.class)
@@ -36,6 +43,9 @@ class UserControllerTest {
 
     @MockitoBean
     private UserService userService;
+
+    @MockitoBean
+    private UserHistoryService userHistoryService;
 
     @MockitoBean
     private JwtService jwtService;
@@ -141,5 +151,45 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.message").value("El email ya está registrado"))
                 .andExpect(jsonPath("$.password").doesNotExist())
                 .andExpect(jsonPath("$.passwordHash").doesNotExist());
+    }
+
+    @Test
+    void currentUser_ReturnsAuthenticatedProfileWithoutSensitiveFields() throws Exception {
+        given(userService.findCurrentUser("athlete@example.com")).willReturn(new UserResponse(
+                4,
+                "Delfin",
+                "Rojas",
+                "athlete@example.com",
+                LocalDateTime.of(2026, 9, 12, 16, 0)));
+
+        mockMvc.perform(get("/api/users/me")
+                        .principal(authenticatedUser()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(4))
+                .andExpect(jsonPath("$.email").value("athlete@example.com"))
+                .andExpect(jsonPath("$.passwordHash").doesNotExist())
+                .andExpect(jsonPath("$.password_hash").doesNotExist())
+                .andExpect(jsonPath("$.password").doesNotExist());
+    }
+
+    @Test
+    void currentUserHistory_ReturnsSeparateResultCollections() throws Exception {
+        given(userHistoryService.findOwnHistory("athlete@example.com"))
+                .willReturn(new UserHistoryResponse(List.of(), List.of()));
+
+        mockMvc.perform(get("/api/users/me/history")
+                        .principal(authenticatedUser())
+                        .queryParam("userId", "999"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.wodResults").isEmpty())
+                .andExpect(jsonPath("$.exerciseResults").isEmpty())
+                .andExpect(jsonPath("$.userId").doesNotExist());
+
+        then(userHistoryService).should().findOwnHistory("athlete@example.com");
+    }
+
+    private UsernamePasswordAuthenticationToken authenticatedUser() {
+        return UsernamePasswordAuthenticationToken.authenticated(
+                "athlete@example.com", null, List.of());
     }
 }
