@@ -156,3 +156,4 @@ a `getWod`, `getWodResults`, `createWodResult`, `getExercise`,
   sistema global de notificaciones.
 - Las etiquetas visibles podran traducir enums ya existentes, pero no se
   modificaran los valores enviados a la API.
+cd ,,
