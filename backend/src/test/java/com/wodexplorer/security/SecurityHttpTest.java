@@ -1,11 +1,14 @@
 package com.wodexplorer.security;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,6 +38,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.wodexplorer.config.CorsConfig;
 import com.wodexplorer.config.JwtConfiguration;
 import com.wodexplorer.config.SecurityConfig;
+import com.wodexplorer.dto.ExerciseResponse;
 import com.wodexplorer.controller.AuthController;
 import com.wodexplorer.controller.ExerciseController;
 import com.wodexplorer.controller.ExerciseResultController;
@@ -47,6 +51,8 @@ import com.wodexplorer.dto.UserHistoryResponse;
 import com.wodexplorer.dto.UserResponse;
 import com.wodexplorer.dto.UserStatisticsResponse;
 import com.wodexplorer.exception.GlobalExceptionHandler;
+import com.wodexplorer.entity.ExerciseCategory;
+import com.wodexplorer.entity.MeasurementType;
 import com.wodexplorer.service.AuthService;
 import com.wodexplorer.service.ExerciseService;
 import com.wodexplorer.service.ExerciseResultService;
@@ -66,6 +72,7 @@ import io.jsonwebtoken.Jwts;
 @Import({
         CorsConfig.class,
         GlobalExceptionHandler.class,
+        AdminAuthorizationService.class,
         JwtAuthenticationFilter.class,
         JwtConfiguration.class,
         JwtService.class,
@@ -76,7 +83,8 @@ import io.jsonwebtoken.Jwts;
 @TestPropertySource(properties = {
         "jwt.secret=01234567890123456789012345678901",
         "jwt.expiration=3600000",
-        "cors.allowed-origin=http://localhost:4173"
+        "cors.allowed-origin=http://localhost:4173",
+        "security.admin-emails=admin@example.com"
 })
 class SecurityHttpTest {
 
@@ -171,6 +179,90 @@ class SecurityHttpTest {
                 .andExpect(status().isOk());
 
         then(exerciseService).should().findAll();
+    }
+
+    @Test
+    void exerciseMutations_WithoutJwt_ReturnJsonUnauthorized() throws Exception {
+        mockMvc.perform(post("/api/exercises")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(validExerciseJson()))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.error").value("UNAUTHORIZED"))
+                .andExpect(jsonPath("$.message").value("Autenticación requerida"));
+
+        then(exerciseService).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void exerciseMutations_WithNormalJwt_ReturnForbiddenWithoutCallingService() throws Exception {
+        String token = jwtService.generateToken(TEST_EMAIL);
+
+        mockMvc.perform(post("/api/exercises")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(validExerciseJson()))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.error").value("FORBIDDEN"))
+                .andExpect(jsonPath("$.message").value("Acceso denegado"));
+
+        mockMvc.perform(put("/api/exercises/1")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(validExerciseJson()))
+                .andExpect(status().isForbidden());
+
+        mockMvc.perform(delete("/api/exercises/1")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isForbidden());
+
+        then(exerciseService).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void exerciseMutations_WithRoleInBody_DoNotElevateNormalUser() throws Exception {
+        String token = jwtService.generateToken(TEST_EMAIL);
+
+        mockMvc.perform(post("/api/exercises")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name": "Burpee",
+                                  "category": "GYMNASTICS",
+                                  "measurementType": "REPS",
+                                  "role": "ADMIN"
+                                }
+                                """))
+                .andExpect(status().isForbidden());
+
+        then(exerciseService).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void exerciseMutations_WithAdminJwt_AllowsCreateUpdateAndDelete() throws Exception {
+        given(exerciseService.create(any())).willReturn(exerciseResponse());
+        given(exerciseService.update(any(Integer.class), any())).willReturn(exerciseResponse());
+        String token = jwtService.generateToken(" ADMIN@EXAMPLE.COM ");
+
+        mockMvc.perform(post("/api/exercises")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(validExerciseJson()))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(put("/api/exercises/1")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(validExerciseJson()))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(delete("/api/exercises/1")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isNoContent());
+
+        then(exerciseService).should().create(any());
+        then(exerciseService).should().update(eq(1), any());
+        then(exerciseService).should().delete(1);
     }
 
     @ParameterizedTest
@@ -383,5 +475,19 @@ class SecurityHttpTest {
                 .expiration(Date.from(now.minusSeconds(1)))
                 .signWith(signingKey, Jwts.SIG.HS256)
                 .compact();
+    }
+
+    private String validExerciseJson() {
+        return """
+                {
+                  "name": "Burpee",
+                  "category": "GYMNASTICS",
+                  "measurementType": "REPS"
+                }
+                """;
+    }
+
+    private ExerciseResponse exerciseResponse() {
+        return new ExerciseResponse(1, "Burpee", ExerciseCategory.GYMNASTICS, MeasurementType.REPS);
     }
 }

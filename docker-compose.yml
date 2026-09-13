@@ -50,6 +50,8 @@ services:
 
       CORS_ALLOWED_ORIGIN: ${CORS_ALLOWED_ORIGIN:-http://localhost:5173}
 
+      ADMIN_EMAILS: ${ADMIN_EMAILS:-}
+
     ports:
       - "8080:8080"
 

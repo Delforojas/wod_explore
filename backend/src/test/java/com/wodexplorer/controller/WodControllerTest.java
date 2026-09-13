@@ -30,6 +30,7 @@ import com.wodexplorer.entity.WodLevel;
 import com.wodexplorer.entity.WodType;
 import com.wodexplorer.exception.GlobalExceptionHandler;
 import com.wodexplorer.exception.WodNotFoundException;
+import com.wodexplorer.security.AdminAuthorizationService;
 import com.wodexplorer.service.JwtService;
 import com.wodexplorer.service.WodService;
 
@@ -47,6 +48,9 @@ class WodControllerTest {
 
     @MockitoBean
     private JwtService jwtService;
+
+    @MockitoBean
+    private AdminAuthorizationService adminAuthorizationService;
 
     @Test
     void findAll_WithoutFilters_ReturnsCatalogDto() throws Exception {

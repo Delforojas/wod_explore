@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.wodexplorer.dto.UserEvolutionResponse;
 import com.wodexplorer.dto.UserStatisticsResponse;
 import com.wodexplorer.exception.GlobalExceptionHandler;
+import com.wodexplorer.security.AdminAuthorizationService;
 import com.wodexplorer.service.JwtService;
 import com.wodexplorer.service.UserStatisticsService;
 
@@ -38,6 +39,9 @@ class UserStatisticsControllerTest {
 
     @MockitoBean
     private JwtService jwtService;
+
+    @MockitoBean
+    private AdminAuthorizationService adminAuthorizationService;
 
     @Test
     void statistics_ReturnsCountsAndPersonalRecords() throws Exception {

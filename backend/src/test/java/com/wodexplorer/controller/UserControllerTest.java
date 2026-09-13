@@ -28,6 +28,7 @@ import com.wodexplorer.dto.UserHistoryResponse;
 import com.wodexplorer.dto.UserResponse;
 import com.wodexplorer.exception.EmailAlreadyExistsException;
 import com.wodexplorer.exception.GlobalExceptionHandler;
+import com.wodexplorer.security.AdminAuthorizationService;
 import com.wodexplorer.service.JwtService;
 import com.wodexplorer.service.UserHistoryService;
 import com.wodexplorer.service.UserService;
@@ -49,6 +50,9 @@ class UserControllerTest {
 
     @MockitoBean
     private JwtService jwtService;
+
+    @MockitoBean
+    private AdminAuthorizationService adminAuthorizationService;
 
     @Test
     void register_ValidRequest_ReturnsCreatedWithoutSensitiveFields() throws Exception {

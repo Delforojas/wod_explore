@@ -48,6 +48,7 @@ import com.wodexplorer.service.UserService;
 @WebMvcTest({ExerciseController.class, UserController.class, AuthController.class})
 @ImportAutoConfiguration(exclude = UserDetailsServiceAutoConfiguration.class)
 @Import({
+        AdminAuthorizationService.class,
         AuthService.class,
         CorsConfig.class,
         GlobalExceptionHandler.class,
@@ -62,7 +63,8 @@ import com.wodexplorer.service.UserService;
 })
 @TestPropertySource(properties = {
         "jwt.secret=01234567890123456789012345678901",
-        "jwt.expiration=3600000"
+        "jwt.expiration=3600000",
+        "security.admin-emails="
 })
 class AuthenticationFlowHttpTest {
 

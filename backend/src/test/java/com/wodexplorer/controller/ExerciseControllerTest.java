@@ -21,6 +21,7 @@ import com.wodexplorer.dto.ExerciseResponse;
 import com.wodexplorer.entity.ExerciseCategory;
 import com.wodexplorer.entity.MeasurementType;
 import com.wodexplorer.exception.GlobalExceptionHandler;
+import com.wodexplorer.security.AdminAuthorizationService;
 import com.wodexplorer.service.ExerciseService;
 import com.wodexplorer.service.JwtService;
 
@@ -38,6 +39,9 @@ class ExerciseControllerTest {
 
     @MockitoBean
     private JwtService jwtService;
+
+    @MockitoBean
+    private AdminAuthorizationService adminAuthorizationService;
 
     @Test
     void findAll_ReturnsExistingExerciseContract() throws Exception {

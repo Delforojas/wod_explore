@@ -28,6 +28,7 @@ import com.wodexplorer.dto.WodResultResponse;
 import com.wodexplorer.entity.WodLevel;
 import com.wodexplorer.exception.GlobalExceptionHandler;
 import com.wodexplorer.exception.WodNotFoundException;
+import com.wodexplorer.security.AdminAuthorizationService;
 import com.wodexplorer.service.JwtService;
 import com.wodexplorer.service.WodResultService;
 
@@ -47,6 +48,9 @@ class WodResultControllerTest {
 
     @MockitoBean
     private JwtService jwtService;
+
+    @MockitoBean
+    private AdminAuthorizationService adminAuthorizationService;
 
     @Test
     void create_WithAuthenticatedUser_ReturnsCreatedWithoutUserId() throws Exception {
