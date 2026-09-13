@@ -79,8 +79,12 @@ describe("HistoryPage", () => {
     renderWithAuth(<HistoryPage />, { token: "token" });
 
     await waitFor(() => expect(screen.getByText("WOD #1")).toBeTruthy());
+    expect(screen.getByRole("heading", { name: "Resultados WOD" })).toBeTruthy();
+    expect(screen.getByText("Resultado WOD")).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Marcas de ejercicios" })).toBeTruthy();
     expect(screen.getByText("Ejercicio #2")).toBeTruthy();
-    expect(screen.getByRole("link", { name: /WOD #1/ }).getAttribute("href")).toBe("#/wods/1");
+    expect(screen.getByRole("link", { name: /Ver detalle del WOD/ }).getAttribute("href")).toBe("#/wods/1");
+    expect(screen.getByRole("link", { name: /Ver detalle del ejercicio/ }).getAttribute("href")).toBe("#/exercises/2");
   });
 
   it("shows a network error with retry feedback", async () => {

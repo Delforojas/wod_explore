@@ -87,11 +87,18 @@ describe("StatisticsPage", () => {
   it("renders populated records and evolution", async () => {
     vi.mocked(getStatistics).mockResolvedValue(populatedStatistics);
     vi.mocked(getEvolution).mockResolvedValue(populatedEvolution);
-    renderWithAuth(<StatisticsPage />, { token: "token" });
+    const { container } = renderWithAuth(<StatisticsPage />, { token: "token" });
 
     await waitFor(() => expect(screen.getAllByText("Fran")).toHaveLength(2));
     expect(screen.getAllByText("Back Squat")).toHaveLength(2);
     expect(screen.getAllByText("2", { selector: ".stat-value strong" })).toHaveLength(2);
+    expect(screen.getByRole("heading", { name: "Marcas personales" })).toBeTruthy();
+    expect(screen.getAllByText(/Por tiempo/)).toHaveLength(2);
+    expect(screen.getAllByText(/1RM/)).toHaveLength(2);
+    expect(screen.getAllByText("Secuencia temporal de intentos")).toHaveLength(2);
+    expect(container.querySelectorAll(".evolution-band")).toHaveLength(2);
+    expect(container.querySelectorAll(".evolution-band[aria-hidden=\"true\"]")).toHaveLength(2);
+    expect(screen.getAllByRole("link", { name: /Ver detalle del WOD/ })).toHaveLength(2);
     expect(screen.getByText("Evolución")).toBeTruthy();
   });
 

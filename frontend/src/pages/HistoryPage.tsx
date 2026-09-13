@@ -42,24 +42,76 @@ export function HistoryPage() {
   if (token && loadedToken !== token) return <LoadingMessage />;
   if (error || !history) return <StateMessage kind={errorKind} title={errorKind === "network-error" ? "No hay conexión con tu historial" : "No pudimos cargar tu historial"} message={error ?? "Inténtalo de nuevo."} action={{ label: "Reintentar", onClick: () => window.location.reload() }} />;
   const isEmpty = history.wodResults.items.length === 0 && history.exerciseResults.items.length === 0;
-  const totalResults = history.wodResults.totalElements + history.exerciseResults.totalElements;
 
   return (
-    <section className="catalog-page">
-      <div className="page-heading"><div><h1>Historial</h1></div><p className="heading-note">{totalResults} registros guardados</p></div>
-      {isEmpty && page === 0 ? <StateMessage kind="empty" title="Aún no hay sesiones" message="Registra un resultado desde cualquier detalle para empezar tu historial." action={{ label: "Explorar WODs", href: "#/wods" }} /> : <div className="history-grid"><HistoryColumn title="Resultados WOD" empty="No hay resultados WOD." total={history.wodResults.totalElements} items={history.wodResults.items.map((result) => ({ id: result.id, title: `WOD #${result.wodId}`, value: result.timeSeconds ? `${result.timeSeconds} s` : `${result.rounds ?? 0} rondas + ${result.reps ?? 0}`, meta: `${result.level} · ${dateFormatter.format(new Date(result.completedAt))}`, href: `#/wods/${result.wodId}` }))} /><HistoryColumn title="Marcas de ejercicios" empty="No hay marcas de ejercicios." total={history.exerciseResults.totalElements} items={history.exerciseResults.items.map((result) => ({ id: result.id, title: `Ejercicio #${result.exerciseId}`, value: `${result.value} ${result.unit}`, meta: `${result.recordType} · ${dateFormatter.format(new Date(result.performedAt))}`, href: `#/exercises/${result.exerciseId}` }))} /></div>}
+    <section className="catalog-page history-page" aria-labelledby="history-title">
+      <header className="page-heading">
+        <div>
+          <h1 id="history-title">Historial</h1>
+          <p className="heading-support">Una lectura de todas las sesiones y marcas que has guardado.</p>
+        </div>
+        <dl className="history-summary" aria-label="Resumen del historial">
+          <div>
+            <dt>Resultados WOD</dt>
+            <dd>{history.wodResults.totalElements}</dd>
+          </div>
+          <div>
+            <dt>Marcas de ejercicios</dt>
+            <dd>{history.exerciseResults.totalElements}</dd>
+          </div>
+        </dl>
+      </header>
+      {isEmpty && page === 0 ? <StateMessage kind="empty" title="Aún no hay sesiones" message="Registra un resultado desde cualquier detalle para empezar tu historial." action={{ label: "Explorar WODs", href: "#/wods" }} /> : <div className="history-grid"><HistoryColumn title="Resultados WOD" description="Sesiones registradas" empty="No hay resultados WOD." total={history.wodResults.totalElements} emptyAction={{ label: "Explorar WODs", href: "#/wods" }} items={history.wodResults.items.map((result) => ({ id: result.id, title: `WOD #${result.wodId}`, type: "Resultado WOD", value: result.timeSeconds !== null ? `${result.timeSeconds} s` : `${result.rounds ?? 0} rondas + ${result.reps ?? 0} repeticiones`, meta: formatLevel(result.level), dateTime: result.completedAt, href: `#/wods/${result.wodId}`, ariaLabel: `WOD #${result.wodId}, ${result.timeSeconds !== null ? `${result.timeSeconds} segundos` : `${result.rounds ?? 0} rondas y ${result.reps ?? 0} repeticiones`}. Ver detalle del WOD` }))} /><HistoryColumn title="Marcas de ejercicios" description="Mejores registros guardados" empty="No hay marcas de ejercicios." total={history.exerciseResults.totalElements} emptyAction={{ label: "Explorar ejercicios", href: "#/exercises" }} items={history.exerciseResults.items.map((result) => ({ id: result.id, title: `Ejercicio #${result.exerciseId}`, type: "Marca de ejercicio", value: `${result.value} ${formatUnit(result.unit)}`, meta: result.recordType, dateTime: result.performedAt, href: `#/exercises/${result.exerciseId}`, ariaLabel: `Ejercicio #${result.exerciseId}, ${result.value} ${formatUnit(result.unit)}. Ver detalle del ejercicio` }))} /></div>}
       {!isEmpty || page > 0 ? <PaginationControls page={page} hasNext={history.wodResults.hasNext || history.exerciseResults.hasNext} isLoading={false} onPrevious={() => goToPage(Math.max(0, page - 1))} onNext={() => goToPage(page + 1)} /> : null}
     </section>
   );
 }
 
-interface HistoryColumnProps {
-  title: string;
-  empty: string;
-  total: number;
-  items: Array<{ id: number; title: string; value: string; meta: string; href: string }>;
+function formatLevel(level: "BEGINNER" | "INTERMEDIATE" | "RX") {
+  return { BEGINNER: "Principiante", INTERMEDIATE: "Intermedio", RX: "RX" }[level];
 }
 
-function HistoryColumn({ title, empty, total, items }: HistoryColumnProps) {
-  return <section className="history-column"><div className="section-heading"><h2>{title}</h2><span>{total}</span></div>{items.length === 0 ? <StateMessage kind="empty" title={empty} /> : items.map((item) => <a className="history-row" href={item.href} key={item.id}><span><strong>{item.title}</strong><small>{item.meta}</small></span><b>{item.value}</b></a>)}</section>;
+function formatUnit(unit: "KG" | "REPS" | "SECONDS" | "METERS") {
+  return { KG: "kg", REPS: "repeticiones", SECONDS: "segundos", METERS: "metros" }[unit];
+}
+
+interface HistoryColumnProps {
+  title: string;
+  description: string;
+  empty: string;
+  total: number;
+  emptyAction: { label: string; href: string };
+  items: Array<{ id: number; title: string; type: string; value: string; meta: string; dateTime: string; href: string; ariaLabel: string }>;
+}
+
+function HistoryColumn({ title, description, empty, total, emptyAction, items }: HistoryColumnProps) {
+  const headingId = `history-${title.replace(/\s+/g, "-").toLowerCase()}`;
+
+  return (
+    <section className="history-column" aria-labelledby={headingId}>
+      <header className="section-heading">
+        <div>
+          <h2 id={headingId}>{title}</h2>
+          <p className="section-description">{description}</p>
+        </div>
+        <span>{total}</span>
+      </header>
+      {items.length === 0 ? <StateMessage kind="empty" title={empty} action={emptyAction} /> : (
+        <ol className="history-list">
+          {items.map((item) => (
+            <li key={item.id}>
+              <a className="history-row" href={item.href} aria-label={item.ariaLabel}>
+                <span className="history-row__content">
+                  <small className="history-row__type">{item.type}</small>
+                  <strong>{item.title}</strong>
+                  <small>{item.meta} · <time dateTime={item.dateTime}>{dateFormatter.format(new Date(item.dateTime))}</time></small>
+                </span>
+                <span className="history-row__value"><b>{item.value}</b><small>Ver detalle</small></span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      )}
+    </section>
+  );
 }
