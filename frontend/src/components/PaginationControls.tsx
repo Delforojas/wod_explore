@@ -1,6 +1,7 @@
 interface PaginationControlsProps {
   page: number;
   hasNext: boolean;
+  totalPages?: number;
   isLoading: boolean;
   onPrevious: () => void;
   onNext: () => void;
@@ -9,6 +10,7 @@ interface PaginationControlsProps {
 export function PaginationControls({
   page,
   hasNext,
+  totalPages,
   isLoading,
   onPrevious,
   onNext,
@@ -18,17 +20,19 @@ export function PaginationControls({
       <button
         className="button button--secondary"
         type="button"
+        aria-label="Anterior"
         onClick={onPrevious}
         disabled={isLoading || page === 0}
       >
         Anterior
       </button>
       <span className="pagination-status" aria-live="polite">
-        Página {page + 1}
+        Página {page + 1}{totalPages !== undefined && totalPages > 0 ? ` de ${totalPages}` : ""}
       </span>
       <button
         className="button button--secondary"
         type="button"
+        aria-label="Siguiente"
         onClick={onNext}
         disabled={isLoading || !hasNext}
       >
