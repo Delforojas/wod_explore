@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -51,6 +52,7 @@ import com.wodexplorer.dto.LoginResponse;
 import com.wodexplorer.dto.UserHistoryResponse;
 import com.wodexplorer.dto.UserResponse;
 import com.wodexplorer.dto.UserStatisticsResponse;
+import com.wodexplorer.controller.HealthController;
 import com.wodexplorer.exception.GlobalExceptionHandler;
 import com.wodexplorer.entity.ExerciseCategory;
 import com.wodexplorer.entity.MeasurementType;
@@ -68,7 +70,7 @@ import io.jsonwebtoken.Jwts;
 
 @WebMvcTest({ExerciseController.class, UserController.class, AuthController.class,
         UserStatisticsController.class, WodController.class, WodResultController.class,
-        ExerciseResultController.class})
+        ExerciseResultController.class, HealthController.class})
 @ImportAutoConfiguration(exclude = UserDetailsServiceAutoConfiguration.class)
 @Import({
         CorsConfig.class,
@@ -129,6 +131,15 @@ class SecurityHttpTest {
         given(authService.login(any())).willReturn(new LoginResponse("test-token"));
         given(userService.register(any())).willReturn(new UserResponse(
                 1, "Delfin", "Rojas", TEST_EMAIL, null));
+    }
+
+    @Test
+    void health_WithoutJwt_ReturnsJsonUp() throws Exception {
+        mockMvc.perform(get("/api/health"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value("UP"))
+                .andExpect(jsonPath("$.*").value(org.hamcrest.Matchers.hasSize(1)));
     }
 
     @Test

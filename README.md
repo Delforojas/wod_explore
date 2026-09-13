@@ -117,6 +117,27 @@ cd backend
 Hibernate está configurado con `spring.jpa.hibernate.ddl-auto=none`; el backend
 no crea ni modifica automáticamente el esquema.
 
+### Comprobar la salud del backend
+
+El endpoint público no requiere JWT y confirma únicamente que el proceso Spring
+Boot está atendiendo peticiones. No comprueba la disponibilidad de MySQL; esa
+comprobación pertenece al healthcheck de Docker Compose.
+
+Con el backend local o Docker ejecutándose:
+
+```bash
+curl --fail --silent http://localhost:8080/api/health
+```
+
+La respuesta esperada es:
+
+```json
+{"status":"UP"}
+```
+
+En CI puede utilizarse el mismo comando después de iniciar el backend, junto con
+`--fail`, para hacer fallar el job si el servicio no responde con éxito.
+
 ## Tests backend aislados
 
 La suite backend usa Testcontainers para levantar una instancia MySQL 8.4
@@ -192,12 +213,14 @@ El frontend usa `window.location.hash` y un router local; no usa React Router.
 
 ## API REST actual
 
-Todas las rutas bajo `/api/**` requieren JWT salvo el registro y el login.
+Todas las rutas bajo `/api/**` requieren JWT salvo el registro, el login y el
+endpoint público de salud.
 
 | Método y ruta | Uso |
 | --- | --- |
 | `POST /api/users` | Registrar usuario, público. |
 | `POST /api/auth/login` | Iniciar sesión, público. |
+| `GET /api/health` | Comprobar que el proceso del backend está disponible, público. |
 | `GET /api/users/me` | Obtener usuario autenticado. |
 | `GET /api/users/me/history` | Obtener historial propio. |
 | `GET /api/users/me/statistics` | Obtener estadísticas y marcas personales. |

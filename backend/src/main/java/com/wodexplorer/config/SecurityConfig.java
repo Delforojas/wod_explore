@@ -48,6 +48,8 @@ public class SecurityConfig {
                         .authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler))
                 .authorizeHttpRequests(authorize -> authorize
+                         .requestMatchers(HttpMethod.GET, "/api/health")
+                        .permitAll()
                          .requestMatchers(HttpMethod.POST, "/api/users", "/api/auth/login")
                          .permitAll()
                          .requestMatchers(HttpMethod.POST, "/api/exercises")
