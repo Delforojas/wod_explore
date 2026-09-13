@@ -23,7 +23,7 @@ export function Layout({ children, currentPage }: LayoutProps) {
   }
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell app-shell--${currentPage}`}>
       <a className="skip-link" href="#main-content">Saltar al contenido</a>
       <header className="topbar">
         <a className="brand" href="#/">
