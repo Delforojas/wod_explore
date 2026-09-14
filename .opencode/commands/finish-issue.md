@@ -257,7 +257,117 @@ DETENTE.
 No documentes la finalización.
 No cierres la Issue.
 
-## 8. Registrar la validación y finalización
+## 8. Integrar la rama en main mediante Pull Request
+
+Después de publicar correctamente la rama, integra la Issue en `main`.
+
+Esta sección es OBLIGATORIA antes de cerrar la Issue.
+
+### 8.1 Comprobar la rama destino
+
+La rama destino normal es `main`.
+
+Antes de crear el Pull Request:
+
+- comprueba que `origin/main` existe;
+- comprueba que la rama actual está publicada;
+- comprueba que el commit final de la Issue existe en remoto.
+
+No hagas merge directamente mediante `git merge` local.
+
+La integración debe realizarse mediante Pull Request usando GitHub MCP.
+
+### 8.2 Crear o localizar el Pull Request
+
+Busca primero si ya existe un Pull Request abierto correspondiente a:
+
+- la rama actual;
+- la Issue #$1;
+- destino `main`.
+
+Si ya existe:
+
+- reutilízalo;
+- no crees un PR duplicado.
+
+Si no existe:
+
+- crea un Pull Request mediante GitHub MCP;
+- usa como base `main`;
+- usa como head la rama actual;
+- referencia la Issue #$1.
+
+El título debe describir brevemente el cambio e incluir `#$1` cuando resulte apropiado.
+
+No cierres todavía la Issue.
+
+### 8.3 Comprobar que el Pull Request puede integrarse
+
+Comprueba mediante GitHub MCP que:
+
+- el PR apunta a `main`;
+- no existen conflictos de merge;
+- las comprobaciones obligatorias de GitHub, si existen, permiten la integración;
+- el commit final de la Issue forma parte del PR.
+
+Si existen conflictos:
+
+DETENTE.
+
+No intentes resolver conflictos automáticamente desde `/finish-issue`.
+No cierres la Issue.
+
+Informa al usuario de que la rama necesita actualizarse o resolver conflictos.
+
+### 8.4 Hacer merge del Pull Request
+
+Si el PR es integrable y no existen bloqueos:
+
+- realiza el merge mediante GitHub MCP;
+- respeta la estrategia de merge configurada en el repositorio;
+- no uses force push;
+- no reescribas historial.
+
+Después del merge comprueba que:
+
+- el Pull Request aparece como merged;
+- `main` contiene los cambios de la Issue;
+- el commit o merge commit está disponible en remoto.
+
+Si el merge falla:
+
+DETENTE.
+
+No cierres la Issue.
+
+### 8.5 Sincronizar main local
+
+Después de confirmar el merge remoto:
+
+- cambia a `main`;
+- actualiza `main` desde `origin/main` mediante fast-forward cuando sea posible.
+
+Ejemplo conceptual:
+
+`git switch main`
+
+`git pull --ff-only origin main`
+
+No realices merges adicionales durante este paso.
+
+Después comprueba que:
+
+- `main` local contiene los cambios de la Issue;
+- `main` está sincronizado con `origin/main`.
+
+Conserva para el resumen final:
+
+- URL o número del Pull Request;
+- estado del PR;
+- estrategia de merge utilizada;
+- hash resultante en `main`.
+
+## 9. Registrar la validación y finalización
 
 Actualiza la GitHub Issue #$1 mediante GitHub MCP indicando que:
 
@@ -302,7 +412,7 @@ No inventes pruebas manuales que el usuario no haya indicado.
 
 No vuelvas a documentar detalles técnicos innecesariamente si ya fueron registrados durante `/issue $1`.
 
-## 9. Cerrar la Issue
+## 10. Cerrar la Issue
 
 El cierre de la Issue debe ser siempre el último paso remoto.
 
@@ -331,7 +441,7 @@ Si la Issue ya estaba cerrada antes de ejecutar este comando:
 - completa igualmente todas las comprobaciones Git y de publicación;
 - no vuelvas a cerrarla innecesariamente.
 
-## 10. Verificación final
+## 11. Verificación final
 
 Comprueba:
 
@@ -346,7 +456,7 @@ Comprueba:
 
 Si quedan cambios locales ajenos a la Issue, indícalos claramente sin modificarlos.
 
-## 11. Resumen final
+## 12. Resumen final
 
 La salida final DEBE incluir obligatoriamente:
 
