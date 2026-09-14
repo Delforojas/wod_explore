@@ -82,6 +82,28 @@ class WodResultControllerTest {
     }
 
     @Test
+    void create_WhenWodIsNotAccessible_ReturnsNotFound() throws Exception {
+        given(wodResultService.create(
+                eq(20),
+                eq(new WodResultRequest(342, null, null, WodLevel.RX, null)),
+                eq(EMAIL)))
+                .willThrow(new WodNotFoundException(20));
+
+        mockMvc.perform(post("/api/wods/20/results")
+                        .principal(authenticatedUser())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "timeSeconds": 342,
+                                  "level": "RX"
+                                }
+                                """))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("WOD_NOT_FOUND"))
+                .andExpect(jsonPath("$.message").value("WOD no encontrado con id: 20"));
+    }
+
+    @Test
     void create_WithUserIdInPayload_ReturnsBadRequestAndCannotOverrideOwner() throws Exception {
         mockMvc.perform(post("/api/wods/18/results")
                         .principal(authenticatedUser())
@@ -138,6 +160,7 @@ class WodResultControllerTest {
         mockMvc.perform(get("/api/wods/999/results")
                         .principal(authenticatedUser()))
                 .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("WOD_NOT_FOUND"))
                 .andExpect(jsonPath("$.status").value(404))
                 .andExpect(jsonPath("$.message").value("WOD no encontrado con id: 999"));
     }

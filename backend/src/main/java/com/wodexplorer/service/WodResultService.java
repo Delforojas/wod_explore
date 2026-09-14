@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +49,7 @@ public class WodResultService {
             WodResultRequest request,
             String authenticatedEmail) {
         User user = findAuthenticatedUser(authenticatedEmail);
-        Wod wod = findWod(wodId);
+        Wod wod = findAccessibleWod(wodId, user);
         validateMetrics(wod.getType(), request);
         LocalDateTime completedAt = resolveCompletedAt(request.completedAt());
 
@@ -69,7 +70,7 @@ public class WodResultService {
             Integer wodId,
             String authenticatedEmail) {
         User user = findAuthenticatedUser(authenticatedEmail);
-        Wod wod = findWod(wodId);
+        Wod wod = findAccessibleWod(wodId, user);
 
         return wodResultRepository
                 .findByUser_IdAndWod_IdOrderByCompletedAtDescIdDesc(user.getId(), wod.getId())
@@ -91,9 +92,16 @@ public class WodResultService {
                 .orElseThrow(AuthenticatedUserNotFoundException::new);
     }
 
-    private Wod findWod(Integer wodId) {
-        return wodRepository.findById(wodId)
+    private Wod findAccessibleWod(Integer wodId, User authenticatedUser) {
+        Wod wod = wodRepository.findById(wodId)
                 .orElseThrow(() -> new WodNotFoundException(wodId));
+
+        User owner = wod.getOwner();
+        if (owner != null && !Objects.equals(owner.getId(), authenticatedUser.getId())) {
+            throw new WodNotFoundException(wodId);
+        }
+
+        return wod;
     }
 
     private void validateMetrics(WodType type, WodResultRequest request) {

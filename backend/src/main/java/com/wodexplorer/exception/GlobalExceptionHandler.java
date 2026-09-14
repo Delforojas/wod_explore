@@ -35,6 +35,7 @@ public class GlobalExceptionHandler {
             WodNotFoundException exception) {
 
         Map<String, Object> error = Map.of(
+                "error", "WOD_NOT_FOUND",
                 "status", HttpStatus.NOT_FOUND.value(),
                 "message", exception.getMessage()
         );
