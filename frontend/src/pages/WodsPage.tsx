@@ -28,6 +28,10 @@ function formatWodLevel(level: string) {
   return level === "BEGINNER" ? "Principiante" : level === "INTERMEDIATE" ? "Intermedio" : level;
 }
 
+function formatWodCount(total: number) {
+  return `${total} ${total === 1 ? "sesión disponible" : "sesiones disponibles"}`;
+}
+
 export function WodsPage() {
   const { token } = useAuth();
   const [catalog, setCatalog] = useState<WodPage | null>(null);
@@ -79,15 +83,15 @@ export function WodsPage() {
 
   return (
     <section className="catalog-page catalog-page--wods">
-      <div className="page-heading">
+      <header className="page-heading">
         <div>
           <h1>WODs</h1>
           <p className="heading-support">Entrenamientos listos para encontrar, consultar y repetir.</p>
         </div>
         <p className="heading-note" aria-live="polite">
-          {catalog ? `${catalog.totalElements} ${catalog.totalElements === 1 ? "sesión disponible" : "sesiones disponibles"}` : "Busca tu próximo entrenamiento"}
+          {catalog ? formatWodCount(catalog.totalElements) : "Busca tu próximo entrenamiento"}
         </p>
-      </div>
+      </header>
       <form className="filter-strip" onSubmit={handleSubmit} aria-label="Filtrar WODs">
         <label>Nombre<input name="name" autoComplete="off" value={name} onChange={(event) => setName(event.target.value)} placeholder="Ej. Fran…" /></label>
         <label>Tipo<select name="type" autoComplete="off" value={type} onChange={(event) => setType(event.target.value)}><option value="">Todos</option><option value="FOR_TIME">FOR TIME</option><option value="AMRAP">AMRAP</option><option value="EMOM">EMOM</option></select></label>
@@ -100,32 +104,42 @@ export function WodsPage() {
           <strong>Filtros activos:</strong> {activeFilters.join(" · ")}
         </p>
       )}
-       {!token && <StateMessage kind="private" title="El archivo es privado" message="Inicia sesión para consultar WODs y sus detalles." action={{ label: "Entrar", href: "#/login" }} />}
-       {token && isLoading && <LoadingMessage />}
-       {token && !isLoading && error && <StateMessage kind={errorKind} title={errorKind === "network-error" ? "No hay conexión con los WODs" : "No pudimos cargar los WODs"} message={error} action={{ label: "Reintentar", onClick: () => { setIsLoading(true); setError(null); setReloadToken((currentToken) => currentToken + 1); } }} />}
-       {token && !isLoading && !error && catalog?.items.length === 0 && <StateMessage kind="empty" title="No hay WODs para estos filtros" message="Prueba a ampliar tu búsqueda." />}
-      {token && !isLoading && !error && catalog && catalog.items.length > 0 && (
-        <div className="catalog-list">
-          {catalog.items.map((wod) => (
-            <a className="catalog-row catalog-row--wod" key={wod.id} href={`#/wods/${wod.id}`}>
-              <span className="row-number">{String(wod.id).padStart(3, "0")}</span>
-              <span className="row-main"><strong>{wod.name}</strong><small>{WOD_TYPE_LABELS[wod.type]}</small></span>
-              <span className="row-meta"><small>Nivel</small>{wod.level ? WOD_LEVEL_LABELS[wod.level] : "Todos"}</span>
-              <span className="row-arrow" aria-hidden="true">-&gt;</span>
-            </a>
-          ))}
-        </div>
-      )}
-      {token && !isLoading && !error && catalog && (
-        <PaginationControls
-          page={page}
-          hasNext={catalog.hasNext}
-          totalPages={catalog.totalPages}
-          isLoading={isLoading}
-          onPrevious={() => goToPage(Math.max(0, page - 1))}
-          onNext={() => goToPage(page + 1)}
-        />
-      )}
+       <section className="catalog-results" aria-labelledby="wod-results-title">
+         <div className="catalog-results-heading">
+           <h2 id="wod-results-title">Resultados de WODs</h2>
+           <p className="catalog-results-heading__status" aria-live="polite">
+             {catalog ? (activeFilters.length > 0 ? "Mostrando los filtros aplicados" : "Todos los entrenamientos") : "Los resultados aparecerán aquí"}
+           </p>
+         </div>
+         {!token && <StateMessage kind="private" title="El archivo es privado" message="Inicia sesión para consultar WODs y sus detalles." action={{ label: "Entrar", href: "#/login" }} />}
+         {token && isLoading && <LoadingMessage />}
+         {token && !isLoading && error && <StateMessage kind={errorKind} title={errorKind === "network-error" ? "No hay conexión con los WODs" : "No pudimos cargar los WODs"} message={error} action={{ label: "Reintentar", onClick: () => { setIsLoading(true); setError(null); setReloadToken((currentToken) => currentToken + 1); } }} />}
+         {token && !isLoading && !error && catalog?.items.length === 0 && <StateMessage kind="empty" title="No hay WODs para estos filtros" message="Prueba a ampliar tu búsqueda." />}
+         {token && !isLoading && !error && catalog && catalog.items.length > 0 && (
+           <ul className="catalog-list">
+             {catalog.items.map((wod) => (
+               <li className="catalog-list__item" key={wod.id}>
+                 <a className="catalog-row catalog-row--wod" href={`#/wods/${wod.id}`}>
+                   <span className="row-number">{String(wod.id).padStart(3, "0")}</span>
+                   <span className="row-main"><strong>{wod.name}</strong><small className="row-main__type"><span>Formato</span>{WOD_TYPE_LABELS[wod.type]}</small></span>
+                   <span className="row-meta"><small>Nivel</small>{wod.level ? WOD_LEVEL_LABELS[wod.level] : "Todos"}</span>
+                   <span className="row-arrow" aria-hidden="true">-&gt;</span>
+                 </a>
+               </li>
+             ))}
+           </ul>
+         )}
+         {token && !isLoading && !error && catalog && (
+           <PaginationControls
+             page={page}
+             hasNext={catalog.hasNext}
+             totalPages={catalog.totalPages}
+             isLoading={isLoading}
+             onPrevious={() => goToPage(Math.max(0, page - 1))}
+             onNext={() => goToPage(page + 1)}
+           />
+         )}
+       </section>
     </section>
   );
 }

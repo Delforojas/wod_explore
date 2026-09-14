@@ -77,6 +77,9 @@ describe("WodsPage", () => {
     renderWithAuth(<WodsPage />, { token: "token" });
 
     expect(await screen.findByRole("link", { name: /Fran/ })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Resultados de WODs" })).toBeTruthy();
+    expect(screen.getByText("For time")).toBeTruthy();
+    expect(screen.getByText("RX", { selector: ".row-meta" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Anterior" }).hasAttribute("disabled")).toBe(true);
     expect(screen.getByRole("button", { name: "Siguiente" }).hasAttribute("disabled")).toBe(false);
 
@@ -90,6 +93,7 @@ describe("WodsPage", () => {
       "token",
       { page: 0, size: 20 },
     ));
+    expect(screen.getByText("Filtros activos:").parentElement?.textContent).toContain("Nombre: Fran");
 
     await user.click(screen.getByRole("button", { name: "Siguiente" }));
     await waitFor(() => expect(getWods).toHaveBeenLastCalledWith(
