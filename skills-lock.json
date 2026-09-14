@@ -1,6 +1,42 @@
 {
   "version": 1,
   "skills": {
+    "110-java-maven-best-practices": {
+      "source": "jabrena/plinth",
+      "sourceType": "github",
+      "skillPath": "skills/110-java-maven-best-practices/SKILL.md",
+      "computedHash": "5d54d5204899a46673820db67bfa37d4243d839450a560c09b351870091193a5"
+    },
+    "121-java-object-oriented-design": {
+      "source": "jabrena/plinth",
+      "sourceType": "github",
+      "skillPath": "skills/121-java-object-oriented-design/SKILL.md",
+      "computedHash": "598a192f41f4683f7380806436a840c16cf19f79be86e3746ab52ab229bf3afe"
+    },
+    "122-java-type-design": {
+      "source": "jabrena/plinth",
+      "sourceType": "github",
+      "skillPath": "skills/122-java-type-design/SKILL.md",
+      "computedHash": "daf8519b71d9604b55d8bc83b880b6ed292109e1661c32eb8a509c6fd2dbf339"
+    },
+    "123-java-design-patterns": {
+      "source": "jabrena/plinth",
+      "sourceType": "github",
+      "skillPath": "skills/123-java-design-patterns/SKILL.md",
+      "computedHash": "f44339c648b853eb6f969515b03368941e9568a83fa91b874905ff7aa30a0849"
+    },
+    "128-java-generics": {
+      "source": "jabrena/plinth",
+      "sourceType": "github",
+      "skillPath": "skills/128-java-generics/SKILL.md",
+      "computedHash": "be8040e974f78389280a77168f0b30b3d90747d0746fe5385918bb154e96e17c"
+    },
+    "131-java-testing-unit-testing": {
+      "source": "jabrena/plinth",
+      "sourceType": "github",
+      "skillPath": "skills/131-java-testing-unit-testing/SKILL.md",
+      "computedHash": "8858fbe6b787fc80e5075c2ab223cffef6d0b7ecd2d19a89b08730d3b11d8187"
+    },
     "find-skills": {
       "source": "vercel-labs/skills",
       "sourceType": "github",
@@ -12,6 +48,48 @@
       "sourceType": "github",
       "skillPath": ".agents/skills/impeccable/SKILL.md",
       "computedHash": "ff725daa0324d7140b9a7787fa9062173214d3359feef897469e581c022e674b"
+    },
+    "java-21": {
+      "source": "gentleman-programming/gentleman-skills",
+      "sourceType": "github",
+      "skillPath": "community/java-21/SKILL.md",
+      "computedHash": "85421b8b059afbd5581eac5348967ffec45a5a1f3c6d520a56c96e3c84046062"
+    },
+    "java-springboot": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "skillPath": "skills/java-springboot/SKILL.md",
+      "computedHash": "f1b9c6b1277178fc33e5a612761c1cd1cf6ab5f946d05d69d52026d142c0a0c1"
+    },
+    "jpa-patterns": {
+      "source": "affaan-m/ecc",
+      "sourceType": "github",
+      "skillPath": "skills/jpa-patterns/SKILL.md",
+      "computedHash": "b006c947d019f2e90ec305a9d08d1b4b74fc56c4f245d5796abac316931d871c"
+    },
+    "junit-mockito-patterns": {
+      "source": "full-stack-skills/java-skills",
+      "sourceType": "github",
+      "skillPath": "skills/junit-mockito-patterns/SKILL.md",
+      "computedHash": "fe9b4036b40e930f3f4a8f78c8fd3328a376993052dd9068a93b4a44937e6db1"
+    },
+    "mysql": {
+      "source": "planetscale/database-skills",
+      "sourceType": "github",
+      "skillPath": "skills/mysql/SKILL.md",
+      "computedHash": "6cb0725d61db4940f9eab79436753fe4ecb261f57ae8a08b2ac28676f82cbecc"
+    },
+    "spring-boot-3": {
+      "source": "gentleman-programming/gentleman-skills",
+      "sourceType": "github",
+      "skillPath": "community/spring-boot-3/SKILL.md",
+      "computedHash": "bc247f857dbb34cf56f11132d786390e0d1b224105c0d8f8c1869cbe5e1c8b33"
+    },
+    "springboot-security": {
+      "source": "affaan-m/ecc",
+      "sourceType": "github",
+      "skillPath": "skills/springboot-security/SKILL.md",
+      "computedHash": "c518a86c3a473e0545c35065d82284d13a5d99d6f7a0e17780594f3a44af38ad"
     },
     "tailwind-css-patterns": {
       "source": "giuseppe-trisciuoglio/developer-kit",
