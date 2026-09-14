@@ -15,5 +15,5 @@
 - [x] Ejecutar `./mvnw test` y corregir cualquier fallo.
 - [x] Ejecutar `./mvnw package` y corregir cualquier fallo.
 - [x] Revisar diff, status, alcance y ausencia de secretos.
-- [ ] Crear el commit exclusivo de la Issue #44.
-- [ ] Documentar el commit, verificaciones y rama en la Issue sin cerrarla.
+- [x] Crear el commit exclusivo de la Issue #44.
+- [x] Documentar el commit, verificaciones y rama en la Issue sin cerrarla.
