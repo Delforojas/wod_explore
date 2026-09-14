@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.TestPropertySource;
 
 import com.wodexplorer.dto.UserWodDetailResponse;
 import com.wodexplorer.dto.UserWodExerciseRequest;
@@ -25,6 +26,10 @@ import com.wodexplorer.repository.WodRepository;
 import com.wodexplorer.support.MySqlIntegrationTest;
 
 @SpringBootTest
+@TestPropertySource(properties = {
+        "jwt.secret=01234567890123456789012345678901",
+        "jwt.expiration=3600000"
+})
 class UserWodUpdateIntegrationTest extends MySqlIntegrationTest {
 
     @Autowired
