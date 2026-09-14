@@ -115,7 +115,7 @@ class WodServiceTest {
     @Test
     void findById_WhenWodExists_ReturnsDetail() {
         Wod wod = wod(18, "Danny", WodType.AMRAP, 1200, null, WodLevel.RX);
-        given(wodRepository.findById(18)).willReturn(Optional.of(wod));
+        given(wodRepository.findGlobalById(18)).willReturn(Optional.of(wod));
         given(wodExerciseRepository.findByWodIdWithExerciseOrderByPositionAsc(18))
                 .willReturn(List.of());
 
@@ -136,7 +136,7 @@ class WodServiceTest {
         Exercise burpee = exercise(125, "Burpee", ExerciseCategory.GYMNASTICS, MeasurementType.REPS);
         WodExercise first = wodExercise(burpee, 25, 1);
         WodExercise second = wodExercise(burpee, 25, 9);
-        given(wodRepository.findById(20)).willReturn(Optional.of(wod));
+        given(wodRepository.findGlobalById(20)).willReturn(Optional.of(wod));
         given(wodExerciseRepository.findByWodIdWithExerciseOrderByPositionAsc(20))
                 .willReturn(List.of(first, second));
 
@@ -156,7 +156,7 @@ class WodServiceTest {
     void findById_WithNullReps_PreservesNull() {
         Wod wod = wod(13, "Carse", WodType.FOR_TIME, null, null, WodLevel.RX);
         Exercise run = exercise(113, "Run", ExerciseCategory.CARDIO, MeasurementType.DISTANCE);
-        given(wodRepository.findById(13)).willReturn(Optional.of(wod));
+        given(wodRepository.findGlobalById(13)).willReturn(Optional.of(wod));
         given(wodExerciseRepository.findByWodIdWithExerciseOrderByPositionAsc(13))
                 .willReturn(List.of(wodExercise(run, null, 1)));
 
@@ -167,7 +167,7 @@ class WodServiceTest {
 
     @Test
     void findById_WhenWodDoesNotExist_ThrowsNotFound() {
-        given(wodRepository.findById(999)).willReturn(Optional.empty());
+        given(wodRepository.findGlobalById(999)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> wodService.findById(999))
                 .isInstanceOf(WodNotFoundException.class)

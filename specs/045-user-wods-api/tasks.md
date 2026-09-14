@@ -1,0 +1,23 @@
+# Tasks - Issue #45: API para WODs personalizados de usuario
+
+- [x] Crear DTOs de request para WOD, ejercicios y prescripciones con Jakarta Validation.
+- [x] Crear DTOs de response para resumen, detalle, ejercicios y prescripciones.
+- [x] Crear excepciones de validacion y recurso personalizado no disponible.
+- [x] Mapear los nuevos errores en GlobalExceptionHandler con formato consistente.
+- [x] Añadir consultas de repository por propietario y carga ordenada de detalle.
+- [x] Implementar UserWodService con resolucion de usuario autenticado.
+- [x] Validar nombre, tipo, categoria, nivel, rondas, time limit y ejercicios.
+- [x] Validar posiciones unicas, positivas y consecutivas.
+- [x] Validar prescripciones segun MeasurementType y unidades controladas.
+- [x] Persistir WOD, relaciones y prescripciones sin escribir owner desde el request.
+- [x] Mapear creacion, listado y detalle a DTOs sin exponer entidades ni secretos.
+- [x] Implementar UserWodController bajo /api/user-wods.
+- [x] Añadir tests unitarios del service para ownership y reglas de dominio.
+- [x] Añadir tests HTTP del controller para payloads validos e invalidos.
+- [x] Añadir tests HTTP de autenticacion, aislamiento y regresion del catalogo.
+- [x] Ejecutar ./mvnw validate y corregir errores.
+- [x] Ejecutar ./mvnw test y corregir fallos.
+- [x] Ejecutar ./mvnw package y corregir fallos.
+- [x] Revisar diff, status, alcance, secretos y ausencia de cambios de esquema.
+- [ ] Crear commit exclusivo de la Issue #45.
+- [ ] Documentar la Issue con commit, verificaciones y validaciones manuales pendientes.

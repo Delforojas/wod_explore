@@ -44,6 +44,18 @@ public class GlobalExceptionHandler {
                 .body(error);
     }
 
+    @ExceptionHandler(UserWodNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleUserWodNotFound(
+            UserWodNotFoundException exception) {
+        Map<String, Object> error = Map.of(
+                "error", "USER_WOD_NOT_FOUND",
+                "message", exception.getMessage(),
+                "status", HttpStatus.NOT_FOUND.value(),
+                "details", Map.of());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
     @ExceptionHandler(AuthenticatedUserNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleAuthenticatedUserNotFound(
             AuthenticatedUserNotFoundException exception) {
@@ -77,6 +89,18 @@ public class GlobalExceptionHandler {
                 "message", "Datos inválidos",
                 "details", details
         );
+
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(InvalidUserWodException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidUserWod(
+            InvalidUserWodException exception) {
+        Map<String, String> details = Map.of("wod", exception.getMessage());
+        Map<String, Object> error = Map.of(
+                "error", "VALIDATION_ERROR",
+                "message", "Datos inválidos",
+                "details", details);
 
         return ResponseEntity.badRequest().body(error);
     }
