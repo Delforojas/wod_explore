@@ -94,6 +94,41 @@ class WodResultServiceTest {
     }
 
     @Test
+    void create_OwnedCustomWod_AllowsAuthenticatedOwner() {
+        User user = user(4, EMAIL);
+        Wod wod = ownedWod(20, WodType.FOR_TIME, user);
+        WodResultRequest request = new WodResultRequest(
+                342, null, null, WodLevel.RX, NOW);
+        given(userRepository.findByEmail(EMAIL)).willReturn(Optional.of(user));
+        given(wodRepository.findById(20)).willReturn(Optional.of(wod));
+        given(wodResultRepository.save(any(WodResult.class)))
+                .willAnswer(invocation -> invocation.getArgument(0));
+
+        WodResultResponse response = wodResultService.create(20, request, EMAIL);
+
+        assertThat(response.wodId()).isEqualTo(20);
+        then(wodResultRepository).should().save(any(WodResult.class));
+    }
+
+    @Test
+    void create_CustomWodOwnedByAnotherUser_ReturnsNotFoundWithoutSaving() {
+        User authenticatedUser = user(4, EMAIL);
+        User owner = user(9, "owner@example.com");
+        Wod wod = ownedWod(20, WodType.FOR_TIME, owner);
+        given(userRepository.findByEmail(EMAIL)).willReturn(Optional.of(authenticatedUser));
+        given(wodRepository.findById(20)).willReturn(Optional.of(wod));
+
+        assertThatThrownBy(() -> wodResultService.create(
+                20,
+                new WodResultRequest(342, null, null, WodLevel.RX, NOW),
+                EMAIL))
+                .isInstanceOf(WodNotFoundException.class)
+                .hasMessage("WOD no encontrado con id: 20");
+
+        then(wodResultRepository).shouldHaveNoInteractions();
+    }
+
+    @Test
     void create_Amrap_AllowsZeroRoundsAndReps() {
         User user = user(4, EMAIL);
         Wod wod = wod(18, WodType.AMRAP);
@@ -215,6 +250,36 @@ class WodResultServiceTest {
     }
 
     @Test
+    void findOwnResults_OwnedCustomWod_AllowsAuthenticatedOwner() {
+        User user = user(4, EMAIL);
+        Wod wod = ownedWod(20, WodType.FOR_TIME, user);
+        given(userRepository.findByEmail(EMAIL)).willReturn(Optional.of(user));
+        given(wodRepository.findById(20)).willReturn(Optional.of(wod));
+        given(wodResultRepository.findByUser_IdAndWod_IdOrderByCompletedAtDescIdDesc(4, 20))
+                .willReturn(List.of());
+
+        assertThat(wodResultService.findOwnResults(20, EMAIL)).isEmpty();
+
+        then(wodResultRepository).should()
+                .findByUser_IdAndWod_IdOrderByCompletedAtDescIdDesc(4, 20);
+    }
+
+    @Test
+    void findOwnResults_CustomWodOwnedByAnotherUser_ReturnsNotFoundWithoutQueryingResults() {
+        User authenticatedUser = user(4, EMAIL);
+        User owner = user(9, "owner@example.com");
+        Wod wod = ownedWod(20, WodType.FOR_TIME, owner);
+        given(userRepository.findByEmail(EMAIL)).willReturn(Optional.of(authenticatedUser));
+        given(wodRepository.findById(20)).willReturn(Optional.of(wod));
+
+        assertThatThrownBy(() -> wodResultService.findOwnResults(20, EMAIL))
+                .isInstanceOf(WodNotFoundException.class)
+                .hasMessage("WOD no encontrado con id: 20");
+
+        then(wodResultRepository).shouldHaveNoInteractions();
+    }
+
+    @Test
     void findOwnResults_WhenWodDoesNotExist_ThrowsNotFound() {
         given(userRepository.findByEmail(EMAIL)).willReturn(Optional.of(user(4, EMAIL)));
         given(wodRepository.findById(999)).willReturn(Optional.empty());
@@ -236,6 +301,12 @@ class WodResultServiceTest {
         Wod wod = new Wod();
         wod.setId(id);
         wod.setType(type);
+        return wod;
+    }
+
+    private Wod ownedWod(int id, WodType type, User owner) {
+        Wod wod = wod(id, type);
+        wod.setOwner(owner);
         return wod;
     }
 
