@@ -12,9 +12,14 @@ import com.wodexplorer.entity.WodType;
 
 public interface WodRepository extends JpaRepository<Wod, Integer> {
 
+    Page<Wod> findByOwner_Id(Integer ownerId, Pageable pageable);
+
+    java.util.Optional<Wod> findByIdAndOwner_Id(Integer id, Integer ownerId);
+
     @Query("""
             select w from Wod w
-            where (:name is null or lower(w.name) like lower(concat('%', :name, '%')))
+            where w.owner is null
+              and (:name is null or lower(w.name) like lower(concat('%', :name, '%')))
               and (:type is null or w.type = :type)
               and (:level is null or w.level = :level)
             """)
