@@ -1,86 +1,112 @@
-# Product
+# Producto
 
 <!-- impeccable:product-schema 1 -->
 
-## Platform
+## Plataforma
 
 web
 
-## Users
+## Usuarios
 
 Practicantes individuales de CrossFit y coaches o boxes que necesitan consultar
 WODs y ejercicios, encontrar entrenamientos adecuados y registrar o revisar
-sesiones realizadas.
+sesiones realizadas. Las funciones personales requieren una cuenta autenticada.
 
-## Product Purpose
+## Propósito del producto
 
-WOD Explorer permite explorar WODs y ejercicios de CrossFit mediante un catálogo
-local, buscar y filtrar entrenamientos, guardar favoritos y mantener un historial
-personal de entrenamientos realizados. El producto tiene éxito cuando el usuario
-puede encontrar un WOD, consultar su detalle, registrarlo y volver a revisar esa
-información de forma sencilla.
+WOD Explorer permite explorar WODs y ejercicios de CrossFit mediante una API,
+buscar y filtrar entrenamientos, registrar resultados y consultar el historial,
+las marcas personales y la evolución de una cuenta. El producto tiene éxito
+cuando una persona puede encontrar un WOD, consultar su detalle, registrar su
+resultado y volver a revisar esa información de forma sencilla.
 
-## Positioning
+## Posicionamiento
 
-Es un catálogo local sencillo que combina el descubrimiento de WODs con un
-historial personal persistido en el navegador, sin cuentas ni servicios externos.
+Es una aplicación web full stack que combina el descubrimiento de WODs y
+ejercicios con el seguimiento personal del rendimiento. El frontend React
+consume una API REST Spring Boot y MySQL es la persistencia principal.
 
-## Operating Context
+## Contexto operativo
 
-La aplicación se utiliza directamente en el navegador y no requiere autenticación
-ni conexión a un backend. Los WODs y ejercicios se leen desde JSON local; los
-favoritos y el historial se conservan en `localStorage`. Los flujos principales
-son explorar el catálogo, buscar o filtrar WODs, consultar un detalle, gestionar
-favoritos y registrar, consultar o eliminar entrenamientos del historial.
+La aplicación se ejecuta como tres piezas coordinadas durante el desarrollo:
 
-## Capabilities and Constraints
+- Frontend React/Vite en el navegador, normalmente en el puerto `5173`.
+- Backend Java 21/Spring Boot en el puerto `8080`, con rutas bajo `/api/**`.
+- MySQL 8.4 mediante Docker Compose, con el puerto `3306` dentro de Docker y
+  `3307` expuesto en el equipo local.
+
+El registro (`POST /api/users`) y el login (`POST /api/auth/login`) son públicos.
+Las consultas de catálogo, resultados, historial, estadísticas y evolución usan
+la API y requieren el JWT de la sesión. El token se conserva únicamente en
+`sessionStorage` durante la sesión del navegador.
+
+## Capacidades y restricciones
 
 - El idioma principal de la interfaz es español.
 - La aplicación debe mantener una interfaz responsive y mobile-first.
-- La implementación debe mantener compatibilidad con React, TypeScript y Tailwind
-  CSS.
-- No se añadirá backend, base de datos ni API externa.
-- Los datos actuales deben mantenerse en JSON local y `localStorage`.
-- Deben conservarse las funcionalidades de catálogo de WODs, filtros, búsqueda,
-  favoritos e historial de entrenamientos.
-- Cualquier rediseño debe centrarse en UI/UX, composición visual, jerarquía,
-  responsive y consistencia.
-- La lógica de negocio no debe modificarse salvo que sea estrictamente necesario
-  para adaptar la interfaz.
+- El frontend actual usa React, TypeScript, Vite, Zod, Vitest y CSS en
+  `frontend/src/index.css`. No usa React Router, Testing Library ni declara
+  Tailwind como dependencia en `frontend/package.json`.
+- El backend actual usa Java 21, Spring Boot 3.5.5, Maven Wrapper, Spring Web,
+  Spring Security, Spring Data JPA, Jakarta Validation, JWT y MySQL Connector/J.
+- MySQL 8.4 es la persistencia principal para usuarios, WODs, ejercicios y
+  resultados.
+- Los JSON históricos pueden permanecer en el repositorio durante la transición,
+  pero no son una fuente activa de verdad para las funcionalidades migradas.
+- `localStorage` no almacena catálogo, resultados, historial ni estadísticas.
+  Solo el JWT de sesión se mantiene temporalmente en `sessionStorage`.
+- Favoritos no están disponibles en la arquitectura actual; su contrato está
+  pendiente de una Issue específica.
+- No existe todavía un endpoint `/api/health` ni un sistema de roles
+  administrativos.
 - No se añadirán dependencias sin una necesidad clara.
 - TypeScript debe mantenerse en modo estricto y se debe evitar `any`.
-- La aplicación debe seguir pasando `npm test`, `npm run lint` y `npm run build`.
-- No existen por ahora requisitos legales, de marca o de despliegue adicionales.
+- El frontend debe seguir pasando `npm test`, `npm run lint` y `npm run build`.
+- El backend debe verificarse con `./mvnw validate`, `./mvnw test` y
+  `./mvnw package` cuando corresponda.
+- Los secretos se proporcionan mediante variables de entorno y no se incluyen
+  en documentación ni archivos versionados.
 
-## Brand Commitments
+## Compromisos de marca
 
 El nombre del producto es WOD Explorer. Los textos visibles de la interfaz y la
 documentación del proyecto deben mantenerse en español. No hay otros compromisos
 de marca definidos por ahora.
 
-## Evidence on Hand
+## Fuente de verdad y evidencia
 
-- Catálogo de WODs en `src/data/wods.json`.
-- Catálogo de ejercicios en `src/data/exercises.json`.
-- Implementación existente de catálogo, filtros, búsqueda, favoritos e historial.
-- Tests de lógica, validación, persistencia, componentes, navegación y regresión
-  en `tests/`.
-- No hay testimonios, clientes, métricas, requisitos legales ni activos de marca
-  adicionales que deban representarse.
+La fuente de verdad operativa se distribuye así:
 
-## Product Principles
+- Catálogo de WODs y ejercicios: tablas MySQL consultadas por el backend y
+  expuestas mediante `/api/wods` y `/api/exercises`.
+- Usuarios y autenticación: backend, tabla `users` y JWT emitido por
+  `/api/auth/login`.
+- Resultados: tablas `wod_results` y `exercise_results`, consultadas mediante
+  las rutas de resultados y los endpoints de usuario autenticado.
+- Historial: `/api/users/me/history`.
+- Estadísticas y evolución: `/api/users/me/statistics` y
+  `/api/users/me/evolution`.
+- Contratos del cliente: `frontend/src/api/schemas.ts` y
+  `frontend/src/api/client.ts`.
+- Vistas y navegación: `frontend/src/pages/`, `frontend/src/components/` y
+  `frontend/src/app/router.ts`.
+
+Los JSON históricos descritos por las Specs 001–004 documentan etapas anteriores
+del producto local. Se conservan como referencia y no deben reintroducirse como
+fuentes de verdad activas.
+
+## Principios del producto
 
 - Priorizar una exploración y un registro de entrenamientos simples y claros.
+- Usar la API y MySQL como fuente única para las funcionalidades migradas.
 - Preservar los flujos existentes al mejorar la interfaz.
 - Mantener la experiencia usable en móvil, escritorio y teclado.
-- Preferir datos locales y una arquitectura frontend sencilla.
+- Mantener separadas las responsabilidades de frontend, backend y persistencia.
 - Evitar infraestructura, dependencias o cambios de negocio innecesarios.
 
-## Accessibility & Inclusion
+## Accesibilidad e inclusión
 
 La aplicación debe cumplir un nivel básico de accesibilidad WCAG mediante HTML
 semántico, navegación completa por teclado, foco visible y labels accesibles.
 Los mensajes de error deben ser comprensibles y los controles principales deben
 seguir siendo utilizables en distintos tamaños de pantalla.
-
-Tienes libertad para redefinir el lenguaje visual, layout, tipografía, spacing, cards, navegación y presentación del contenido, siempre que se respeten las restricciones anteriores.

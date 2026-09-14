@@ -7,6 +7,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.never;
 
+import java.util.List;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,11 +31,14 @@ class JwtAuthenticationFilterTest {
     @Mock
     private JwtService jwtService;
 
+    @Mock
+    private AdminAuthorizationService adminAuthorizationService;
+
     private JwtAuthenticationFilter filter;
 
     @BeforeEach
     void setUp() {
-        filter = new JwtAuthenticationFilter(jwtService);
+        filter = new JwtAuthenticationFilter(jwtService, adminAuthorizationService);
         SecurityContextHolder.clearContext();
     }
 
@@ -72,6 +77,8 @@ class JwtAuthenticationFilterTest {
         request.addHeader("Authorization", "Bearer valid-token");
         MockFilterChain filterChain = new MockFilterChain();
         given(jwtService.extractSubject("valid-token")).willReturn("delfin@example.com");
+        given(adminAuthorizationService.authoritiesFor("delfin@example.com"))
+                .willReturn(List.of());
 
         filter.doFilter(request, new MockHttpServletResponse(), filterChain);
 

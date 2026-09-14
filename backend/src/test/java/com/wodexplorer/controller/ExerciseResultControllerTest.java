@@ -31,6 +31,7 @@ import com.wodexplorer.entity.ExerciseResultUnit;
 import com.wodexplorer.exception.GlobalExceptionHandler;
 import com.wodexplorer.exception.ExerciseNotFoundException;
 import com.wodexplorer.exception.InvalidExerciseResultException;
+import com.wodexplorer.security.AdminAuthorizationService;
 import com.wodexplorer.service.ExerciseResultService;
 import com.wodexplorer.service.JwtService;
 
@@ -51,6 +52,9 @@ class ExerciseResultControllerTest {
 
     @MockitoBean
     private JwtService jwtService;
+
+    @MockitoBean
+    private AdminAuthorizationService adminAuthorizationService;
 
     @Test
     void create_ReturnsCreatedWithoutUserId() throws Exception {

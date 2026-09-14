@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wodexplorer.dto.UserRegistrationRequest;
+import com.wodexplorer.dto.PaginationParameters;
 import com.wodexplorer.dto.UserHistoryResponse;
 import com.wodexplorer.dto.UserResponse;
 import com.wodexplorer.service.UserService;
 import com.wodexplorer.service.UserHistoryService;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 @RestController
 @RequestMapping("/api/users")
@@ -43,8 +45,11 @@ public class UserController {
     }
 
     @GetMapping("/me/history")
-    public UserHistoryResponse currentUserHistory(Authentication authentication) {
-        return userHistoryService.findOwnHistory(authenticatedEmail(authentication));
+    public UserHistoryResponse currentUserHistory(
+            Authentication authentication,
+            @Valid @ModelAttribute PaginationParameters pagination) {
+        return userHistoryService.findOwnHistory(
+                authenticatedEmail(authentication), pagination.getPage(), pagination.getSize());
     }
 
     private String authenticatedEmail(Authentication authentication) {

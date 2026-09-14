@@ -14,8 +14,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import com.wodexplorer.dto.PageResponse;
 import com.wodexplorer.dto.UserHistoryResponse;
 import com.wodexplorer.entity.Exercise;
 import com.wodexplorer.entity.ExerciseRecordType;
@@ -55,21 +59,25 @@ class UserHistoryServiceTest {
         WodResult wodResult = wodResult(42, user, wod);
         ExerciseResult exerciseResult = exerciseResult(7, user, exercise);
         given(userRepository.findByEmail(EMAIL)).willReturn(Optional.of(user));
-        given(wodResultRepository.findByUser_IdOrderByCompletedAtDescIdDesc(4))
-                .willReturn(List.of(wodResult));
-        given(exerciseResultRepository.findByUser_IdOrderByPerformedAtDescIdDesc(4))
-                .willReturn(List.of(exerciseResult));
+        given(wodResultRepository.findByUser_Id(4, PageRequest.of(0, 20,
+                Sort.by(Sort.Order.desc("completedAt"), Sort.Order.desc("id")))))
+                .willReturn(new PageImpl<>(List.of(wodResult)));
+        given(exerciseResultRepository.findByUser_Id(4, PageRequest.of(0, 20,
+                Sort.by(Sort.Order.desc("performedAt"), Sort.Order.desc("id")))))
+                .willReturn(new PageImpl<>(List.of(exerciseResult)));
         UserHistoryService service = new UserHistoryService(
                 userRepository, wodResultRepository, exerciseResultRepository);
 
-        UserHistoryResponse response = service.findOwnHistory(" ATHLETE@EXAMPLE.COM ");
+        UserHistoryResponse response = service.findOwnHistory(" ATHLETE@EXAMPLE.COM ", 0, 20);
 
-        assertThat(response.wodResults()).hasSize(1);
-        assertThat(response.wodResults().getFirst().wodId()).isEqualTo(20);
-        assertThat(response.exerciseResults()).hasSize(1);
-        assertThat(response.exerciseResults().getFirst().exerciseId()).isEqualTo(125);
-        then(wodResultRepository).should().findByUser_IdOrderByCompletedAtDescIdDesc(4);
-        then(exerciseResultRepository).should().findByUser_IdOrderByPerformedAtDescIdDesc(4);
+        assertThat(response.wodResults().items()).hasSize(1);
+        assertThat(response.wodResults().items().getFirst().wodId()).isEqualTo(20);
+        assertThat(response.exerciseResults().items()).hasSize(1);
+        assertThat(response.exerciseResults().items().getFirst().exerciseId()).isEqualTo(125);
+        then(wodResultRepository).should().findByUser_Id(4, PageRequest.of(0, 20,
+                Sort.by(Sort.Order.desc("completedAt"), Sort.Order.desc("id"))));
+        then(exerciseResultRepository).should().findByUser_Id(4, PageRequest.of(0, 20,
+                Sort.by(Sort.Order.desc("performedAt"), Sort.Order.desc("id"))));
     }
 
     @Test
@@ -78,7 +86,7 @@ class UserHistoryServiceTest {
         UserHistoryService service = new UserHistoryService(
                 userRepository, wodResultRepository, exerciseResultRepository);
 
-        assertThatThrownBy(() -> service.findOwnHistory(EMAIL))
+        assertThatThrownBy(() -> service.findOwnHistory(EMAIL, 0, 20))
                 .isInstanceOf(AuthenticatedUserNotFoundException.class);
         then(wodResultRepository).shouldHaveNoInteractions();
         then(exerciseResultRepository).shouldHaveNoInteractions();

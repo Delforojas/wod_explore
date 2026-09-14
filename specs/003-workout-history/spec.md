@@ -365,3 +365,13 @@ La Spec 003 se considerará completada cuando:
 19. TypeScript no presente errores.
 
 20. La funcionalidad sea usable mediante teclado y en móvil y escritorio.
+
+## Nota de transición arquitectónica
+
+Esta Spec describe la etapa histórica del historial local persistido en
+`localStorage`, sin cuentas ni backend. Sus requisitos funcionales se conservan
+sin reescritura para mantener el registro de decisiones de esa etapa.
+
+El historial operativo actual pertenece a usuarios autenticados y se obtiene de
+`GET /api/users/me/history`. Los resultados se almacenan en MySQL mediante el
+backend; el `localStorage` histórico de esta Spec ya no es una fuente activa.

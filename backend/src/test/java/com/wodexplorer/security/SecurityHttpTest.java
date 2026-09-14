@@ -1,11 +1,15 @@
 package com.wodexplorer.security;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,6 +39,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.wodexplorer.config.CorsConfig;
 import com.wodexplorer.config.JwtConfiguration;
 import com.wodexplorer.config.SecurityConfig;
+import com.wodexplorer.dto.ExerciseResponse;
+import com.wodexplorer.dto.PageResponse;
 import com.wodexplorer.controller.AuthController;
 import com.wodexplorer.controller.ExerciseController;
 import com.wodexplorer.controller.ExerciseResultController;
@@ -46,7 +52,10 @@ import com.wodexplorer.dto.LoginResponse;
 import com.wodexplorer.dto.UserHistoryResponse;
 import com.wodexplorer.dto.UserResponse;
 import com.wodexplorer.dto.UserStatisticsResponse;
+import com.wodexplorer.controller.HealthController;
 import com.wodexplorer.exception.GlobalExceptionHandler;
+import com.wodexplorer.entity.ExerciseCategory;
+import com.wodexplorer.entity.MeasurementType;
 import com.wodexplorer.service.AuthService;
 import com.wodexplorer.service.ExerciseService;
 import com.wodexplorer.service.ExerciseResultService;
@@ -61,11 +70,12 @@ import io.jsonwebtoken.Jwts;
 
 @WebMvcTest({ExerciseController.class, UserController.class, AuthController.class,
         UserStatisticsController.class, WodController.class, WodResultController.class,
-        ExerciseResultController.class})
+        ExerciseResultController.class, HealthController.class})
 @ImportAutoConfiguration(exclude = UserDetailsServiceAutoConfiguration.class)
 @Import({
         CorsConfig.class,
         GlobalExceptionHandler.class,
+        AdminAuthorizationService.class,
         JwtAuthenticationFilter.class,
         JwtConfiguration.class,
         JwtService.class,
@@ -75,7 +85,9 @@ import io.jsonwebtoken.Jwts;
 })
 @TestPropertySource(properties = {
         "jwt.secret=01234567890123456789012345678901",
-        "jwt.expiration=3600000"
+        "jwt.expiration=3600000",
+        "cors.allowed-origin=http://localhost:4173",
+        "security.admin-emails=admin@example.com"
 })
 class SecurityHttpTest {
 
@@ -114,10 +126,20 @@ class SecurityHttpTest {
 
     @BeforeEach
     void setUp() {
-        given(exerciseService.findAll()).willReturn(List.of());
+        given(exerciseService.findAll(null, 0, 20))
+                .willReturn(new PageResponse<>(List.of(), 0, 20, 0, 0, false));
         given(authService.login(any())).willReturn(new LoginResponse("test-token"));
         given(userService.register(any())).willReturn(new UserResponse(
                 1, "Delfin", "Rojas", TEST_EMAIL, null));
+    }
+
+    @Test
+    void health_WithoutJwt_ReturnsJsonUp() throws Exception {
+        mockMvc.perform(get("/api/health"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value("UP"))
+                .andExpect(jsonPath("$.*").value(org.hamcrest.Matchers.hasSize(1)));
     }
 
     @Test
@@ -169,7 +191,91 @@ class SecurityHttpTest {
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk());
 
-        then(exerciseService).should().findAll();
+        then(exerciseService).should().findAll(null, 0, 20);
+    }
+
+    @Test
+    void exerciseMutations_WithoutJwt_ReturnJsonUnauthorized() throws Exception {
+        mockMvc.perform(post("/api/exercises")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(validExerciseJson()))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.error").value("UNAUTHORIZED"))
+                .andExpect(jsonPath("$.message").value("Autenticación requerida"));
+
+        then(exerciseService).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void exerciseMutations_WithNormalJwt_ReturnForbiddenWithoutCallingService() throws Exception {
+        String token = jwtService.generateToken(TEST_EMAIL);
+
+        mockMvc.perform(post("/api/exercises")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(validExerciseJson()))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.error").value("FORBIDDEN"))
+                .andExpect(jsonPath("$.message").value("Acceso denegado"));
+
+        mockMvc.perform(put("/api/exercises/1")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(validExerciseJson()))
+                .andExpect(status().isForbidden());
+
+        mockMvc.perform(delete("/api/exercises/1")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isForbidden());
+
+        then(exerciseService).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void exerciseMutations_WithRoleInBody_DoNotElevateNormalUser() throws Exception {
+        String token = jwtService.generateToken(TEST_EMAIL);
+
+        mockMvc.perform(post("/api/exercises")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name": "Burpee",
+                                  "category": "GYMNASTICS",
+                                  "measurementType": "REPS",
+                                  "role": "ADMIN"
+                                }
+                                """))
+                .andExpect(status().isForbidden());
+
+        then(exerciseService).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void exerciseMutations_WithAdminJwt_AllowsCreateUpdateAndDelete() throws Exception {
+        given(exerciseService.create(any())).willReturn(exerciseResponse());
+        given(exerciseService.update(any(Integer.class), any())).willReturn(exerciseResponse());
+        String token = jwtService.generateToken(" ADMIN@EXAMPLE.COM ");
+
+        mockMvc.perform(post("/api/exercises")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(validExerciseJson()))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(put("/api/exercises/1")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(validExerciseJson()))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(delete("/api/exercises/1")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isNoContent());
+
+        then(exerciseService).should().create(any());
+        then(exerciseService).should().update(eq(1), any());
+        then(exerciseService).should().delete(1);
     }
 
     @ParameterizedTest
@@ -184,14 +290,15 @@ class SecurityHttpTest {
 
     @Test
     void wods_WithValidJwt_AllowsCatalogAccess() throws Exception {
-        given(wodService.findAll(null, null, null)).willReturn(List.of());
+        given(wodService.findAll(null, null, null, 0, 20))
+                .willReturn(new PageResponse<>(List.of(), 0, 20, 0, 0, false));
         String token = jwtService.generateToken(TEST_EMAIL);
 
         mockMvc.perform(get("/api/wods")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk());
 
-        then(wodService).should().findAll(null, null, null);
+        then(wodService).should().findAll(null, null, null, 0, 20);
     }
 
     @Test
@@ -275,17 +382,19 @@ class SecurityHttpTest {
 
     @Test
     void currentUserHistory_WithValidJwt_UsesJwtSubject() throws Exception {
-        given(userHistoryService.findOwnHistory(TEST_EMAIL)).willReturn(
-                new UserHistoryResponse(List.of(), List.of()));
+        given(userHistoryService.findOwnHistory(TEST_EMAIL, 0, 20)).willReturn(
+                new UserHistoryResponse(
+                        new PageResponse<>(List.of(), 0, 20, 0, 0, false),
+                        new PageResponse<>(List.of(), 0, 20, 0, 0, false)));
         String token = jwtService.generateToken(TEST_EMAIL);
 
         mockMvc.perform(get("/api/users/me/history")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.wodResults").isEmpty())
-                .andExpect(jsonPath("$.exerciseResults").isEmpty());
+                .andExpect(jsonPath("$.wodResults.items").isEmpty())
+                .andExpect(jsonPath("$.exerciseResults.items").isEmpty());
 
-        then(userHistoryService).should().findOwnHistory(TEST_EMAIL);
+        then(userHistoryService).should().findOwnHistory(TEST_EMAIL, 0, 20);
     }
 
     @Test
@@ -364,11 +473,11 @@ class SecurityHttpTest {
     @Test
     void api_PreflightFromConfiguredOrigin_IsAllowedWithoutAuthentication() throws Exception {
         mockMvc.perform(options("/api/exercises")
-                        .header("Origin", "http://localhost:5173")
+                        .header("Origin", "http://localhost:4173")
                         .header("Access-Control-Request-Method", "GET")
                         .header("Access-Control-Request-Headers", "Authorization"))
                 .andExpect(status().isOk())
-                .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:5173"))
+                .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:4173"))
                 .andExpect(header().string("Access-Control-Allow-Headers", "Authorization"));
     }
 
@@ -382,5 +491,19 @@ class SecurityHttpTest {
                 .expiration(Date.from(now.minusSeconds(1)))
                 .signWith(signingKey, Jwts.SIG.HS256)
                 .compact();
+    }
+
+    private String validExerciseJson() {
+        return """
+                {
+                  "name": "Burpee",
+                  "category": "GYMNASTICS",
+                  "measurementType": "REPS"
+                }
+                """;
+    }
+
+    private ExerciseResponse exerciseResponse() {
+        return new ExerciseResponse(1, "Burpee", ExerciseCategory.GYMNASTICS, MeasurementType.REPS);
     }
 }

@@ -231,3 +231,14 @@ La Spec 002 se considerará completada cuando:
 10. `npm run lint` pase.
 
 11. `npm run build` pase.
+
+## Nota de transición arquitectónica
+
+Esta Spec describe la etapa histórica de búsqueda y favoritos locales, sin cuentas
+ni backend. Sus requisitos funcionales y su modelo de `localStorage` se conservan
+como registro de diseño original y no se reescriben aquí.
+
+La arquitectura operativa posterior usa autenticación JWT, API REST y MySQL para
+las funcionalidades migradas. Los favoritos de esta Spec no están disponibles en
+el frontend actual hasta que se defina e implemente su contrato autenticado en una
+Issue posterior.
