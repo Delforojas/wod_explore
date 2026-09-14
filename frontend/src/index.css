@@ -3800,6 +3800,12 @@ h2 {
   gap: 42px;
   min-width: 0;
 }
+.my-wod-detail-side {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  min-width: 0;
+}
 .my-wod-exercises .section-heading {
   align-items: start;
   border-bottom: 1px solid var(--ink);

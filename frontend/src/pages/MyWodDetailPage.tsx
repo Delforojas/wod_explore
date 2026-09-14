@@ -5,6 +5,7 @@ import { navigate } from "../app/router";
 import { useAuth } from "../auth/useAuth";
 import { LoadingMessage, StateMessage } from "../components/StateMessage";
 import { getErrorStateKind } from "../components/stateMessageUtils";
+import { WodResultsPanel } from "../components/WodResultsPanel";
 import type { UserWodDetail, WodExercisePrescriptionUnit, WodLevel, WodType } from "../api/schemas";
 
 const dateFormatter = new Intl.DateTimeFormat("es-ES");
@@ -212,12 +213,15 @@ export function MyWodDetailPage({ id }: { id: number }) {
           </section>
         </article>
 
-        <aside className="my-wod-detail-aside" aria-label="Resumen del WOD personal">
-          <p className="my-wod-detail-aside__label">Archivo personal</p>
-          <strong>{String(wod.exercises.length).padStart(2, "0")}</strong>
-          <p>{wod.exercises.length === 1 ? "movimiento en la sesión" : "movimientos en la sesión"}</p>
-          <a className="button button--secondary" href="#/create-wod">Crear otro WOD</a>
-        </aside>
+        <div className="my-wod-detail-side">
+          <WodResultsPanel wodId={wod.id} wodType={wod.type} token={token} />
+          <aside className="my-wod-detail-aside" aria-label="Resumen del WOD personal">
+            <p className="my-wod-detail-aside__label">Archivo personal</p>
+            <strong>{String(wod.exercises.length).padStart(2, "0")}</strong>
+            <p>{wod.exercises.length === 1 ? "movimiento en la sesión" : "movimientos en la sesión"}</p>
+            <a className="button button--secondary" href="#/create-wod">Crear otro WOD</a>
+          </aside>
+        </div>
       </div>
 
       <dialog
