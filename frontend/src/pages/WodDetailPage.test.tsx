@@ -70,13 +70,13 @@ describe("WodDetailPage", () => {
 
     expect(await screen.findByRole("heading", { name: "Fran" })).toBeTruthy();
     expect(screen.getByText("Este WOD no tiene ejercicios asociados.")).toBeTruthy();
-    expect(screen.getByText("Todavía no tienes resultados para este WOD.")).toBeTruthy();
+    expect(await screen.findByText("Todavía no tienes resultados para este WOD.")).toBeTruthy();
   });
 
   it("sends the FOR_TIME payload", async () => {
     const user = userEvent.setup();
     renderLoadedWod("FOR_TIME");
-    await screen.findByRole("heading", { name: "Fran" });
+    await screen.findByLabelText("Tiempo en segundos");
 
     await user.type(screen.getByLabelText("Tiempo en segundos"), "60");
     await user.click(screen.getByRole("button", { name: "Guardar resultado" }));
@@ -91,7 +91,7 @@ describe("WodDetailPage", () => {
   it("shows accessible feedback after saving a result", async () => {
     const user = userEvent.setup();
     renderLoadedWod("FOR_TIME");
-    await screen.findByRole("heading", { name: "Fran" });
+    await screen.findByLabelText("Tiempo en segundos");
 
     await user.type(screen.getByLabelText("Tiempo en segundos"), "60");
     await user.click(screen.getByRole("button", { name: "Guardar resultado" }));
@@ -103,7 +103,7 @@ describe("WodDetailPage", () => {
   it("sends the AMRAP payload", async () => {
     const user = userEvent.setup();
     renderLoadedWod("AMRAP");
-    await screen.findByRole("heading", { name: "Fran" });
+    await screen.findByLabelText("Rondas");
 
     await user.type(screen.getByLabelText("Rondas"), "10");
     await user.type(screen.getByLabelText("Repeticiones extra"), "5");
@@ -119,7 +119,7 @@ describe("WodDetailPage", () => {
   it("sends the EMOM payload", async () => {
     const user = userEvent.setup();
     renderLoadedWod("EMOM");
-    await screen.findByRole("heading", { name: "Fran" });
+    await screen.findByLabelText("Repeticiones");
 
     await user.type(screen.getByLabelText("Repeticiones"), "12");
     await user.click(screen.getByRole("button", { name: "Guardar resultado" }));
