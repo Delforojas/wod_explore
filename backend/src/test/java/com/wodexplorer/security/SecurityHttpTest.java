@@ -341,6 +341,31 @@ class SecurityHttpTest {
     }
 
     @Test
+    void userWodUpdate_WithoutJwt_ReturnsJsonUnauthorized() throws Exception {
+        mockMvc.perform(put("/api/user-wods/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(validUserWodJson()))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.error").value("UNAUTHORIZED"));
+
+        then(userWodService).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void userWodUpdate_WithValidJwt_UsesJwtSubject() throws Exception {
+        given(userWodService.update(eq(1), any(), eq(TEST_EMAIL))).willReturn(null);
+        String token = jwtService.generateToken(TEST_EMAIL);
+
+        mockMvc.perform(put("/api/user-wods/1")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(validUserWodJson()))
+                .andExpect(status().isOk());
+
+        then(userWodService).should().update(eq(1), any(), eq(TEST_EMAIL));
+    }
+
+    @Test
     void wodResults_WithoutJwt_ReturnsJsonUnauthorized() throws Exception {
         mockMvc.perform(get("/api/wods/18/results"))
                 .andExpect(status().isUnauthorized())

@@ -6,6 +6,7 @@ export type Route =
   | { page: "create-wod" }
   | { page: "my-wods" }
   | { page: "my-wod-detail"; id: number }
+  | { page: "my-wod-edit"; id: number }
   | { page: "wod-detail"; id: number }
   | { page: "exercises" }
   | { page: "exercise-detail"; id: number }
@@ -23,6 +24,9 @@ export function parseRoute(hash: string): Route {
   if (parts[0] === "wods" && parts.length === 1) return { page: "wods" };
   if (parts[0] === "create-wod") return { page: "create-wod" };
   if (parts[0] === "my-wods" && parts.length === 1) return { page: "my-wods" };
+  if (parts[0] === "my-wods" && parts[2] === "edit" && Number.isInteger(Number(parts[1]))) {
+    return { page: "my-wod-edit", id: Number(parts[1]) };
+  }
   if (parts[0] === "my-wods" && parts[1] && Number.isInteger(Number(parts[1]))) {
     return { page: "my-wod-detail", id: Number(parts[1]) };
   }

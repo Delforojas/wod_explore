@@ -66,6 +66,13 @@ describe("Layout", () => {
     expect(within(screen.getByRole("navigation", { name: "Navegación móvil" })).getByRole("link", { name: "Mis WODs" }).getAttribute("aria-current")).toBe("page");
   });
 
+  it("marks Mis WODs as active on its edit page", () => {
+    renderWithAuth(<Layout currentPage="my-wod-edit"><p>Contenido</p></Layout>);
+
+    expect(within(screen.getByRole("navigation", { name: "Navegación principal" })).getByRole("link", { name: "Mis WODs" }).getAttribute("aria-current")).toBe("page");
+    expect(within(screen.getByRole("navigation", { name: "Navegación móvil" })).getByRole("link", { name: "Mis WODs" }).getAttribute("aria-current")).toBe("page");
+  });
+
   it("keeps the parent catalog active on detail pages", () => {
     renderWithAuth(<Layout currentPage="exercise-detail"><p>Contenido</p></Layout>);
 

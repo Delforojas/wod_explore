@@ -10,6 +10,7 @@ import { CreateWodPage } from "./CreateWodPage";
 vi.mock("../api/client", () => ({
   createUserWod: vi.fn(),
   getExercises: vi.fn(),
+  updateUserWod: vi.fn(),
 }));
 
 const backSquat: Exercise = {

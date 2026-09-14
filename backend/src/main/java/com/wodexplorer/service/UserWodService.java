@@ -23,6 +23,7 @@ import com.wodexplorer.dto.UserWodExerciseResponse;
 import com.wodexplorer.dto.UserWodPrescriptionRequest;
 import com.wodexplorer.dto.UserWodPrescriptionResponse;
 import com.wodexplorer.dto.UserWodSummaryResponse;
+import com.wodexplorer.dto.UserWodUpdateRequest;
 import com.wodexplorer.entity.Exercise;
 import com.wodexplorer.entity.MeasurementType;
 import com.wodexplorer.entity.User;
@@ -69,29 +70,31 @@ public class UserWodService {
 
         Wod wod = new Wod();
         wod.setOwner(owner);
-        wod.setName(request.name().trim());
-        wod.setType(request.type());
-        wod.setCategory(request.category());
-        wod.setLevel(request.level());
-        wod.setTimeLimit(request.timeLimit());
-        wod.setRounds(request.rounds());
+        applyWodFields(wod, request.name(), request.type(), request.category(), request.level(),
+                request.timeLimit(), request.rounds());
+        addExercises(wod, request.exercises(), exercisesById);
 
-        for (UserWodExerciseRequest exerciseRequest : request.exercises()) {
-            Exercise exercise = exercisesById.get(exerciseRequest.exerciseId());
-            validatePrescriptions(exercise.getMeasurementType(), exerciseRequest.prescriptions());
+        Wod savedWod = wodRepository.saveAndFlush(wod);
+        return toDetailResponse(savedWod);
+    }
 
-            WodExercise wodExercise = new WodExercise();
-            wodExercise.setExercise(exercise);
-            wodExercise.setPosition(exerciseRequest.position());
-            for (UserWodPrescriptionRequest prescriptionRequest : exerciseRequest.prescriptions()) {
-                WodExercisePrescription prescription = new WodExercisePrescription();
-                prescription.setValue(prescriptionRequest.value());
-                prescription.setUnit(prescriptionRequest.unit());
-                prescription.setUnitLabel(normalizeUnitLabel(prescriptionRequest));
-                wodExercise.addPrescription(prescription);
-            }
-            wod.addExercise(wodExercise);
-        }
+    @Transactional
+    public UserWodDetailResponse update(
+            Integer id,
+            UserWodUpdateRequest request,
+            String authenticatedEmail) {
+        User owner = findAuthenticatedUser(authenticatedEmail);
+        Wod wod = wodRepository.findByIdAndOwner_Id(id, owner.getId())
+                .orElseThrow(UserWodNotFoundException::new);
+
+        validateWod(request);
+        Map<Integer, Exercise> exercisesById = findExercises(request.exercises());
+        applyWodFields(wod, request.name(), request.type(), request.category(), request.level(),
+                request.timeLimit(), request.rounds());
+
+        wod.getExercises().clear();
+        wodRepository.saveAndFlush(wod);
+        addExercises(wod, request.exercises(), exercisesById);
 
         Wod savedWod = wodRepository.saveAndFlush(wod);
         return toDetailResponse(savedWod);
@@ -137,40 +140,62 @@ public class UserWodService {
     }
 
     private void validateWod(UserWodCreateRequest request) {
-        if (request == null || request.name() == null || request.name().trim().isBlank()) {
+        if (request == null) {
             throw invalid("El nombre es obligatorio");
         }
-        String normalizedName = request.name().trim();
+        validateWod(request.name(), request.type(), request.level(), request.timeLimit(),
+                request.rounds(), request.exercises());
+    }
+
+    private void validateWod(UserWodUpdateRequest request) {
+        if (request == null) {
+            throw invalid("El nombre es obligatorio");
+        }
+        validateWod(request.name(), request.type(), request.level(), request.timeLimit(),
+                request.rounds(), request.exercises());
+    }
+
+    private void validateWod(
+            String name,
+            WodType type,
+            com.wodexplorer.entity.WodLevel level,
+            Integer timeLimit,
+            Integer rounds,
+            List<UserWodExerciseRequest> exercises) {
+        if (name == null || name.trim().isBlank()) {
+            throw invalid("El nombre es obligatorio");
+        }
+        String normalizedName = name.trim();
         if (normalizedName.length() > 100) {
             throw invalid("El nombre no puede superar 100 caracteres");
         }
-        if (request.type() == null) {
+        if (type == null) {
             throw invalid("El tipo es obligatorio");
         }
-        if (request.level() == null) {
+        if (level == null) {
             throw invalid("El nivel es obligatorio");
         }
-        if (request.timeLimit() != null && request.timeLimit() <= 0) {
+        if (timeLimit != null && timeLimit <= 0) {
             throw invalid("El time limit debe ser positivo");
         }
-        if (request.rounds() != null && request.rounds() <= 0) {
+        if (rounds != null && rounds <= 0) {
             throw invalid("Las rondas deben ser positivas");
         }
-        if (request.type() == WodType.AMRAP) {
-            if (request.timeLimit() == null) {
+        if (type == WodType.AMRAP) {
+            if (timeLimit == null) {
                 throw invalid("El time limit es obligatorio para AMRAP");
             }
-            if (request.rounds() != null) {
+            if (rounds != null) {
                 throw invalid("AMRAP no admite rondas fijas");
             }
         }
-        if (request.type() == WodType.EMOM && request.timeLimit() == null) {
+        if (type == WodType.EMOM && timeLimit == null) {
             throw invalid("El time limit es obligatorio para EMOM");
         }
-        if (request.exercises() == null || request.exercises().isEmpty()) {
+        if (exercises == null || exercises.isEmpty()) {
             throw invalid("Debe existir al menos un ejercicio");
         }
-        for (UserWodExerciseRequest exercise : request.exercises()) {
+        for (UserWodExerciseRequest exercise : exercises) {
             if (exercise == null || exercise.exerciseId() == null || exercise.exerciseId() <= 0) {
                 throw invalid("Cada ejercicio debe tener un exerciseId positivo");
             }
@@ -181,7 +206,45 @@ public class UserWodService {
                 throw invalid("Cada ejercicio debe tener prescripciones");
             }
         }
-        validatePositions(request.exercises());
+        validatePositions(exercises);
+    }
+
+    private void applyWodFields(
+            Wod wod,
+            String name,
+            WodType type,
+            com.wodexplorer.entity.WodCategory category,
+            com.wodexplorer.entity.WodLevel level,
+            Integer timeLimit,
+            Integer rounds) {
+        wod.setName(name.trim());
+        wod.setType(type);
+        wod.setCategory(category);
+        wod.setLevel(level);
+        wod.setTimeLimit(timeLimit);
+        wod.setRounds(rounds);
+    }
+
+    private void addExercises(
+            Wod wod,
+            List<UserWodExerciseRequest> requests,
+            Map<Integer, Exercise> exercisesById) {
+        for (UserWodExerciseRequest exerciseRequest : requests) {
+            Exercise exercise = exercisesById.get(exerciseRequest.exerciseId());
+            validatePrescriptions(exercise.getMeasurementType(), exerciseRequest.prescriptions());
+
+            WodExercise wodExercise = new WodExercise();
+            wodExercise.setExercise(exercise);
+            wodExercise.setPosition(exerciseRequest.position());
+            for (UserWodPrescriptionRequest prescriptionRequest : exerciseRequest.prescriptions()) {
+                WodExercisePrescription prescription = new WodExercisePrescription();
+                prescription.setValue(prescriptionRequest.value());
+                prescription.setUnit(prescriptionRequest.unit());
+                prescription.setUnitLabel(normalizeUnitLabel(prescriptionRequest));
+                wodExercise.addPrescription(prescription);
+            }
+            wod.addExercise(wodExercise);
+        }
     }
 
     private void validatePositions(List<UserWodExerciseRequest> exercises) {
