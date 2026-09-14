@@ -10,12 +10,15 @@ import {
   loginResponseSchema,
   statisticsSchema,
   userSchema,
+  userWodCreateRequestSchema,
+  userWodDetailSchema,
   wodDetailSchema,
   wodPageSchema,
   wodResultSchema,
   type ExerciseResultRequest,
   type LoginRequest,
   type RegisterRequest,
+  type UserWodCreateRequest,
   type WodResultRequest,
 } from "./schemas";
 
@@ -150,6 +153,11 @@ export function getWods(
 
 export function getWod(id: number, token: string) {
   return request(`/wods/${id}`, wodDetailSchema, {}, token);
+}
+
+export function createUserWod(body: UserWodCreateRequest, token: string) {
+  const parsedBody = userWodCreateRequestSchema.parse(body);
+  return request("/user-wods", userWodDetailSchema, jsonBody(parsedBody), token);
 }
 
 export function createWodResult(id: number, body: WodResultRequest, token: string) {

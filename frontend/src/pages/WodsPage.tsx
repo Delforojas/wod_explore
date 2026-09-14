@@ -84,13 +84,16 @@ export function WodsPage() {
   return (
     <section className="catalog-page catalog-page--wods">
       <header className="page-heading">
-        <div>
+        <div className="page-heading__body">
           <h1>WODs</h1>
           <p className="heading-support">Entrenamientos listos para encontrar, consultar y repetir.</p>
         </div>
-        <p className="heading-note" aria-live="polite">
-          {catalog ? formatWodCount(catalog.totalElements) : "Busca tu próximo entrenamiento"}
-        </p>
+        <div className="page-heading__actions">
+          <p className="heading-note" aria-live="polite">
+            {catalog ? formatWodCount(catalog.totalElements) : "Busca tu próximo entrenamiento"}
+          </p>
+          <a className="button button--accent" href="#/create-wod">Crear WOD</a>
+        </div>
       </header>
       <form className="filter-strip" onSubmit={handleSubmit} aria-label="Filtrar WODs">
         <label>Nombre<input name="name" autoComplete="off" value={name} onChange={(event) => setName(event.target.value)} placeholder="Ej. Fran…" /></label>

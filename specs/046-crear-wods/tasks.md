@@ -1,0 +1,25 @@
+# Tasks - Issue #46: Crear interfaz para WODs personalizados
+
+- [x] Crear schemas Zod y tipos derivados para request y respuesta de WOD personalizado.
+- [x] Anadir `createUserWod` al cliente API con token y validacion de respuesta.
+- [x] Extender el hash router y `App` con la ruta `#/create-wod`.
+- [x] Anadir CTA y accesos de navegacion para descubrir "Crear WOD".
+- [x] Crear la pagina de formulario con nombre, tipo y nivel.
+- [x] Implementar campos dinamicos de `timeLimit` y `rounds` segun `WodType`.
+- [x] Implementar dialogo nativo para buscar, paginar y seleccionar ejercicios.
+- [x] Permitir multiples ejercicios, repeticion, reordenacion y eliminacion.
+- [x] Renderizar prescripciones compatibles con cada `measurementType` y sus unidades.
+- [x] Validar el borrador y vincular mensajes al campo afectado antes del POST.
+- [x] Implementar estados de autenticacion, carga, errores, reintento y exito.
+- [x] Evitar submits duplicados y conservar el borrador en errores de guardado.
+- [x] Anadir estilos responsive y accesibles coherentes con `DESIGN.md`.
+- [x] Anadir tests de router y cliente API para la nueva ruta y contrato.
+- [x] Anadir tests de comportamiento para formulario, selector, orden y eliminacion.
+- [x] Anadir tests de validacion, carga, errores API y confirmacion de guardado.
+- [x] Ejecutar `npm run test` desde `frontend/` y corregir fallos.
+- [x] Ejecutar `npm run lint` desde `frontend/` y corregir fallos.
+- [x] Ejecutar `npm run build` desde `frontend/` y corregir fallos de TypeScript.
+- [x] Ejecutar detector Impeccable y revisar responsive y accesibilidad.
+- [x] Revisar diff, status, alcance, secretos y ausencia de cambios backend.
+- [x] Crear el commit exclusivo de la Issue #46.
+- [x] Documentar la Issue con commit, verificaciones y validaciones manuales pendientes.

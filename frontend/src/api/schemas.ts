@@ -2,12 +2,20 @@ import { z } from "zod";
 
 export const wodTypeSchema = z.enum(["FOR_TIME", "AMRAP", "EMOM"]);
 export const wodLevelSchema = z.enum(["BEGINNER", "INTERMEDIATE", "RX"]);
+export const wodCategorySchema = z.enum(["METCON"]);
 export const measurementTypeSchema = z.enum([
   "WEIGHT",
   "REPS",
   "TIME",
   "DISTANCE",
   "WEIGHT_DISTANCE",
+  "OTHER",
+]);
+export const wodExercisePrescriptionUnitSchema = z.enum([
+  "REPS",
+  "METERS",
+  "KG",
+  "SECONDS",
   "OTHER",
 ]);
 export const exerciseCategorySchema = z.enum([
@@ -69,6 +77,55 @@ export const wodExerciseSchema = z.object({
 export const wodDetailSchema = wodSummarySchema.extend({
   createdAt: dateTimeSchema,
   exercises: z.array(wodExerciseSchema),
+});
+
+const userWodPrescriptionSchema = z.object({
+  value: z.number().positive(),
+  unit: wodExercisePrescriptionUnitSchema,
+  unitLabel: z.string().nullable(),
+});
+
+const userWodExerciseSchema = z.object({
+  exerciseId: z.number().int(),
+  name: z.string(),
+  category: exerciseCategorySchema,
+  measurementType: measurementTypeSchema,
+  position: z.number().int().positive(),
+  prescriptions: z.array(userWodPrescriptionSchema),
+});
+
+const userWodPrescriptionRequestSchema = z.object({
+  value: z.number().positive(),
+  unit: wodExercisePrescriptionUnitSchema,
+  unitLabel: z.string().nullable().optional(),
+});
+
+const userWodExerciseRequestSchema = z.object({
+  exerciseId: z.number().int().positive(),
+  position: z.number().int().positive(),
+  prescriptions: z.array(userWodPrescriptionRequestSchema).min(1),
+});
+
+export const userWodCreateRequestSchema = z.object({
+  name: z.string().trim().min(1).max(100),
+  type: wodTypeSchema,
+  category: wodCategorySchema.nullable().optional(),
+  level: wodLevelSchema,
+  timeLimit: z.number().int().positive().nullable().optional(),
+  rounds: z.number().int().positive().nullable().optional(),
+  exercises: z.array(userWodExerciseRequestSchema).min(1),
+});
+
+export const userWodDetailSchema = z.object({
+  id: z.number().int(),
+  name: z.string(),
+  type: wodTypeSchema,
+  category: wodCategorySchema.nullable(),
+  timeLimit: z.number().int().nullable(),
+  rounds: z.number().int().nullable(),
+  level: wodLevelSchema,
+  createdAt: dateTimeSchema,
+  exercises: z.array(userWodExerciseSchema),
 });
 
 export const wodResultSchema = z.object({
@@ -160,7 +217,9 @@ export const apiErrorSchema = z.object({
 export type LoginResponse = z.infer<typeof loginResponseSchema>;
 export type WodType = z.infer<typeof wodTypeSchema>;
 export type WodLevel = z.infer<typeof wodLevelSchema>;
+export type WodCategory = z.infer<typeof wodCategorySchema>;
 export type MeasurementType = z.infer<typeof measurementTypeSchema>;
+export type WodExercisePrescriptionUnit = z.infer<typeof wodExercisePrescriptionUnitSchema>;
 export type ExerciseCategory = z.infer<typeof exerciseCategorySchema>;
 export type ExerciseResultUnit = z.infer<typeof exerciseResultUnitSchema>;
 export type ExerciseRecordType = z.infer<typeof exerciseRecordTypeSchema>;
@@ -169,6 +228,7 @@ export type Exercise = z.infer<typeof exerciseSchema>;
 export type WodSummary = z.infer<typeof wodSummarySchema>;
 export type WodExercise = z.infer<typeof wodExerciseSchema>;
 export type WodDetail = z.infer<typeof wodDetailSchema>;
+export type UserWodDetail = z.infer<typeof userWodDetailSchema>;
 export type WodResult = z.infer<typeof wodResultSchema>;
 export type ExerciseResult = z.infer<typeof exerciseResultSchema>;
 export type ExercisePage = z.infer<typeof exercisePageSchema>;
@@ -207,3 +267,7 @@ export interface ExerciseResultRequest {
   recordType: z.infer<typeof exerciseRecordTypeSchema>;
   performedAt?: string;
 }
+
+export type UserWodPrescriptionRequest = z.infer<typeof userWodPrescriptionRequestSchema>;
+export type UserWodExerciseRequest = z.infer<typeof userWodExerciseRequestSchema>;
+export type UserWodCreateRequest = z.infer<typeof userWodCreateRequestSchema>;
