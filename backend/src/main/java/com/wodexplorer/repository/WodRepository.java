@@ -1,7 +1,7 @@
 package com.wodexplorer.repository;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,10 +17,10 @@ public interface WodRepository extends JpaRepository<Wod, Integer> {
             where (:name is null or lower(w.name) like lower(concat('%', :name, '%')))
               and (:type is null or w.type = :type)
               and (:level is null or w.level = :level)
-            order by w.id asc
             """)
-    List<Wod> findByFilters(
+    Page<Wod> findByFilters(
             @Param("name") String name,
             @Param("type") WodType type,
-            @Param("level") WodLevel level);
+            @Param("level") WodLevel level,
+            Pageable pageable);
 }

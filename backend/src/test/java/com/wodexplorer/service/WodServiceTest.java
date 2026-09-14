@@ -2,6 +2,8 @@ package com.wodexplorer.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -13,7 +15,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
+import com.wodexplorer.dto.PageResponse;
 import com.wodexplorer.dto.WodDetailResponse;
 import com.wodexplorer.dto.WodSummaryResponse;
 import com.wodexplorer.entity.Exercise;
@@ -43,58 +49,67 @@ class WodServiceTest {
     @Test
     void findAll_WithoutFilters_ReturnsCatalog() {
         Wod wod = wod(1, "Abbate", WodType.FOR_TIME, null, null, WodLevel.RX);
-        given(wodRepository.findByFilters(null, null, null)).willReturn(List.of(wod));
+        given(wodRepository.findByFilters(eq(null), eq(null), eq(null), any(Pageable.class)))
+                .willReturn(pageOf(wod));
 
-        List<WodSummaryResponse> result = wodService.findAll(null, null, null);
+        PageResponse<WodSummaryResponse> result = wodService.findAll(null, null, null, 0, 20);
 
-        assertThat(result).containsExactly(new WodSummaryResponse(
+        assertThat(result.items()).containsExactly(new WodSummaryResponse(
                 1, "Abbate", WodType.FOR_TIME, null, null, WodLevel.RX));
     }
 
     @Test
     void findAll_WithNameFilter_TrimsNameAndUsesPartialSearch() {
-        given(wodRepository.findByFilters("Fran", null, null)).willReturn(List.of());
+        given(wodRepository.findByFilters(eq("Fran"), eq(null), eq(null), any(Pageable.class)))
+                .willReturn(Page.empty());
 
-        wodService.findAll("  Fran  ", null, null);
+        wodService.findAll("  Fran  ", null, null, 0, 20);
 
-        then(wodRepository).should().findByFilters("Fran", null, null);
+        then(wodRepository).should().findByFilters(eq("Fran"), eq(null), eq(null), any(Pageable.class));
     }
 
     @Test
     void findAll_WithTypeFilter_DelegatesType() {
-        given(wodRepository.findByFilters(null, WodType.AMRAP, null)).willReturn(List.of());
+        given(wodRepository.findByFilters(eq(null), eq(WodType.AMRAP), eq(null), any(Pageable.class)))
+                .willReturn(Page.empty());
 
-        wodService.findAll(null, WodType.AMRAP, null);
+        wodService.findAll(null, WodType.AMRAP, null, 0, 20);
 
-        then(wodRepository).should().findByFilters(null, WodType.AMRAP, null);
+        then(wodRepository).should().findByFilters(
+                eq(null), eq(WodType.AMRAP), eq(null), any(Pageable.class));
     }
 
     @Test
     void findAll_WithLevelFilter_DelegatesLevel() {
-        given(wodRepository.findByFilters(null, null, WodLevel.BEGINNER)).willReturn(List.of());
+        given(wodRepository.findByFilters(eq(null), eq(null), eq(WodLevel.BEGINNER), any(Pageable.class)))
+                .willReturn(Page.empty());
 
-        wodService.findAll(null, null, WodLevel.BEGINNER);
+        wodService.findAll(null, null, WodLevel.BEGINNER, 0, 20);
 
-        then(wodRepository).should().findByFilters(null, null, WodLevel.BEGINNER);
+        then(wodRepository).should().findByFilters(
+                eq(null), eq(null), eq(WodLevel.BEGINNER), any(Pageable.class));
     }
 
     @Test
     void findAll_WithCombinedFilters_DelegatesAllFilters() {
-        given(wodRepository.findByFilters("Fran", WodType.FOR_TIME, WodLevel.RX))
-                .willReturn(List.of());
+        given(wodRepository.findByFilters(
+                eq("Fran"), eq(WodType.FOR_TIME), eq(WodLevel.RX), any(Pageable.class)))
+                .willReturn(Page.empty());
 
-        wodService.findAll("Fran", WodType.FOR_TIME, WodLevel.RX);
+        wodService.findAll("Fran", WodType.FOR_TIME, WodLevel.RX, 0, 20);
 
-        then(wodRepository).should().findByFilters("Fran", WodType.FOR_TIME, WodLevel.RX);
+        then(wodRepository).should().findByFilters(
+                eq("Fran"), eq(WodType.FOR_TIME), eq(WodLevel.RX), any(Pageable.class));
     }
 
     @Test
     void findAll_WithBlankName_TreatsNameAsAbsent() {
-        given(wodRepository.findByFilters(null, null, null)).willReturn(List.of());
+        given(wodRepository.findByFilters(eq(null), eq(null), eq(null), any(Pageable.class)))
+                .willReturn(Page.empty());
 
-        wodService.findAll("   ", null, null);
+        wodService.findAll("   ", null, null, 0, 20);
 
-        then(wodRepository).should().findByFilters(null, null, null);
+        then(wodRepository).should().findByFilters(eq(null), eq(null), eq(null), any(Pageable.class));
     }
 
     @Test
@@ -196,5 +211,9 @@ class WodServiceTest {
         wod.setRounds(rounds);
         wod.setLevel(level);
         return wod;
+    }
+
+    private Page<Wod> pageOf(Wod... wods) {
+        return new PageImpl<>(List.of(wods));
     }
 }

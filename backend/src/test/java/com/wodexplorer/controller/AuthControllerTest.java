@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.wodexplorer.dto.LoginResponse;
 import com.wodexplorer.exception.GlobalExceptionHandler;
 import com.wodexplorer.exception.InvalidCredentialsException;
+import com.wodexplorer.security.AdminAuthorizationService;
 import com.wodexplorer.service.AuthService;
 import com.wodexplorer.service.JwtService;
 
@@ -40,6 +41,9 @@ class AuthControllerTest {
 
     @MockitoBean
     private JwtService jwtService;
+
+    @MockitoBean
+    private AdminAuthorizationService adminAuthorizationService;
 
     @Test
     void login_ValidRequest_ReturnsTokenWithoutSensitiveFields() throws Exception {

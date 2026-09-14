@@ -1,7 +1,5 @@
 package com.wodexplorer.controller;
 
-import com.wodexplorer.entity.Exercise;
-
 import com.wodexplorer.service.ExerciseService;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.wodexplorer.dto.ExerciseRequest;
 import com.wodexplorer.dto.ExerciseResponse;
@@ -26,7 +25,9 @@ import org.springframework.http.ResponseEntity;
 
 import jakarta.validation.Valid;
 
-import java.util.List;
+import com.wodexplorer.dto.PageResponse;
+import com.wodexplorer.dto.PaginationParameters;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 @RestController
 
@@ -44,11 +45,13 @@ public class ExerciseController {
 
     @GetMapping
 
-public List<ExerciseResponse> findAll() {
+    public PageResponse<ExerciseResponse> findAll(
+        @RequestParam(name = "name", required = false) String name,
+        @Valid @ModelAttribute PaginationParameters pagination) {
 
-    return exerciseService.findAll();
+        return exerciseService.findAll(name, pagination.getPage(), pagination.getSize());
 
-}
+    }
     @GetMapping("/{id}")
 
 public ExerciseResponse findById(@PathVariable Integer id) {

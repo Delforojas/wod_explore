@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.wodexplorer.dto.WodDetailResponse;
 import com.wodexplorer.dto.WodExerciseResponse;
+import com.wodexplorer.dto.PageResponse;
 import com.wodexplorer.dto.WodSummaryResponse;
 import com.wodexplorer.entity.ExerciseCategory;
 import com.wodexplorer.entity.MeasurementType;
@@ -30,6 +31,7 @@ import com.wodexplorer.entity.WodLevel;
 import com.wodexplorer.entity.WodType;
 import com.wodexplorer.exception.GlobalExceptionHandler;
 import com.wodexplorer.exception.WodNotFoundException;
+import com.wodexplorer.security.AdminAuthorizationService;
 import com.wodexplorer.service.JwtService;
 import com.wodexplorer.service.WodService;
 
@@ -48,34 +50,40 @@ class WodControllerTest {
     @MockitoBean
     private JwtService jwtService;
 
+    @MockitoBean
+    private AdminAuthorizationService adminAuthorizationService;
+
     @Test
     void findAll_WithoutFilters_ReturnsCatalogDto() throws Exception {
-        given(wodService.findAll(null, null, null)).willReturn(List.of(
-                new WodSummaryResponse(1, "Abbate", WodType.FOR_TIME, null, null, WodLevel.RX)));
+        given(wodService.findAll(null, null, null, 0, 20)).willReturn(new PageResponse<>(List.of(
+                new WodSummaryResponse(1, "Abbate", WodType.FOR_TIME, null, null, WodLevel.RX)),
+                0, 20, 1, 1, false));
 
         mockMvc.perform(get("/api/wods"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].name").value("Abbate"))
-                .andExpect(jsonPath("$[0].type").value("FOR_TIME"))
-                .andExpect(jsonPath("$[0].level").value("RX"))
-                .andExpect(jsonPath("$[0].timeLimit").value(nullValue()))
-                .andExpect(jsonPath("$[0].rounds").value(nullValue()));
+                .andExpect(jsonPath("$.items[0].id").value(1))
+                .andExpect(jsonPath("$.items[0].name").value("Abbate"))
+                .andExpect(jsonPath("$.items[0].type").value("FOR_TIME"))
+                .andExpect(jsonPath("$.items[0].level").value("RX"))
+                .andExpect(jsonPath("$.items[0].timeLimit").value(nullValue()))
+                .andExpect(jsonPath("$.items[0].rounds").value(nullValue()))
+                .andExpect(jsonPath("$.hasNext").value(false));
     }
 
     @Test
     void findAll_WithCombinedFilters_DelegatesTypedParameters() throws Exception {
-        given(wodService.findAll("  Fran  ", WodType.FOR_TIME, WodLevel.RX))
-                .willReturn(List.of());
+        given(wodService.findAll("  Fran  ", WodType.FOR_TIME, WodLevel.RX, 0, 20))
+                .willReturn(new PageResponse<>(List.of(), 0, 20, 0, 0, false));
 
         mockMvc.perform(get("/api/wods")
                         .param("name", "  Fran  ")
                         .param("type", "FOR_TIME")
                         .param("level", "RX"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isEmpty());
+                .andExpect(jsonPath("$.items").isEmpty());
 
-        then(wodService).should().findAll(eq("  Fran  "), eq(WodType.FOR_TIME), eq(WodLevel.RX));
+        then(wodService).should().findAll(
+                eq("  Fran  "), eq(WodType.FOR_TIME), eq(WodLevel.RX), eq(0), eq(20));
     }
 
     @Test
@@ -166,6 +174,22 @@ class WodControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("VALIDATION_ERROR"))
                 .andExpect(jsonPath("$.details.level").exists());
+    }
+
+    @Test
+    void findAll_WithPageSizeAboveMaximum_ReturnsBadRequest() throws Exception {
+        mockMvc.perform(get("/api/wods").param("size", "101"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.details.size").exists());
+    }
+
+    @Test
+    void findAll_WithNegativePage_ReturnsBadRequest() throws Exception {
+        mockMvc.perform(get("/api/wods").param("page", "-1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.details.page").exists());
     }
 
     @Test

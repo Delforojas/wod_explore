@@ -67,3 +67,14 @@ como skill principal de diseño.
 - Mantener accesibilidad y responsive.
 
 - `npm test`, `npm run lint` y `npm run build` deben seguir pasando.
+
+## Nota de transición arquitectónica
+
+Esta Spec describe el rediseño visual de la etapa frontend local. Sus requisitos
+de diseño y restricciones funcionales se conservan sin reescritura como historial
+del producto.
+
+La interfaz visual definida aquí continúa siendo referencia para el frontend
+actual, pero las fuentes de datos y los flujos operativos posteriores usan la API,
+JWT y MySQL. La dirección visual vigente se mantiene en `DESIGN.md` y la
+arquitectura actual se documenta en `PRODUCT.md` y `README.md`.

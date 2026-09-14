@@ -40,7 +40,8 @@ public class ExerciseResult {
     private ExerciseResultUnit unit;
 
     @Convert(converter = ExerciseRecordTypeConverter.class)
-    @Column(name = "record_type", nullable = false)
+    @Column(name = "record_type", nullable = false,
+            columnDefinition = "enum('1RM','3RM','5RM','10RM','MAX_REPS','BEST_TIME')")
     private ExerciseRecordType recordType;
 
     @Column(name = "performed_at", nullable = false)

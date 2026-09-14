@@ -1,0 +1,1331 @@
+{
+  "knownSymbols": {
+    "useEffect": [
+      {
+        "name": "useEffect",
+        "module": "react",
+        "isDefault": false
+      }
+    ],
+    "useState": [
+      {
+        "name": "useState",
+        "module": "react",
+        "isDefault": false
+      }
+    ],
+    "type { FormEvent": [
+      {
+        "name": "type { FormEvent",
+        "module": "react",
+        "isDefault": true
+      }
+    ],
+    "describe": [
+      {
+        "name": "describe",
+        "module": "vitest",
+        "isDefault": false
+      }
+    ],
+    "expect": [
+      {
+        "name": "expect",
+        "module": "vitest",
+        "isDefault": false
+      }
+    ],
+    "it": [
+      {
+        "name": "it",
+        "module": "vitest",
+        "isDefault": false
+      }
+    ],
+    "vi": [
+      {
+        "name": "vi",
+        "module": "vitest",
+        "isDefault": false
+      }
+    ],
+    "z": [
+      {
+        "name": "z",
+        "module": "zod",
+        "isDefault": false
+      }
+    ],
+    "type { ReactNode": [
+      {
+        "name": "type { ReactNode",
+        "module": "react",
+        "isDefault": true
+      }
+    ],
+    "useContext": [
+      {
+        "name": "useContext",
+        "module": "react",
+        "isDefault": false
+      }
+    ],
+    "createContext": [
+      {
+        "name": "createContext",
+        "module": "react",
+        "isDefault": false
+      }
+    ],
+    "defineConfig": [
+      {
+        "name": "defineConfig",
+        "module": "vite",
+        "isDefault": false
+      }
+    ],
+    "react": [
+      {
+        "name": "react",
+        "module": "@vitejs/plugin-react",
+        "isDefault": true
+      }
+    ],
+    "StrictMode": [
+      {
+        "name": "StrictMode",
+        "module": "react",
+        "isDefault": false
+      }
+    ],
+    "createRoot": [
+      {
+        "name": "createRoot",
+        "module": "react-dom/client",
+        "isDefault": false
+      }
+    ],
+    "Route": [
+      {
+        "name": "Route",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/app/router.ts",
+        "type": "type",
+        "isDefault": false
+      },
+      {
+        "name": "Route",
+        "module": "react-router-dom",
+        "isDefault": false
+      }
+    ],
+    "Link": [
+      {
+        "name": "Link",
+        "module": "react-router-dom",
+        "isDefault": false
+      }
+    ],
+    "useParams": [
+      {
+        "name": "useParams",
+        "module": "react-router-dom",
+        "isDefault": false
+      }
+    ],
+    "WodFilter": [
+      {
+        "name": "WodFilter",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/filterWods.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "WOD_FILTERS": [
+      {
+        "name": "WOD_FILTERS",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/filterWods.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "WodFilterOptions": [
+      {
+        "name": "WodFilterOptions",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/filterWods.ts",
+        "type": "interface",
+        "isDefault": false
+      }
+    ],
+    "filterWods": [
+      {
+        "name": "filterWods",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/filterWods.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "WORKOUT_HISTORY_STORAGE_KEY": [
+      {
+        "name": "WORKOUT_HISTORY_STORAGE_KEY",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/workoutHistoryStorage.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "loadWorkoutHistory": [
+      {
+        "name": "loadWorkoutHistory",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/workoutHistoryStorage.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "saveWorkoutHistory": [
+      {
+        "name": "saveWorkoutHistory",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/workoutHistoryStorage.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "WorkoutDateValidation": [
+      {
+        "name": "WorkoutDateValidation",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/workoutHistoryValidation.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "getLocalDateString": [
+      {
+        "name": "getLocalDateString",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/workoutHistoryValidation.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "validateWorkoutDate": [
+      {
+        "name": "validateWorkoutDate",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/workoutHistoryValidation.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "normalizeOptionalText": [
+      {
+        "name": "normalizeOptionalText",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/workoutHistoryValidation.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "createWorkoutHistoryEntry": [
+      {
+        "name": "createWorkoutHistoryEntry",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/workoutHistory.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "sortWorkoutHistory": [
+      {
+        "name": "sortWorkoutHistory",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/workoutHistory.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "deleteWorkoutEntry": [
+      {
+        "name": "deleteWorkoutEntry",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/workoutHistory.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "parseExercises": [
+      {
+        "name": "parseExercises",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/loadExercises.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "loadExercises": [
+      {
+        "name": "loadExercises",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/loadExercises.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "findWodById": [
+      {
+        "name": "findWodById",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/findWodById.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "FAVORITES_STORAGE_KEY": [
+      {
+        "name": "FAVORITES_STORAGE_KEY",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/favoritesStorage.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "loadFavoriteIds": [
+      {
+        "name": "loadFavoriteIds",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/favoritesStorage.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "saveFavoriteIds": [
+      {
+        "name": "saveFavoriteIds",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/favoritesStorage.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "parseWods": [
+      {
+        "name": "parseWods",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/loadWods.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "loadWods": [
+      {
+        "name": "loadWods",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/lib/loadWods.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "UseFavoritesResult": [
+      {
+        "name": "UseFavoritesResult",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/hooks/useFavorites.ts",
+        "type": "interface",
+        "isDefault": false
+      }
+    ],
+    "useFavorites": [
+      {
+        "name": "useFavorites",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/hooks/useFavorites.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "useRef": [
+      {
+        "name": "useRef",
+        "module": "react",
+        "isDefault": false
+      }
+    ],
+    "UseWorkoutHistoryResult": [
+      {
+        "name": "UseWorkoutHistoryResult",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/hooks/useWorkoutHistory.ts",
+        "type": "interface",
+        "isDefault": false
+      }
+    ],
+    "useWorkoutHistory": [
+      {
+        "name": "useWorkoutHistory",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/hooks/useWorkoutHistory.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "FavoriteButton": [
+      {
+        "name": "FavoriteButton",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/components/FavoriteButton.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "WorkoutHistoryItem": [
+      {
+        "name": "WorkoutHistoryItem",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/components/WorkoutHistoryItem.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "EmptyStateKind": [
+      {
+        "name": "EmptyStateKind",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/components/EmptyState.tsx",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "EmptyState": [
+      {
+        "name": "EmptyState",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/components/EmptyState.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "useId": [
+      {
+        "name": "useId",
+        "module": "react",
+        "isDefault": false
+      }
+    ],
+    "Header": [
+      {
+        "name": "Header",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/components/Header.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "NavLink": [
+      {
+        "name": "NavLink",
+        "module": "react-router-dom",
+        "isDefault": false
+      }
+    ],
+    "WorkoutLogForm": [
+      {
+        "name": "WorkoutLogForm",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/components/WorkoutLogForm.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "DeleteWorkoutButton": [
+      {
+        "name": "DeleteWorkoutButton",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/components/DeleteWorkoutButton.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "WodFilters": [
+      {
+        "name": "WodFilters",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/components/WodFilters.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "WodSearch": [
+      {
+        "name": "WodSearch",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/components/WodSearch.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "ErrorState": [
+      {
+        "name": "ErrorState",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/components/ErrorState.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "ExerciseCard": [
+      {
+        "name": "ExerciseCard",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/components/ExerciseCard.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "WodCard": [
+      {
+        "name": "WodCard",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/components/WodCard.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "workoutDateSchema": [
+      {
+        "name": "workoutDateSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/schemas/workoutHistory.schema.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "workoutHistoryEntrySchema": [
+      {
+        "name": "workoutHistoryEntrySchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/schemas/workoutHistory.schema.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "workoutHistorySchema": [
+      {
+        "name": "workoutHistorySchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/schemas/workoutHistory.schema.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "wodSchema": [
+      {
+        "name": "wodSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/schemas/wod.schema.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "wodsSchema": [
+      {
+        "name": "wodsSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/schemas/wod.schema.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "exercisesSchema": [
+      {
+        "name": "exercisesSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/schemas/exercise.schema.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "Wod": [
+      {
+        "name": "Wod",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/types/wod.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "Wods": [
+      {
+        "name": "Wods",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/types/wod.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "WorkoutHistoryEntry": [
+      {
+        "name": "WorkoutHistoryEntry",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/types/workoutHistory.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "WorkoutHistory": [
+      {
+        "name": "WorkoutHistory",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/types/workoutHistory.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "CreateWorkoutHistoryEntryInput": [
+      {
+        "name": "CreateWorkoutHistoryEntryInput",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/types/workoutHistory.ts",
+        "type": "interface",
+        "isDefault": false
+      }
+    ],
+    "Exercises": [
+      {
+        "name": "Exercises",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/types/exercise.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "AppRoutes": [
+      {
+        "name": "AppRoutes",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/src/App.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "BrowserRouter": [
+      {
+        "name": "BrowserRouter",
+        "module": "react-router-dom",
+        "isDefault": false
+      }
+    ],
+    "Navigate": [
+      {
+        "name": "Navigate",
+        "module": "react-router-dom",
+        "isDefault": false
+      }
+    ],
+    "Routes": [
+      {
+        "name": "Routes",
+        "module": "react-router-dom",
+        "isDefault": false
+      }
+    ],
+    "tailwindcss": [
+      {
+        "name": "tailwindcss",
+        "module": "@tailwindcss/vite",
+        "isDefault": true
+      }
+    ],
+    "cleanup": [
+      {
+        "name": "cleanup",
+        "module": "@testing-library/react",
+        "isDefault": false
+      }
+    ],
+    "fireEvent": [
+      {
+        "name": "fireEvent",
+        "module": "@testing-library/react",
+        "isDefault": false
+      }
+    ],
+    "render": [
+      {
+        "name": "render",
+        "module": "@testing-library/react",
+        "isDefault": false
+      }
+    ],
+    "screen": [
+      {
+        "name": "screen",
+        "module": "@testing-library/react",
+        "isDefault": false
+      }
+    ],
+    "afterEach": [
+      {
+        "name": "afterEach",
+        "module": "vitest",
+        "isDefault": false
+      }
+    ],
+    "within": [
+      {
+        "name": "within",
+        "module": "@testing-library/react",
+        "isDefault": false
+      }
+    ],
+    "MemoryRouter": [
+      {
+        "name": "MemoryRouter",
+        "module": "react-router-dom",
+        "isDefault": false
+      }
+    ],
+    "act": [
+      {
+        "name": "act",
+        "module": "@testing-library/react",
+        "isDefault": false
+      }
+    ],
+    "renderHook": [
+      {
+        "name": "renderHook",
+        "module": "@testing-library/react",
+        "isDefault": false
+      }
+    ],
+    "beforeEach": [
+      {
+        "name": "beforeEach",
+        "module": "vitest",
+        "isDefault": false
+      }
+    ],
+    "renderToStaticMarkup": [
+      {
+        "name": "renderToStaticMarkup",
+        "module": "react-dom/server",
+        "isDefault": false
+      }
+    ],
+    "useLocation": [
+      {
+        "name": "useLocation",
+        "module": "react-router-dom",
+        "isDefault": false
+      }
+    ],
+    "emptyFavorites": [
+      {
+        "name": "emptyFavorites",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/tests/favorites-fixtures.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "async": [
+      {
+        "name": "async",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/exercisesApi.ts",
+        "isDefault": false
+      }
+    ],
+    "ExerciseCategory": [
+      {
+        "name": "ExerciseCategory",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "MeasurementType": [
+      {
+        "name": "MeasurementType",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "Exercise": [
+      {
+        "name": "Exercise",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "HomePage": [
+      {
+        "name": "HomePage",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/pages/HomePage.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "StatisticsPage": [
+      {
+        "name": "StatisticsPage",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/pages/StatisticsPage.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "WodsPage": [
+      {
+        "name": "WodsPage",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/pages/WodsPage.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "ExerciseDetailPage": [
+      {
+        "name": "ExerciseDetailPage",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/pages/ExerciseDetailPage.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "AuthPage": [
+      {
+        "name": "AuthPage",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/pages/AuthPage.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "ExercisesPage": [
+      {
+        "name": "ExercisesPage",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/pages/ExercisesPage.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "WodDetailPage": [
+      {
+        "name": "WodDetailPage",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/pages/WodDetailPage.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "HistoryPage": [
+      {
+        "name": "HistoryPage",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/pages/HistoryPage.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "ApiError": [
+      {
+        "name": "ApiError",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/client.ts",
+        "type": "class",
+        "isDefault": false
+      }
+    ],
+    "register": [
+      {
+        "name": "register",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/client.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "login": [
+      {
+        "name": "login",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/client.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "getCurrentUser": [
+      {
+        "name": "getCurrentUser",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/client.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "getExercises": [
+      {
+        "name": "getExercises",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/client.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "getExercise": [
+      {
+        "name": "getExercise",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/client.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "getWods": [
+      {
+        "name": "getWods",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/client.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "getWod": [
+      {
+        "name": "getWod",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/client.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "createWodResult": [
+      {
+        "name": "createWodResult",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/client.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "getWodResults": [
+      {
+        "name": "getWodResults",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/client.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "createExerciseResult": [
+      {
+        "name": "createExerciseResult",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/client.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "getExerciseResults": [
+      {
+        "name": "getExerciseResults",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/client.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "getBestExerciseResult": [
+      {
+        "name": "getBestExerciseResult",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/client.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "getHistory": [
+      {
+        "name": "getHistory",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/client.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "getStatistics": [
+      {
+        "name": "getStatistics",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/client.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "getEvolution": [
+      {
+        "name": "getEvolution",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/client.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "wodTypeSchema": [
+      {
+        "name": "wodTypeSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "wodLevelSchema": [
+      {
+        "name": "wodLevelSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "measurementTypeSchema": [
+      {
+        "name": "measurementTypeSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "exerciseCategorySchema": [
+      {
+        "name": "exerciseCategorySchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "exerciseResultUnitSchema": [
+      {
+        "name": "exerciseResultUnitSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "exerciseRecordTypeSchema": [
+      {
+        "name": "exerciseRecordTypeSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "loginResponseSchema": [
+      {
+        "name": "loginResponseSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "userSchema": [
+      {
+        "name": "userSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "exerciseSchema": [
+      {
+        "name": "exerciseSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "wodSummarySchema": [
+      {
+        "name": "wodSummarySchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "wodExerciseSchema": [
+      {
+        "name": "wodExerciseSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "wodDetailSchema": [
+      {
+        "name": "wodDetailSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "wodResultSchema": [
+      {
+        "name": "wodResultSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "exerciseResultSchema": [
+      {
+        "name": "exerciseResultSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "historySchema": [
+      {
+        "name": "historySchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "wodPersonalRecordSchema": [
+      {
+        "name": "wodPersonalRecordSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "exercisePersonalRecordSchema": [
+      {
+        "name": "exercisePersonalRecordSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "statisticsSchema": [
+      {
+        "name": "statisticsSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "wodEvolutionPointSchema": [
+      {
+        "name": "wodEvolutionPointSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "exerciseEvolutionPointSchema": [
+      {
+        "name": "exerciseEvolutionPointSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "evolutionSchema": [
+      {
+        "name": "evolutionSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "apiErrorSchema": [
+      {
+        "name": "apiErrorSchema",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "LoginResponse": [
+      {
+        "name": "LoginResponse",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "WodType": [
+      {
+        "name": "WodType",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "WodLevel": [
+      {
+        "name": "WodLevel",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "ExerciseResultUnit": [
+      {
+        "name": "ExerciseResultUnit",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "ExerciseRecordType": [
+      {
+        "name": "ExerciseRecordType",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "User": [
+      {
+        "name": "User",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "WodSummary": [
+      {
+        "name": "WodSummary",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "WodExercise": [
+      {
+        "name": "WodExercise",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "WodDetail": [
+      {
+        "name": "WodDetail",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "WodResult": [
+      {
+        "name": "WodResult",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "ExerciseResult": [
+      {
+        "name": "ExerciseResult",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "UserHistory": [
+      {
+        "name": "UserHistory",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "WodPersonalRecord": [
+      {
+        "name": "WodPersonalRecord",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "ExercisePersonalRecord": [
+      {
+        "name": "ExercisePersonalRecord",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "UserStatistics": [
+      {
+        "name": "UserStatistics",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "UserEvolution": [
+      {
+        "name": "UserEvolution",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "type",
+        "isDefault": false
+      }
+    ],
+    "RegisterRequest": [
+      {
+        "name": "RegisterRequest",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "interface",
+        "isDefault": false
+      }
+    ],
+    "LoginRequest": [
+      {
+        "name": "LoginRequest",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "interface",
+        "isDefault": false
+      }
+    ],
+    "WodResultRequest": [
+      {
+        "name": "WodResultRequest",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "interface",
+        "isDefault": false
+      }
+    ],
+    "ExerciseResultRequest": [
+      {
+        "name": "ExerciseResultRequest",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/api/schemas.ts",
+        "type": "interface",
+        "isDefault": false
+      }
+    ],
+    "AuthProvider": [
+      {
+        "name": "AuthProvider",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/auth/AuthContext.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "useAuth": [
+      {
+        "name": "useAuth",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/auth/useAuth.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "AuthContextValue": [
+      {
+        "name": "AuthContextValue",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/auth/context.ts",
+        "type": "interface",
+        "isDefault": false
+      }
+    ],
+    "AuthContext": [
+      {
+        "name": "AuthContext",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/auth/context.ts",
+        "type": "const",
+        "isDefault": false
+      }
+    ],
+    "Layout": [
+      {
+        "name": "Layout",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/components/Layout.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "parseRoute": [
+      {
+        "name": "parseRoute",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/app/router.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "navigate": [
+      {
+        "name": "navigate",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/app/router.ts",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "App": [
+      {
+        "name": "App",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/App.tsx",
+        "isDefault": true
+      }
+    ],
+    "ProfilePage": [
+      {
+        "name": "ProfilePage",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/pages/ProfilePage.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "StateMessage": [
+      {
+        "name": "StateMessage",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/components/StateMessage.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ],
+    "LoadingMessage": [
+      {
+        "name": "LoadingMessage",
+        "path": "/Users/delfinrojas/Desktop/Crossfit/frontend/src/components/StateMessage.tsx",
+        "type": "function",
+        "isDefault": false
+      }
+    ]
+  }
+}

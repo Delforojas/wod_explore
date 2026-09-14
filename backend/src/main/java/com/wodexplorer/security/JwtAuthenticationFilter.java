@@ -1,7 +1,6 @@
 package com.wodexplorer.security;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,9 +22,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String BEARER_PREFIX = "Bearer ";
 
     private final JwtService jwtService;
+    private final AdminAuthorizationService adminAuthorizationService;
 
-    public JwtAuthenticationFilter(JwtService jwtService) {
+    public JwtAuthenticationFilter(
+            JwtService jwtService,
+            AdminAuthorizationService adminAuthorizationService) {
         this.jwtService = jwtService;
+        this.adminAuthorizationService = adminAuthorizationService;
     }
 
     @Override
@@ -48,7 +51,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String subject = jwtService.extractSubject(token);
             if (subject != null && !subject.isBlank()) {
                 SecurityContextHolder.getContext().setAuthentication(
-                        UsernamePasswordAuthenticationToken.authenticated(subject, null, List.of())
+                        UsernamePasswordAuthenticationToken.authenticated(
+                                subject,
+                                null,
+                                adminAuthorizationService.authoritiesFor(subject))
                 );
             }
         } catch (JwtException | IllegalArgumentException exception) {
