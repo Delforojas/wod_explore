@@ -12,6 +12,7 @@ import {
   userSchema,
   userWodCreateRequestSchema,
   userWodDetailSchema,
+  userWodPageSchema,
   wodDetailSchema,
   wodPageSchema,
   wodResultSchema,
@@ -153,6 +154,18 @@ export function getWods(
 
 export function getWod(id: number, token: string) {
   return request(`/wods/${id}`, wodDetailSchema, {}, token);
+}
+
+export function getUserWods(token: string, pagination: PaginationOptions = {}) {
+  const params = new URLSearchParams({
+    page: String(pagination.page ?? 0),
+    size: String(pagination.size ?? 20),
+  });
+  return request(`/user-wods?${params.toString()}`, userWodPageSchema, {}, token);
+}
+
+export function getUserWod(id: number, token: string) {
+  return request(`/user-wods/${id}`, userWodDetailSchema, {}, token);
 }
 
 export function createUserWod(body: UserWodCreateRequest, token: string) {

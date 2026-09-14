@@ -106,6 +106,17 @@ const userWodExerciseRequestSchema = z.object({
   prescriptions: z.array(userWodPrescriptionRequestSchema).min(1),
 });
 
+export const userWodSummarySchema = z.object({
+  id: z.number().int(),
+  name: z.string(),
+  type: wodTypeSchema,
+  category: wodCategorySchema.nullable(),
+  timeLimit: z.number().int().nullable(),
+  rounds: z.number().int().nullable(),
+  level: wodLevelSchema,
+  createdAt: dateTimeSchema,
+});
+
 export const userWodCreateRequestSchema = z.object({
   name: z.string().trim().min(1).max(100),
   type: wodTypeSchema,
@@ -161,6 +172,7 @@ function paginatedSchema<T extends z.ZodType>(itemSchema: T) {
 
 export const exercisePageSchema = paginatedSchema(exerciseSchema);
 export const wodPageSchema = paginatedSchema(wodSummarySchema);
+export const userWodPageSchema = paginatedSchema(userWodSummarySchema);
 export const wodResultPageSchema = paginatedSchema(wodResultSchema);
 export const exerciseResultPageSchema = paginatedSchema(exerciseResultSchema);
 
@@ -228,11 +240,13 @@ export type Exercise = z.infer<typeof exerciseSchema>;
 export type WodSummary = z.infer<typeof wodSummarySchema>;
 export type WodExercise = z.infer<typeof wodExerciseSchema>;
 export type WodDetail = z.infer<typeof wodDetailSchema>;
+export type UserWodSummary = z.infer<typeof userWodSummarySchema>;
 export type UserWodDetail = z.infer<typeof userWodDetailSchema>;
 export type WodResult = z.infer<typeof wodResultSchema>;
 export type ExerciseResult = z.infer<typeof exerciseResultSchema>;
 export type ExercisePage = z.infer<typeof exercisePageSchema>;
 export type WodPage = z.infer<typeof wodPageSchema>;
+export type UserWodPage = z.infer<typeof userWodPageSchema>;
 export type WodResultPage = z.infer<typeof wodResultPageSchema>;
 export type ExerciseResultPage = z.infer<typeof exerciseResultPageSchema>;
 export type UserHistory = z.infer<typeof historySchema>;

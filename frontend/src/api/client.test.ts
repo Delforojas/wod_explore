@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { ApiError, createUserWod, getCurrentUser, getExercises, getHistory, getStatistics, getWods } from "./client";
+import { ApiError, createUserWod, getCurrentUser, getExercises, getHistory, getStatistics, getUserWod, getUserWods, getWods } from "./client";
 import { statisticsSchema } from "./schemas";
 
 describe("API client", () => {
@@ -173,6 +173,55 @@ describe("API client", () => {
     const options = fetchMock.mock.calls[0]?.[1] as RequestInit;
     expect(new Headers(options.headers).get("Authorization")).toBe("Bearer token-wod");
     expect(JSON.parse(String(options.body))).toMatchObject({ name: "Fran personal", exercises: [{ position: 1 }] });
+  });
+
+  it("lists and opens personal WODs with the session token", async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify({
+        items: [{
+          id: 31,
+          name: "Fran personal",
+          type: "FOR_TIME",
+          category: null,
+          timeLimit: 600,
+          rounds: null,
+          level: "RX",
+          createdAt: "2026-09-14T10:00:00",
+        }],
+        page: 0,
+        size: 20,
+        totalElements: 1,
+        totalPages: 1,
+        hasNext: false,
+      }), { status: 200 }))
+      .mockResolvedValueOnce(new Response(JSON.stringify({
+        id: 31,
+        name: "Fran personal",
+        type: "FOR_TIME",
+        category: null,
+        timeLimit: 600,
+        rounds: null,
+        level: "RX",
+        createdAt: "2026-09-14T10:00:00",
+        exercises: [],
+      }), { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(getUserWods("token-my-wods")).resolves.toMatchObject({ totalElements: 1 });
+    await expect(getUserWod(31, "token-my-wods")).resolves.toMatchObject({ id: 31 });
+
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      1,
+      "http://localhost:8080/api/user-wods?page=0&size=20",
+      expect.objectContaining({ headers: expect.any(Headers) }),
+    );
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      2,
+      "http://localhost:8080/api/user-wods/31",
+      expect.objectContaining({ headers: expect.any(Headers) }),
+    );
+    expect(new Headers(fetchMock.mock.calls[0]?.[1]?.headers).get("Authorization")).toBe("Bearer token-my-wods");
+    expect(new Headers(fetchMock.mock.calls[1]?.[1]?.headers).get("Authorization")).toBe("Bearer token-my-wods");
   });
 
   it("validates independent paginated history collections", async () => {

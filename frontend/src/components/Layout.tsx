@@ -11,6 +11,7 @@ const navigation = [
   ["Inicio", "/"],
   ["WODs", "/wods"],
   ["Crear WOD", "/create-wod"],
+  ["Mis WODs", "/my-wods"],
   ["Ejercicios", "/exercises"],
   ["Historial", "/history"],
   ["Estadísticas", "/statistics"],
@@ -23,6 +24,7 @@ export function Layout({ children, currentPage }: LayoutProps) {
     const page = path === "/" ? "home" : path.slice(1);
     return currentPage === page
       || (path === "/wods" && currentPage === "wod-detail")
+      || (path === "/my-wods" && currentPage === "my-wod-detail")
       || (path === "/exercises" && currentPage === "exercise-detail");
   }
 
