@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { ApiError, getCurrentUser, getExercises, getHistory, getStatistics, getWods } from "./client";
+import { ApiError, createUserWod, getCurrentUser, getExercises, getHistory, getStatistics, getWods } from "./client";
 import { statisticsSchema } from "./schemas";
 
 describe("API client", () => {
@@ -134,6 +134,45 @@ describe("API client", () => {
       "http://localhost:8080/api/exercises?page=0&size=20&name=snatch",
       expect.objectContaining({ headers: expect.any(Headers) }),
     );
+  });
+
+  it("creates a user WOD with the session token and validates the response", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      id: 31,
+      name: "Fran personal",
+      type: "FOR_TIME",
+      category: null,
+      timeLimit: 600,
+      rounds: null,
+      level: "RX",
+      createdAt: "2026-09-14T10:00:00",
+      exercises: [{
+        exerciseId: 1,
+        name: "Back Squat",
+        category: "WEIGHTLIFTING",
+        measurementType: "WEIGHT",
+        position: 1,
+        prescriptions: [{ value: 60, unit: "KG", unitLabel: null }],
+      }],
+    }), { status: 201, headers: { "Content-Type": "application/json" } }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(createUserWod({
+      name: "Fran personal",
+      type: "FOR_TIME",
+      level: "RX",
+      timeLimit: 600,
+      rounds: null,
+      exercises: [{ exerciseId: 1, position: 1, prescriptions: [{ value: 60, unit: "KG", unitLabel: null }] }],
+    }, "token-wod")).resolves.toMatchObject({ id: 31, name: "Fran personal" });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "http://localhost:8080/api/user-wods",
+      expect.objectContaining({ headers: expect.any(Headers), method: "POST" }),
+    );
+    const options = fetchMock.mock.calls[0]?.[1] as RequestInit;
+    expect(new Headers(options.headers).get("Authorization")).toBe("Bearer token-wod");
+    expect(JSON.parse(String(options.body))).toMatchObject({ name: "Fran personal", exercises: [{ position: 1 }] });
   });
 
   it("validates independent paginated history collections", async () => {

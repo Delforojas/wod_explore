@@ -7,6 +7,7 @@ import { LoadingMessage } from "./components/StateMessage";
 import { AuthPage } from "./pages/AuthPage";
 import { ExerciseDetailPage } from "./pages/ExerciseDetailPage";
 import { ExercisesPage } from "./pages/ExercisesPage";
+import { CreateWodPage } from "./pages/CreateWodPage";
 import { HistoryPage } from "./pages/HistoryPage";
 import { HomePage } from "./pages/HomePage";
 import { ProfilePage } from "./pages/ProfilePage";
@@ -32,6 +33,7 @@ function App() {
       case "login": return <AuthPage mode="login" />;
       case "register": return <AuthPage mode="register" />;
       case "wods": return <WodsPage />;
+      case "create-wod": return <CreateWodPage />;
       case "wod-detail": return <WodDetailPage id={route.id} />;
       case "exercises": return <ExercisesPage />;
       case "exercise-detail": return <ExerciseDetailPage id={route.id} />;

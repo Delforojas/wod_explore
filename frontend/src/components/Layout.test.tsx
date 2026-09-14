@@ -23,6 +23,7 @@ describe("Layout", () => {
     expect(screen.getByRole("link", { name: "Crear cuenta" }).getAttribute("href")).toBe("#/register");
     const primaryNavigation = screen.getByRole("navigation", { name: "Navegación principal" });
     expect(within(primaryNavigation).getByRole("link", { name: "WODs" }).getAttribute("href")).toBe("#/wods");
+    expect(within(primaryNavigation).getByRole("link", { name: "Crear WOD" }).getAttribute("href")).toBe("#/create-wod");
   });
 
   it("shows profile and logout actions for an authenticated user", async () => {
@@ -48,6 +49,13 @@ describe("Layout", () => {
     expect(within(primaryNavigation).getByRole("link", { name: "WODs" }).getAttribute("aria-current")).toBe("page");
     expect(within(mobileNavigation).getByRole("link", { name: "WODs" }).getAttribute("aria-current")).toBe("page");
     expect(within(primaryNavigation).getByRole("link", { name: "Inicio" }).getAttribute("aria-current")).toBeNull();
+  });
+
+  it("marks Crear WOD as active in both navigation variants", () => {
+    renderWithAuth(<Layout currentPage="create-wod"><p>Contenido</p></Layout>);
+
+    expect(within(screen.getByRole("navigation", { name: "Navegación principal" })).getByRole("link", { name: "Crear WOD" }).getAttribute("aria-current")).toBe("page");
+    expect(within(screen.getByRole("navigation", { name: "Navegación móvil" })).getByRole("link", { name: "Crear WOD" }).getAttribute("aria-current")).toBe("page");
   });
 
   it("keeps the parent catalog active on detail pages", () => {

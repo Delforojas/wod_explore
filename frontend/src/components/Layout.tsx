@@ -10,6 +10,7 @@ interface LayoutProps {
 const navigation = [
   ["Inicio", "/"],
   ["WODs", "/wods"],
+  ["Crear WOD", "/create-wod"],
   ["Ejercicios", "/exercises"],
   ["Historial", "/history"],
   ["Estadísticas", "/statistics"],
