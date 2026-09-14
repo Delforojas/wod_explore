@@ -76,9 +76,13 @@ describe("HistoryPage", () => {
 
   it("renders populated history and its detail links", async () => {
     vi.mocked(getHistory).mockResolvedValue(historyWithData);
-    renderWithAuth(<HistoryPage />, { token: "token" });
+    const view = renderWithAuth(<HistoryPage />, { token: "token" });
 
     await waitFor(() => expect(screen.getByText("WOD #1")).toBeTruthy());
+    expect(view.container.querySelectorAll(".history-summary data")).toHaveLength(2);
+    expect(view.container.querySelector("time")?.getAttribute("dateTime")).toBe("2026-09-13T10:00:00");
+    expect(screen.getByText("segundos")).toBeTruthy();
+    expect(screen.getByText("kg")).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Resultados WOD" })).toBeTruthy();
     expect(screen.getByText("Resultado WOD")).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Marcas de ejercicios" })).toBeTruthy();

@@ -53,15 +53,54 @@ export function HistoryPage() {
         <dl className="history-summary" aria-label="Resumen del historial">
           <div>
             <dt>Resultados WOD</dt>
-            <dd>{history.wodResults.totalElements}</dd>
+            <dd><data value={history.wodResults.totalElements}>{history.wodResults.totalElements}</data></dd>
           </div>
           <div>
             <dt>Marcas de ejercicios</dt>
-            <dd>{history.exerciseResults.totalElements}</dd>
+            <dd><data value={history.exerciseResults.totalElements}>{history.exerciseResults.totalElements}</data></dd>
           </div>
         </dl>
       </header>
-      {isEmpty && page === 0 ? <StateMessage kind="empty" title="Aún no hay sesiones" message="Registra un resultado desde cualquier detalle para empezar tu historial." action={{ label: "Explorar WODs", href: "#/wods" }} /> : <div className="history-grid"><HistoryColumn title="Resultados WOD" description="Sesiones registradas" empty="No hay resultados WOD." total={history.wodResults.totalElements} emptyAction={{ label: "Explorar WODs", href: "#/wods" }} items={history.wodResults.items.map((result) => ({ id: result.id, title: `WOD #${result.wodId}`, type: "Resultado WOD", value: result.timeSeconds !== null ? `${result.timeSeconds} s` : `${result.rounds ?? 0} rondas + ${result.reps ?? 0} repeticiones`, meta: formatLevel(result.level), dateTime: result.completedAt, href: `#/wods/${result.wodId}`, ariaLabel: `WOD #${result.wodId}, ${result.timeSeconds !== null ? `${result.timeSeconds} segundos` : `${result.rounds ?? 0} rondas y ${result.reps ?? 0} repeticiones`}. Ver detalle del WOD` }))} /><HistoryColumn title="Marcas de ejercicios" description="Mejores registros guardados" empty="No hay marcas de ejercicios." total={history.exerciseResults.totalElements} emptyAction={{ label: "Explorar ejercicios", href: "#/exercises" }} items={history.exerciseResults.items.map((result) => ({ id: result.id, title: `Ejercicio #${result.exerciseId}`, type: "Marca de ejercicio", value: `${result.value} ${formatUnit(result.unit)}`, meta: result.recordType, dateTime: result.performedAt, href: `#/exercises/${result.exerciseId}`, ariaLabel: `Ejercicio #${result.exerciseId}, ${result.value} ${formatUnit(result.unit)}. Ver detalle del ejercicio` }))} /></div>}
+      {isEmpty && page === 0 ? <StateMessage kind="empty" title="Aún no hay sesiones" message="Registra un resultado desde cualquier detalle para empezar tu historial." action={{ label: "Explorar WODs", href: "#/wods" }} /> : (
+        <div className="history-grid">
+          <HistoryColumn
+            title="Resultados WOD"
+            description="Sesiones registradas"
+            empty="No hay resultados WOD."
+            total={history.wodResults.totalElements}
+            emptyAction={{ label: "Explorar WODs", href: "#/wods" }}
+            items={history.wodResults.items.map((result) => ({
+              id: result.id,
+              title: `WOD #${result.wodId}`,
+              type: "Resultado WOD",
+              value: result.timeSeconds !== null ? `${result.timeSeconds}` : `${result.rounds ?? 0} rondas + ${result.reps ?? 0} repeticiones`,
+              unit: result.timeSeconds !== null ? "segundos" : undefined,
+              meta: formatLevel(result.level),
+              dateTime: result.completedAt,
+              href: `#/wods/${result.wodId}`,
+              ariaLabel: `WOD #${result.wodId}, ${result.timeSeconds !== null ? `${result.timeSeconds} segundos` : `${result.rounds ?? 0} rondas y ${result.reps ?? 0} repeticiones`}. Ver detalle del WOD`,
+            }))}
+          />
+          <HistoryColumn
+            title="Marcas de ejercicios"
+            description="Mejores registros guardados"
+            empty="No hay marcas de ejercicios."
+            total={history.exerciseResults.totalElements}
+            emptyAction={{ label: "Explorar ejercicios", href: "#/exercises" }}
+            items={history.exerciseResults.items.map((result) => ({
+              id: result.id,
+              title: `Ejercicio #${result.exerciseId}`,
+              type: "Marca de ejercicio",
+              value: `${result.value}`,
+              unit: formatUnit(result.unit),
+              meta: result.recordType,
+              dateTime: result.performedAt,
+              href: `#/exercises/${result.exerciseId}`,
+              ariaLabel: `Ejercicio #${result.exerciseId}, ${result.value} ${formatUnit(result.unit)}. Ver detalle del ejercicio`,
+            }))}
+          />
+        </div>
+      )}
       {!isEmpty || page > 0 ? <PaginationControls page={page} hasNext={history.wodResults.hasNext || history.exerciseResults.hasNext} isLoading={false} onPrevious={() => goToPage(Math.max(0, page - 1))} onNext={() => goToPage(page + 1)} /> : null}
     </section>
   );
@@ -81,7 +120,7 @@ interface HistoryColumnProps {
   empty: string;
   total: number;
   emptyAction: { label: string; href: string };
-  items: Array<{ id: number; title: string; type: string; value: string; meta: string; dateTime: string; href: string; ariaLabel: string }>;
+  items: Array<{ id: number; title: string; type: string; value: string; unit?: string; meta: string; dateTime: string; href: string; ariaLabel: string }>;
 }
 
 function HistoryColumn({ title, description, empty, total, emptyAction, items }: HistoryColumnProps) {
@@ -94,7 +133,9 @@ function HistoryColumn({ title, description, empty, total, emptyAction, items }:
           <h2 id={headingId}>{title}</h2>
           <p className="section-description">{description}</p>
         </div>
-        <span>{total}</span>
+        <span className="history-column__total" aria-label={`${total} registros`}>
+          <data value={total}>{total}</data>
+        </span>
       </header>
       {items.length === 0 ? <StateMessage kind="empty" title={empty} action={emptyAction} /> : (
         <ol className="history-list">
@@ -104,9 +145,16 @@ function HistoryColumn({ title, description, empty, total, emptyAction, items }:
                 <span className="history-row__content">
                   <small className="history-row__type">{item.type}</small>
                   <strong>{item.title}</strong>
-                  <small>{item.meta} · <time dateTime={item.dateTime}>{dateFormatter.format(new Date(item.dateTime))}</time></small>
+                  <span className="history-row__meta">
+                    <small>{item.meta}</small>
+                    <time dateTime={item.dateTime}>{dateFormatter.format(new Date(item.dateTime))}</time>
+                  </span>
                 </span>
-                <span className="history-row__value"><b>{item.value}</b><small>Ver detalle</small></span>
+                <span className="history-row__value">
+                  <b>{item.value}</b>
+                  {item.unit && <small className="history-row__unit">{item.unit}</small>}
+                  <small>Ver detalle</small>
+                </span>
               </a>
             </li>
           ))}
