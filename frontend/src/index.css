@@ -277,6 +277,17 @@ h2 { color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-siz
 .stats-overview .stat-value { border-right-color: rgba(255, 253, 248, 0.25); }
 .stats-overview .stat-value strong { color: var(--white); }
 .stats-overview .stat-value span { color: var(--orange-soft); }
+.statistics-page__records .stats-columns { gap: 0; }
+.statistics-page__records .record-column + .record-column { border-left: 1px solid var(--line); padding-left: 36px; }
+.statistics-page__records .section-heading { border-bottom-color: var(--ink); }
+.statistics-page__records .section-heading > span { color: var(--orange-ink); }
+.record-column__total { color: var(--orange-ink); font-size: 12px; font-weight: 800; }
+.statistics-page__records .record-row { grid-template-columns: minmax(0, 1fr) minmax(92px, auto); min-height: var(--touch-target); padding: 17px 10px; }
+.statistics-page__records .record-row:hover, .statistics-page__records .record-row:focus-visible { background: rgba(239, 91, 37, 0.08); color: var(--orange-ink); }
+.record-row__meta { align-items: baseline; display: flex; flex-wrap: wrap; gap: 4px 10px; min-width: 0; }
+.record-row time { color: var(--ink-soft); }
+.record-row__value .record-row__unit { color: var(--ink-soft); font-size: 10px; }
+.statistics-page__records-total, .statistics-page__evolution-total { color: var(--orange-ink); font-size: 12px; font-weight: 800; }
 .personal-records { margin-bottom: 54px; }
 .evolution-section { margin-top: 0; }
 .evolution-grid { padding-top: 24px; }
@@ -288,13 +299,16 @@ h2 { color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-siz
 .evolution-band__segment:nth-child(even) { background: var(--navy); height: 20px; }
 .evolution-band__label { color: var(--ink-soft); font-size: 10px; margin: 0 0 9px; }
 .evolution-list { border-top: 1px solid var(--line); list-style: none; margin: 0; padding: 0; }
-.evolution-row { align-items: start; border-bottom: 1px solid var(--line); display: grid; gap: 10px; grid-template-columns: 100px minmax(0, 1fr) auto; padding: 13px 0; }
-.evolution-row time, .evolution-row b { color: var(--ink-soft); font-size: 11px; }
-.evolution-row__link { color: var(--ink); display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 6px 0; text-decoration: none; touch-action: manipulation; }
-.evolution-row__link:hover, .evolution-row__link:focus-visible { color: var(--orange-ink); }
+.evolution-row { list-style: none; margin: 0; padding: 0; }
+.evolution-row__link { align-items: start; border-bottom: 1px solid var(--line); color: var(--ink); display: grid; gap: 10px; grid-template-columns: 100px minmax(0, 1fr) minmax(92px, auto); min-height: var(--touch-target); padding: 13px 10px; text-decoration: none; touch-action: manipulation; }
+.evolution-row__link:hover, .evolution-row__link:focus-visible { background: rgba(239, 91, 37, 0.08); color: var(--orange-ink); }
+.evolution-row__link time { color: var(--ink-soft); font-size: 11px; overflow-wrap: anywhere; }
+.evolution-row__content { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .evolution-row strong { font-size: 13px; overflow-wrap: anywhere; }
 .evolution-row small { color: var(--ink-soft); font-size: 10px; overflow-wrap: anywhere; }
-.evolution-row b { color: var(--ink); font-family: Georgia, serif; font-size: 16px; font-variant-numeric: tabular-nums; font-weight: 400; overflow-wrap: anywhere; text-align: right; }
+.evolution-row__value { align-items: end; display: flex; flex-direction: column; gap: 5px; justify-self: end; min-width: 0; text-align: right; }
+.evolution-row__value b { color: var(--ink); font-family: Georgia, serif; font-size: 16px; font-variant-numeric: tabular-nums; font-weight: 400; overflow-wrap: anywhere; }
+.evolution-row__value .evolution-row__unit { color: var(--ink-soft); }
 .profile-page { max-width: 980px; }
 .profile-sheet { background: var(--white); border-bottom: 1px solid var(--line); border-top: 1px solid var(--ink); display: grid; grid-template-columns: minmax(220px, 0.75fr) minmax(0, 1.25fr); }
 .profile-intro { border-right: 1px solid var(--line); padding: 32px clamp(20px, 4vw, 48px) 36px 0; }
@@ -390,13 +404,14 @@ h2 { color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-siz
   .history-page .page-heading { gap: 20px; }
   .history-summary { gap: 12px; min-width: 100%; }
   .history-summary dd { font-size: 30px; }
+  .statistics-page__records .record-column + .record-column { border-left: 0; border-top: 1px solid var(--line); margin-top: 24px; padding-left: 0; padding-top: 24px; }
   .history-row, .record-row { gap: 12px; padding-block: 16px; }
   .history-row__value b, .record-row__value b { font-size: 17px; }
   .section-heading--spacious { margin-bottom: 20px; }
   .stats-overview, .personal-records { margin-bottom: 44px; }
   .evolution-grid { padding-top: 20px; }
-  .evolution-row { grid-template-columns: 80px minmax(0, 1fr); }
-  .evolution-row b { grid-column: 2; justify-self: start; text-align: left; }
+  .evolution-row__link { grid-template-columns: 80px minmax(0, 1fr); }
+  .evolution-row__value { align-items: start; grid-column: 2; justify-self: start; text-align: left; }
   .profile-sheet { grid-template-columns: 1fr; }
   .profile-intro { border-bottom: 1px solid var(--line); border-right: 0; padding: 28px 0; }
   .profile-fields { grid-template-columns: 1fr; }

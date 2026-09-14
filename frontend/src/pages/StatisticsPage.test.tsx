@@ -91,7 +91,11 @@ describe("StatisticsPage", () => {
 
     await waitFor(() => expect(screen.getAllByText("Fran")).toHaveLength(2));
     expect(screen.getAllByText("Back Squat")).toHaveLength(2);
-    expect(screen.getAllByText("2", { selector: ".stat-value strong" })).toHaveLength(2);
+    expect(container.querySelectorAll('.stat-value data[value="2"]')).toHaveLength(2);
+    expect(container.querySelectorAll(".stat-value data")).toHaveLength(3);
+    expect(container.querySelectorAll("time")).toHaveLength(4);
+    expect(screen.getAllByText("segundos")).toHaveLength(2);
+    expect(screen.getAllByText("kg")).toHaveLength(2);
     expect(screen.getByRole("heading", { name: "Marcas personales" })).toBeTruthy();
     expect(screen.getAllByText(/Por tiempo/)).toHaveLength(2);
     expect(screen.getAllByText(/1RM/)).toHaveLength(2);
