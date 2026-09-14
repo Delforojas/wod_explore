@@ -56,6 +56,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    @ExceptionHandler(UserWodDeletionBlockedException.class)
+    public ResponseEntity<Map<String, Object>> handleUserWodDeletionBlocked(
+            UserWodDeletionBlockedException exception) {
+        Map<String, Object> error = Map.of(
+                "error", "USER_WOD_HAS_RESULTS",
+                "message", exception.getMessage(),
+                "status", HttpStatus.CONFLICT.value(),
+                "details", Map.of());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
     @ExceptionHandler(AuthenticatedUserNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleAuthenticatedUserNotFound(
             AuthenticatedUserNotFoundException exception) {

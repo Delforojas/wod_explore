@@ -1,0 +1,33 @@
+# Tasks - Issue #49: Eliminar WODs personalizados
+
+- [x] Documentar la evidencia del esquema y la politica de bloqueo de resultados.
+- [x] Crear la excepcion de eliminacion bloqueada y mapearla a `409 Conflict`.
+- [x] Anadir consulta de existencia de resultados por WOD.
+- [x] Implementar `UserWodService.delete` con ownership desde JWT.
+- [x] Bloquear el borrado cuando existan resultados historicos sin modificar datos.
+- [x] Eliminar WODs sin resultados dentro de una transaccion y forzar flush.
+- [x] Verificar cascadas de ejercicios/prescripciones y preservar ejercicios globales.
+- [x] Anadir `DELETE /api/user-wods/{id}` con respuesta `204 No Content`.
+- [x] Cubrir controller con exito, 404, 409 y body/owner no aceptados.
+- [x] Cubrir seguridad para JWT ausente, invalido y subject no resoluble.
+- [x] Cubrir service con exito, ownership, historial y no eliminacion ante bloqueo.
+- [x] Anadir test de integracion MySQL para relaciones y resultados historicos.
+- [x] Anadir `deleteUserWod` al cliente API y validar respuesta vacia `204`.
+- [x] Extender router para feedback de eliminacion sin almacenamiento local.
+- [x] Mostrar feedback de exito en "Mis WODs" tras recargar desde la API.
+- [x] Anadir confirmacion nativa identificando el WOD antes de borrar.
+- [x] Implementar cancelacion, Escape, foco, carga y proteccion contra duplicados.
+- [x] Mostrar errores de red, 404 y 409 sin dejar la UI inconsistente.
+- [x] Navegar a "Mis WODs" despues de un borrado correcto.
+- [x] Cubrir cliente, router, dialogo, confirmacion, cancelacion, carga, errores,
+  exito y navegacion con tests frontend.
+- [x] Ejecutar `./mvnw validate` desde `backend/` y corregir fallos.
+- [x] Ejecutar `./mvnw test` desde `backend/` y corregir fallos.
+- [x] Ejecutar `./mvnw package` desde `backend/` y corregir fallos.
+- [x] Ejecutar `npm test` desde `frontend/` y corregir fallos.
+- [x] Ejecutar `npm run lint` desde `frontend/` y corregir fallos.
+- [x] Ejecutar `npm run build` desde `frontend/` y corregir fallos TypeScript.
+- [x] Ejecutar detector Impeccable y revisar responsive/accesibilidad.
+- [x] Revisar diff, alcance, secretos, esquema y cambios ajenos.
+- [ ] Crear el commit exclusivo de la Issue #49.
+- [ ] Documentar la Issue abierta con commit y validaciones manuales pendientes.

@@ -7,6 +7,8 @@ import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,6 +39,7 @@ import com.wodexplorer.entity.WodExercisePrescriptionUnit;
 import com.wodexplorer.entity.WodLevel;
 import com.wodexplorer.entity.WodType;
 import com.wodexplorer.exception.GlobalExceptionHandler;
+import com.wodexplorer.exception.UserWodDeletionBlockedException;
 import com.wodexplorer.exception.UserWodNotFoundException;
 import com.wodexplorer.security.AdminAuthorizationService;
 import com.wodexplorer.service.JwtService;
@@ -148,6 +151,29 @@ class UserWodControllerTest {
                         .content(validJson()))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.error").value("USER_WOD_NOT_FOUND"));
+    }
+
+    @Test
+    void delete_WithOwnedWod_ReturnsNoContentAndAuthenticationSubject() throws Exception {
+        mockMvc.perform(delete("/api/user-wods/21")
+                        .principal(authentication()))
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(""));
+
+        then(userWodService).should().delete(21, EMAIL);
+    }
+
+    @Test
+    void delete_WhenWodHasResults_ReturnsConflict() throws Exception {
+        org.mockito.BDDMockito.willThrow(new UserWodDeletionBlockedException())
+                .given(userWodService)
+                .delete(21, EMAIL);
+
+        mockMvc.perform(delete("/api/user-wods/21")
+                        .principal(authentication()))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.error").value("USER_WOD_HAS_RESULTS"))
+                .andExpect(jsonPath("$.status").value(409));
     }
 
     @Test

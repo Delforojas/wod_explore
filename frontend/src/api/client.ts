@@ -180,6 +180,10 @@ export function updateUserWod(id: number, body: UserWodUpdateRequest, token: str
   return request(`/user-wods/${id}`, userWodDetailSchema, jsonBody(parsedBody, "PUT"), token);
 }
 
+export function deleteUserWod(id: number, token: string) {
+  return request(`/user-wods/${id}`, z.null(), { method: "DELETE" }, token);
+}
+
 export function createWodResult(id: number, body: WodResultRequest, token: string) {
   return request(`/wods/${id}/results`, wodResultSchema, jsonBody(body), token);
 }

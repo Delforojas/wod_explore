@@ -109,6 +109,14 @@ describe("MyWodsPage", () => {
     expect(screen.getByRole("link", { name: "Crear mi primer WOD" }).getAttribute("href")).toBe("#/create-wod");
   });
 
+  it("shows deletion feedback while reloading the personal archive", async () => {
+    vi.mocked(getUserWods).mockResolvedValue({ ...pageWithWod, items: [], totalElements: 0, totalPages: 0 });
+    renderWithAuth(<MyWodsPage deletionFeedback />, { token: "token" });
+
+    expect(await screen.findByRole("heading", { name: "WOD eliminado" })).toBeTruthy();
+    expect(screen.getByText("El WOD personalizado se ha eliminado de tu archivo.")).toBeTruthy();
+  });
+
   it("shows backend errors without exposing a broken page", async () => {
     vi.mocked(getUserWods).mockRejectedValue(new Error("Archivo no disponible"));
     renderWithAuth(<MyWodsPage />, { token: "token" });

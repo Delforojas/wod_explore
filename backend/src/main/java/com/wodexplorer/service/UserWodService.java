@@ -35,11 +35,13 @@ import com.wodexplorer.entity.WodType;
 import com.wodexplorer.exception.AuthenticatedUserNotFoundException;
 import com.wodexplorer.exception.ExerciseNotFoundException;
 import com.wodexplorer.exception.InvalidUserWodException;
+import com.wodexplorer.exception.UserWodDeletionBlockedException;
 import com.wodexplorer.exception.UserWodNotFoundException;
 import com.wodexplorer.repository.ExerciseRepository;
 import com.wodexplorer.repository.UserRepository;
 import com.wodexplorer.repository.WodExerciseRepository;
 import com.wodexplorer.repository.WodRepository;
+import com.wodexplorer.repository.WodResultRepository;
 
 @Service
 public class UserWodService {
@@ -48,16 +50,19 @@ public class UserWodService {
     private final WodRepository wodRepository;
     private final WodExerciseRepository wodExerciseRepository;
     private final ExerciseRepository exerciseRepository;
+    private final WodResultRepository wodResultRepository;
 
     public UserWodService(
             UserRepository userRepository,
             WodRepository wodRepository,
             WodExerciseRepository wodExerciseRepository,
-            ExerciseRepository exerciseRepository) {
+            ExerciseRepository exerciseRepository,
+            WodResultRepository wodResultRepository) {
         this.userRepository = userRepository;
         this.wodRepository = wodRepository;
         this.wodExerciseRepository = wodExerciseRepository;
         this.exerciseRepository = exerciseRepository;
+        this.wodResultRepository = wodResultRepository;
     }
 
     @Transactional
@@ -98,6 +103,20 @@ public class UserWodService {
 
         Wod savedWod = wodRepository.saveAndFlush(wod);
         return toDetailResponse(savedWod);
+    }
+
+    @Transactional
+    public void delete(Integer id, String authenticatedEmail) {
+        User owner = findAuthenticatedUser(authenticatedEmail);
+        Wod wod = wodRepository.findByIdAndOwner_Id(id, owner.getId())
+                .orElseThrow(UserWodNotFoundException::new);
+
+        if (wodResultRepository.existsByWod_Id(wod.getId())) {
+            throw new UserWodDeletionBlockedException();
+        }
+
+        wodRepository.delete(wod);
+        wodRepository.flush();
     }
 
     @Transactional(readOnly = true)

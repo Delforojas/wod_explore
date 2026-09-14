@@ -43,11 +43,13 @@ import com.wodexplorer.entity.WodType;
 import com.wodexplorer.exception.AuthenticatedUserNotFoundException;
 import com.wodexplorer.exception.ExerciseNotFoundException;
 import com.wodexplorer.exception.InvalidUserWodException;
+import com.wodexplorer.exception.UserWodDeletionBlockedException;
 import com.wodexplorer.exception.UserWodNotFoundException;
 import com.wodexplorer.repository.ExerciseRepository;
 import com.wodexplorer.repository.UserRepository;
 import com.wodexplorer.repository.WodExerciseRepository;
 import com.wodexplorer.repository.WodRepository;
+import com.wodexplorer.repository.WodResultRepository;
 
 @ExtendWith(MockitoExtension.class)
 class UserWodServiceTest {
@@ -65,6 +67,9 @@ class UserWodServiceTest {
 
     @Mock
     private ExerciseRepository exerciseRepository;
+
+    @Mock
+    private WodResultRepository wodResultRepository;
 
     @InjectMocks
     private UserWodService userWodService;
@@ -143,6 +148,50 @@ class UserWodServiceTest {
                 .hasMessage("WOD personalizado no disponible");
         then(exerciseRepository).shouldHaveNoInteractions();
         then(wodRepository).should().findByIdAndOwner_Id(20, 7);
+    }
+
+    @Test
+    void delete_RemovesOwnedWodAndFlushesTransaction() {
+        User owner = user(7, "owner@example.com");
+        Wod wod = wod(20, "Fran", WodType.FOR_TIME);
+        given(userRepository.findByEmail("owner@example.com")).willReturn(Optional.of(owner));
+        given(wodRepository.findByIdAndOwner_Id(20, 7)).willReturn(Optional.of(wod));
+        given(wodResultRepository.existsByWod_Id(20)).willReturn(false);
+
+        userWodService.delete(20, AUTHENTICATED_EMAIL);
+
+        then(wodResultRepository).should().existsByWod_Id(20);
+        then(wodRepository).should().delete(wod);
+        then(wodRepository).should().flush();
+    }
+
+    @Test
+    void delete_WhenWodIsNotOwned_ReturnsGenericNotFoundWithoutCheckingResults() {
+        User owner = user(7, "owner@example.com");
+        given(userRepository.findByEmail("owner@example.com")).willReturn(Optional.of(owner));
+        given(wodRepository.findByIdAndOwner_Id(20, 7)).willReturn(Optional.empty());
+
+        assertThatThrownBy(() -> userWodService.delete(20, AUTHENTICATED_EMAIL))
+                .isInstanceOf(UserWodNotFoundException.class)
+                .hasMessage("WOD personalizado no disponible");
+
+        then(wodResultRepository).shouldHaveNoInteractions();
+        then(wodRepository).shouldHaveNoMoreInteractions();
+    }
+
+    @Test
+    void delete_WhenWodHasResultsBlocksWithoutDeletingAnything() {
+        User owner = user(7, "owner@example.com");
+        Wod wod = wod(20, "Fran", WodType.FOR_TIME);
+        given(userRepository.findByEmail("owner@example.com")).willReturn(Optional.of(owner));
+        given(wodRepository.findByIdAndOwner_Id(20, 7)).willReturn(Optional.of(wod));
+        given(wodResultRepository.existsByWod_Id(20)).willReturn(true);
+
+        assertThatThrownBy(() -> userWodService.delete(20, AUTHENTICATED_EMAIL))
+                .isInstanceOf(UserWodDeletionBlockedException.class)
+                .hasMessage("El WOD personalizado tiene resultados históricos y no se puede eliminar");
+
+        then(wodRepository).shouldHaveNoMoreInteractions();
     }
 
     @Test

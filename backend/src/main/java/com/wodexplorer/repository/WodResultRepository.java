@@ -15,6 +15,8 @@ public interface WodResultRepository extends JpaRepository<WodResult, Integer> {
             Integer userId,
             Integer wodId);
 
+    boolean existsByWod_Id(Integer wodId);
+
     List<WodResult> findByUser_IdOrderByCompletedAtDescIdDesc(Integer userId);
 
     @EntityGraph(attributePaths = "wod")

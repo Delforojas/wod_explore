@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { getUserWod } from "../api/client";
+import { ApiError, deleteUserWod, getUserWod } from "../api/client";
+import { navigate } from "../app/router";
 import { useAuth } from "../auth/useAuth";
 import { LoadingMessage, StateMessage } from "../components/StateMessage";
 import { getErrorStateKind } from "../components/stateMessageUtils";
@@ -52,7 +53,30 @@ export function MyWodDetailPage({ id }: { id: number }) {
   const [reloadToken, setReloadToken] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [errorKind, setErrorKind] = useState<"error" | "network-error">("error");
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const deleteDialogRef = useRef<HTMLDialogElement>(null);
+  const deleteTriggerRef = useRef<HTMLButtonElement>(null);
+  const cancelDeleteRef = useRef<HTMLButtonElement>(null);
   const requestKey = token ? `${token}:${id}:${reloadToken}` : null;
+
+  useEffect(() => {
+    const dialog = deleteDialogRef.current;
+    if (!dialog) return;
+
+    if (isDeleteDialogOpen && !dialog.open) {
+      if (typeof dialog.showModal === "function") dialog.showModal();
+      else dialog.setAttribute("open", "");
+      cancelDeleteRef.current?.focus();
+    }
+
+    if (!isDeleteDialogOpen && dialog.open) {
+      if (typeof dialog.close === "function") dialog.close();
+      else dialog.removeAttribute("open");
+      deleteTriggerRef.current?.focus();
+    }
+  }, [isDeleteDialogOpen]);
 
   useEffect(() => {
     if (!token || !requestKey) return;
@@ -81,6 +105,36 @@ export function MyWodDetailPage({ id }: { id: number }) {
     setReloadToken((current) => current + 1);
   }
 
+  function openDeleteDialog() {
+    setDeleteError(null);
+    setIsDeleteDialogOpen(true);
+  }
+
+  function closeDeleteDialog() {
+    if (isDeleting) return;
+    setDeleteError(null);
+    setIsDeleteDialogOpen(false);
+  }
+
+  async function confirmDelete() {
+    if (!token || isDeleting) return;
+
+    setIsDeleting(true);
+    setDeleteError(null);
+    try {
+      await deleteUserWod(id, token);
+      navigate("/my-wods?deleted=1");
+    } catch (caughtError: unknown) {
+      const message = caughtError instanceof ApiError && caughtError.status === 409
+        ? "Este WOD conserva resultados históricos y no se puede eliminar."
+        : caughtError instanceof Error
+          ? caughtError.message
+          : "No se pudo eliminar este WOD.";
+      setDeleteError(message);
+      setIsDeleting(false);
+    }
+  }
+
   if (!token) {
     return <StateMessage kind="private" title="Tus WODs son privados" message="Inicia sesión para consultar los WODs que has creado." action={{ label: "Entrar", href: "#/login" }} />;
   }
@@ -106,8 +160,17 @@ export function MyWodDetailPage({ id }: { id: number }) {
           <span className="tag tag--accent">WOD personal</span>
           <span className="detail-reference">WOD #{wod.id}</span>
           <a className="button button--accent" href={`#/my-wods/${wod.id}/edit`}>Editar</a>
-        </div>
-      </header>
+          <button
+            className="button button--danger"
+            type="button"
+            ref={deleteTriggerRef}
+            aria-haspopup="dialog"
+            onClick={openDeleteDialog}
+          >
+            Eliminar WOD
+          </button>
+          </div>
+        </header>
 
       <div className="my-wod-detail-grid">
         <article className="my-wod-detail-manifest">
@@ -156,6 +219,46 @@ export function MyWodDetailPage({ id }: { id: number }) {
           <a className="button button--secondary" href="#/create-wod">Crear otro WOD</a>
         </aside>
       </div>
+
+      <dialog
+        ref={deleteDialogRef}
+        className="delete-confirmation"
+        aria-labelledby="delete-confirmation-title"
+        aria-describedby="delete-confirmation-description"
+        onCancel={(event) => {
+          event.preventDefault();
+          closeDeleteDialog();
+        }}
+        onClose={() => setIsDeleteDialogOpen(false)}
+      >
+        <div className="delete-confirmation__body">
+          <p className="delete-confirmation__label">Confirmar eliminación</p>
+          <h2 id="delete-confirmation-title">¿Eliminar {wod.name}?</h2>
+          <p id="delete-confirmation-description">
+            Esta acción eliminará el WOD personalizado y su configuración de ejercicios. No se borrarán ejercicios del catálogo.
+          </p>
+          {deleteError && <p className="delete-confirmation__error" role="alert">{deleteError}</p>}
+        </div>
+        <div className="delete-confirmation__actions">
+          <button
+            className="button button--secondary"
+            type="button"
+            ref={cancelDeleteRef}
+            disabled={isDeleting}
+            onClick={closeDeleteDialog}
+          >
+            Cancelar
+          </button>
+          <button
+            className="button button--accent"
+            type="button"
+            disabled={isDeleting}
+            onClick={() => void confirmDelete()}
+          >
+            {isDeleting ? "Eliminando…" : "Eliminar WOD"}
+          </button>
+        </div>
+      </dialog>
     </section>
   );
 }

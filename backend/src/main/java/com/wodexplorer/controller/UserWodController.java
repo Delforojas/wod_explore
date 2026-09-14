@@ -3,6 +3,7 @@ package com.wodexplorer.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,6 +66,14 @@ public class UserWodController {
             @Valid @RequestBody UserWodUpdateRequest request,
             Authentication authentication) {
         return userWodService.update(id, request, authenticatedEmail(authentication));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(
+            @PathVariable Integer id,
+            Authentication authentication) {
+        userWodService.delete(id, authenticatedEmail(authentication));
+        return ResponseEntity.noContent().build();
     }
 
     private String authenticatedEmail(Authentication authentication) {

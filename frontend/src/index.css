@@ -370,6 +370,15 @@ h2 {
 .button--quiet:hover {
   color: var(--ink);
 }
+.button--danger {
+  background: transparent;
+  border-color: var(--orange-ink);
+  color: var(--orange-ink);
+}
+.button--danger:hover {
+  background: var(--orange-ink);
+  color: var(--white);
+}
 .button--wide {
   width: 100%;
 }
@@ -3913,6 +3922,55 @@ h2 {
   border-color: var(--orange-soft);
   color: var(--orange-soft);
 }
+.delete-confirmation {
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  margin: auto;
+  max-width: 560px;
+  overscroll-behavior: contain;
+  padding: 0;
+  width: calc(100% - 32px);
+}
+.delete-confirmation::backdrop {
+  background: rgba(18, 35, 44, 0.76);
+}
+.delete-confirmation__body {
+  padding: clamp(24px, 5vw, 38px);
+}
+.delete-confirmation__label {
+  color: var(--orange-ink);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+}
+.delete-confirmation__body h2 {
+  margin: 0 0 12px;
+  overflow-wrap: anywhere;
+}
+.delete-confirmation__body > p:not(.delete-confirmation__label):not(.delete-confirmation__error) {
+  color: var(--ink-soft);
+  margin: 0;
+}
+.delete-confirmation__error {
+  background: var(--white);
+  border: 1px solid var(--orange);
+  color: var(--orange-ink);
+  margin: 18px 0 0;
+  padding: 12px 14px;
+}
+.delete-confirmation__actions {
+  border-top: 1px solid var(--line);
+  display: flex;
+  gap: 12px;
+  justify-content: end;
+  padding: 14px 24px;
+}
+.delete-confirmation__actions .button {
+  margin: 0;
+}
 
 @media (max-width: 900px) {
   .my-wod-detail-grid {
@@ -3941,6 +3999,12 @@ h2 {
     gap: 6px 9px;
     grid-template-columns: 34px minmax(0, 1fr) 24px;
     padding-block: 17px;
+  }
+  .delete-confirmation__actions {
+    flex-direction: column-reverse;
+  }
+  .delete-confirmation__actions .button {
+    width: 100%;
   }
   .my-wod-row .row-main {
     grid-column: 2;
