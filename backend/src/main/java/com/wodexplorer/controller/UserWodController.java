@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +17,7 @@ import com.wodexplorer.dto.PaginationParameters;
 import com.wodexplorer.dto.UserWodCreateRequest;
 import com.wodexplorer.dto.UserWodDetailResponse;
 import com.wodexplorer.dto.UserWodSummaryResponse;
+import com.wodexplorer.dto.UserWodUpdateRequest;
 import com.wodexplorer.service.UserWodService;
 
 import jakarta.validation.Valid;
@@ -55,6 +57,14 @@ public class UserWodController {
             @PathVariable Integer id,
             Authentication authentication) {
         return userWodService.findById(id, authenticatedEmail(authentication));
+    }
+
+    @PutMapping("/{id}")
+    public UserWodDetailResponse update(
+            @PathVariable Integer id,
+            @Valid @RequestBody UserWodUpdateRequest request,
+            Authentication authentication) {
+        return userWodService.update(id, request, authenticatedEmail(authentication));
     }
 
     private String authenticatedEmail(Authentication authentication) {

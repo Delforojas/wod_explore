@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { ApiError, createUserWod, getCurrentUser, getExercises, getHistory, getStatistics, getUserWod, getUserWods, getWods } from "./client";
+import { ApiError, createUserWod, getCurrentUser, getExercises, getHistory, getStatistics, getUserWod, getUserWods, getWods, updateUserWod } from "./client";
 import { statisticsSchema } from "./schemas";
 
 describe("API client", () => {
@@ -173,6 +173,46 @@ describe("API client", () => {
     const options = fetchMock.mock.calls[0]?.[1] as RequestInit;
     expect(new Headers(options.headers).get("Authorization")).toBe("Bearer token-wod");
     expect(JSON.parse(String(options.body))).toMatchObject({ name: "Fran personal", exercises: [{ position: 1 }] });
+  });
+
+  it("updates a user WOD with PUT and the session token", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      id: 31,
+      name: "Fran actualizada",
+      type: "FOR_TIME",
+      category: null,
+      timeLimit: 600,
+      rounds: null,
+      level: "RX",
+      createdAt: "2026-09-14T10:00:00",
+      exercises: [{
+        exerciseId: 1,
+        name: "Back Squat",
+        category: "WEIGHTLIFTING",
+        measurementType: "WEIGHT",
+        position: 1,
+        prescriptions: [{ value: 60, unit: "KG", unitLabel: null }],
+      }],
+    }), { status: 200, headers: { "Content-Type": "application/json" } }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(updateUserWod(31, {
+      name: "Fran actualizada",
+      type: "FOR_TIME",
+      category: null,
+      timeLimit: 600,
+      rounds: null,
+      level: "RX",
+      exercises: [{ exerciseId: 1, position: 1, prescriptions: [{ value: 60, unit: "KG", unitLabel: null }] }],
+    }, "token-update")).resolves.toMatchObject({ id: 31, name: "Fran actualizada" });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "http://localhost:8080/api/user-wods/31",
+      expect.objectContaining({ headers: expect.any(Headers), method: "PUT" }),
+    );
+    const options = fetchMock.mock.calls[0]?.[1] as RequestInit;
+    expect(new Headers(options.headers).get("Authorization")).toBe("Bearer token-update");
+    expect(JSON.parse(String(options.body))).toMatchObject({ name: "Fran actualizada", exercises: [{ position: 1 }] });
   });
 
   it("lists and opens personal WODs with the session token", async () => {

@@ -6,6 +6,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -28,6 +29,7 @@ import com.wodexplorer.dto.UserWodDetailResponse;
 import com.wodexplorer.dto.UserWodExerciseResponse;
 import com.wodexplorer.dto.UserWodPrescriptionResponse;
 import com.wodexplorer.dto.UserWodSummaryResponse;
+import com.wodexplorer.dto.UserWodUpdateRequest;
 import com.wodexplorer.entity.ExerciseCategory;
 import com.wodexplorer.entity.MeasurementType;
 import com.wodexplorer.entity.WodCategory;
@@ -105,6 +107,47 @@ class UserWodControllerTest {
                 .andExpect(jsonPath("$.error").value("USER_WOD_NOT_FOUND"))
                 .andExpect(jsonPath("$.message").value("WOD personalizado no disponible"))
                 .andExpect(jsonPath("$.status").value(404));
+    }
+
+    @Test
+    void update_WithValidPayload_ReturnsUpdatedDetailAndAuthenticationSubject() throws Exception {
+        given(userWodService.update(eq(21), any(UserWodUpdateRequest.class), eq(EMAIL)))
+                .willReturn(detailResponse());
+
+        mockMvc.perform(put("/api/user-wods/21")
+                        .principal(authentication())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(validJson()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(21))
+                .andExpect(jsonPath("$.name").value("Fran"))
+                .andExpect(jsonPath("$.exercises[0].position").value(1));
+
+        then(userWodService).should().update(eq(21), any(UserWodUpdateRequest.class), eq(EMAIL));
+    }
+
+    @Test
+    void update_WithUnknownOwnerField_ReturnsBadRequestWithoutCallingService() throws Exception {
+        mockMvc.perform(put("/api/user-wods/21")
+                        .principal(authentication())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(validJson().replace("\"category\": \"METCON\"", "\"ownerId\": 99,")))
+                .andExpect(status().isBadRequest());
+
+        then(userWodService).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void update_WhenUnavailable_ReturnsGenericNotFound() throws Exception {
+        given(userWodService.update(eq(999), any(UserWodUpdateRequest.class), eq(EMAIL)))
+                .willThrow(new UserWodNotFoundException());
+
+        mockMvc.perform(put("/api/user-wods/999")
+                        .principal(authentication())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(validJson()))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").value("USER_WOD_NOT_FOUND"));
     }
 
     @Test

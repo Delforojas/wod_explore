@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -26,7 +27,9 @@ import com.wodexplorer.dto.PageResponse;
 import com.wodexplorer.dto.UserWodCreateRequest;
 import com.wodexplorer.dto.UserWodDetailResponse;
 import com.wodexplorer.dto.UserWodExerciseRequest;
+import com.wodexplorer.dto.UserWodExerciseResponse;
 import com.wodexplorer.dto.UserWodPrescriptionRequest;
+import com.wodexplorer.dto.UserWodUpdateRequest;
 import com.wodexplorer.entity.Exercise;
 import com.wodexplorer.entity.ExerciseCategory;
 import com.wodexplorer.entity.MeasurementType;
@@ -91,6 +94,75 @@ class UserWodServiceTest {
         assertThat(response.exercises().get(0).prescriptions().get(0).unit())
                 .isEqualTo(WodExercisePrescriptionUnit.REPS);
         then(userRepository).should().findByEmail("owner@example.com");
+    }
+
+    @Test
+    void update_ReplacesOwnedWodConfigurationAndChildren() {
+        User owner = user(7, "owner@example.com");
+        Exercise oldExercise = exercise(12, "Burpee", MeasurementType.REPS);
+        Exercise newExercise = exercise(13, "Run", MeasurementType.DISTANCE);
+        Wod wod = wod(20, "Old name", WodType.FOR_TIME);
+        WodExercise oldWodExercise = wodExercise(oldExercise, 1);
+        oldWodExercise.addPrescription(prescriptionEntity("10", WodExercisePrescriptionUnit.REPS));
+        wod.addExercise(oldWodExercise);
+
+        given(userRepository.findByEmail("owner@example.com")).willReturn(Optional.of(owner));
+        given(wodRepository.findByIdAndOwner_Id(20, 7)).willReturn(Optional.of(wod));
+        given(exerciseRepository.findAllById(any())).willReturn(List.of(newExercise));
+        given(wodRepository.saveAndFlush(any(Wod.class)))
+                .willAnswer(invocation -> invocation.getArgument(0));
+
+        UserWodDetailResponse response = userWodService.update(
+                20,
+                updateRequest(WodType.AMRAP, 600,
+                        exerciseRequest(13, 1,
+                                prescription("500", WodExercisePrescriptionUnit.METERS, null))),
+                AUTHENTICATED_EMAIL);
+
+        assertThat(wod.getName()).isEqualTo("Fran");
+        assertThat(wod.getType()).isEqualTo(WodType.AMRAP);
+        assertThat(wod.getTimeLimit()).isEqualTo(600);
+        assertThat(wod.getExercises()).extracting(WodExercise::getExercise)
+                .extracting(Exercise::getId).containsExactly(13);
+        assertThat(wod.getExercises().get(0).getPrescriptions())
+                .extracting(WodExercisePrescription::getUnit)
+                .containsExactly(WodExercisePrescriptionUnit.METERS);
+        assertThat(response.exercises()).extracting(UserWodExerciseResponse::exerciseId)
+                .containsExactly(13);
+        then(wodRepository).should(times(2)).saveAndFlush(wod);
+    }
+
+    @Test
+    void update_WhenWodIsNotOwned_ReturnsGenericNotFoundWithoutValidatingRequest() {
+        User owner = user(7, "owner@example.com");
+        given(userRepository.findByEmail("owner@example.com")).willReturn(Optional.of(owner));
+        given(wodRepository.findByIdAndOwner_Id(20, 7)).willReturn(Optional.empty());
+
+        assertThatThrownBy(() -> userWodService.update(20, null, AUTHENTICATED_EMAIL))
+                .isInstanceOf(UserWodNotFoundException.class)
+                .hasMessage("WOD personalizado no disponible");
+        then(exerciseRepository).shouldHaveNoInteractions();
+        then(wodRepository).should().findByIdAndOwner_Id(20, 7);
+    }
+
+    @Test
+    void update_ReusesValidationRulesForAmrapAndDoesNotPersistInvalidRequest() {
+        User owner = user(7, "owner@example.com");
+        Wod wod = wod(20, "Old name", WodType.FOR_TIME);
+        given(userRepository.findByEmail("owner@example.com")).willReturn(Optional.of(owner));
+        given(wodRepository.findByIdAndOwner_Id(20, 7)).willReturn(Optional.of(wod));
+
+        assertThatThrownBy(() -> userWodService.update(
+                20,
+                updateRequest(WodType.AMRAP, null,
+                        exerciseRequest(12, 1,
+                                prescription("10", WodExercisePrescriptionUnit.REPS, null))),
+                AUTHENTICATED_EMAIL))
+                .isInstanceOf(InvalidUserWodException.class)
+                .hasMessage("El time limit es obligatorio para AMRAP");
+        then(exerciseRepository).shouldHaveNoInteractions();
+        then(wodRepository).should().findByIdAndOwner_Id(20, 7);
+        then(wodRepository).shouldHaveNoMoreInteractions();
     }
 
     @Test
@@ -237,6 +309,15 @@ class UserWodServiceTest {
             Integer timeLimit,
             UserWodExerciseRequest... exercises) {
         return new UserWodCreateRequest(
+                "  Fran  ", type, com.wodexplorer.entity.WodCategory.METCON,
+                WodLevel.RX, timeLimit, null, List.of(exercises));
+    }
+
+    private UserWodUpdateRequest updateRequest(
+            WodType type,
+            Integer timeLimit,
+            UserWodExerciseRequest... exercises) {
+        return new UserWodUpdateRequest(
                 "  Fran  ", type, com.wodexplorer.entity.WodCategory.METCON,
                 WodLevel.RX, timeLimit, null, List.of(exercises));
     }

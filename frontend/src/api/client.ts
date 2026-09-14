@@ -13,6 +13,7 @@ import {
   userWodCreateRequestSchema,
   userWodDetailSchema,
   userWodPageSchema,
+  userWodUpdateRequestSchema,
   wodDetailSchema,
   wodPageSchema,
   wodResultSchema,
@@ -20,6 +21,7 @@ import {
   type LoginRequest,
   type RegisterRequest,
   type UserWodCreateRequest,
+  type UserWodUpdateRequest,
   type WodResultRequest,
 } from "./schemas";
 
@@ -103,8 +105,8 @@ async function request<T>(
   return parsed.data;
 }
 
-const jsonBody = (body: unknown): RequestInit => ({
-  method: "POST",
+const jsonBody = (body: unknown, method: "POST" | "PUT" = "POST"): RequestInit => ({
+  method,
   body: JSON.stringify(body),
 });
 
@@ -171,6 +173,11 @@ export function getUserWod(id: number, token: string) {
 export function createUserWod(body: UserWodCreateRequest, token: string) {
   const parsedBody = userWodCreateRequestSchema.parse(body);
   return request("/user-wods", userWodDetailSchema, jsonBody(parsedBody), token);
+}
+
+export function updateUserWod(id: number, body: UserWodUpdateRequest, token: string) {
+  const parsedBody = userWodUpdateRequestSchema.parse(body);
+  return request(`/user-wods/${id}`, userWodDetailSchema, jsonBody(parsedBody, "PUT"), token);
 }
 
 export function createWodResult(id: number, body: WodResultRequest, token: string) {

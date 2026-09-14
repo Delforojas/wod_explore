@@ -24,7 +24,7 @@ export function Layout({ children, currentPage }: LayoutProps) {
     const page = path === "/" ? "home" : path.slice(1);
     return currentPage === page
       || (path === "/wods" && currentPage === "wod-detail")
-      || (path === "/my-wods" && currentPage === "my-wod-detail")
+      || (path === "/my-wods" && (currentPage === "my-wod-detail" || currentPage === "my-wod-edit"))
       || (path === "/exercises" && currentPage === "exercise-detail");
   }
 

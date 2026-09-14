@@ -105,6 +105,7 @@ export function MyWodDetailPage({ id }: { id: number }) {
         <div className="detail-heading__meta">
           <span className="tag tag--accent">WOD personal</span>
           <span className="detail-reference">WOD #{wod.id}</span>
+          <a className="button button--accent" href={`#/my-wods/${wod.id}/edit`}>Editar</a>
         </div>
       </header>
 

@@ -127,6 +127,8 @@ export const userWodCreateRequestSchema = z.object({
   exercises: z.array(userWodExerciseRequestSchema).min(1),
 });
 
+export const userWodUpdateRequestSchema = userWodCreateRequestSchema;
+
 export const userWodDetailSchema = z.object({
   id: z.number().int(),
   name: z.string(),
@@ -285,3 +287,4 @@ export interface ExerciseResultRequest {
 export type UserWodPrescriptionRequest = z.infer<typeof userWodPrescriptionRequestSchema>;
 export type UserWodExerciseRequest = z.infer<typeof userWodExerciseRequestSchema>;
 export type UserWodCreateRequest = z.infer<typeof userWodCreateRequestSchema>;
+export type UserWodUpdateRequest = z.infer<typeof userWodUpdateRequestSchema>;
