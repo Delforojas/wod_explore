@@ -10,11 +10,16 @@ import com.wodexplorer.entity.Wod;
 import com.wodexplorer.entity.WodLevel;
 import com.wodexplorer.entity.WodType;
 
+import java.util.Optional;
+
 public interface WodRepository extends JpaRepository<Wod, Integer> {
 
     Page<Wod> findByOwner_Id(Integer ownerId, Pageable pageable);
 
     java.util.Optional<Wod> findByIdAndOwner_Id(Integer id, Integer ownerId);
+
+    @Query("select w from Wod w where w.id = :id and w.owner is null")
+    Optional<Wod> findGlobalById(@Param("id") Integer id);
 
     @Query("""
             select w from Wod w

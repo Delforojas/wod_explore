@@ -47,6 +47,7 @@ import com.wodexplorer.controller.ExerciseResultController;
 import com.wodexplorer.controller.UserController;
 import com.wodexplorer.controller.UserStatisticsController;
 import com.wodexplorer.controller.WodController;
+import com.wodexplorer.controller.UserWodController;
 import com.wodexplorer.controller.WodResultController;
 import com.wodexplorer.dto.LoginResponse;
 import com.wodexplorer.dto.UserHistoryResponse;
@@ -64,13 +65,14 @@ import com.wodexplorer.service.UserService;
 import com.wodexplorer.service.UserHistoryService;
 import com.wodexplorer.service.UserStatisticsService;
 import com.wodexplorer.service.WodService;
+import com.wodexplorer.service.UserWodService;
 import com.wodexplorer.service.WodResultService;
 
 import io.jsonwebtoken.Jwts;
 
 @WebMvcTest({ExerciseController.class, UserController.class, AuthController.class,
         UserStatisticsController.class, WodController.class, WodResultController.class,
-        ExerciseResultController.class, HealthController.class})
+        ExerciseResultController.class, HealthController.class, UserWodController.class})
 @ImportAutoConfiguration(exclude = UserDetailsServiceAutoConfiguration.class)
 @Import({
         CorsConfig.class,
@@ -120,6 +122,9 @@ class SecurityHttpTest {
 
     @MockitoBean
     private WodService wodService;
+
+    @MockitoBean
+    private UserWodService userWodService;
 
     @MockitoBean
     private WodResultService wodResultService;
@@ -299,6 +304,40 @@ class SecurityHttpTest {
                 .andExpect(status().isOk());
 
         then(wodService).should().findAll(null, null, null, 0, 20);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"/api/user-wods", "/api/user-wods/1"})
+    void userWods_WithoutJwt_ReturnsJsonUnauthorized(String path) throws Exception {
+        mockMvc.perform(get(path))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.error").value("UNAUTHORIZED"));
+
+        then(userWodService).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void userWods_WithValidJwt_UsesJwtSubject() throws Exception {
+        given(userWodService.findAll(TEST_EMAIL, 0, 20))
+                .willReturn(new PageResponse<>(List.of(), 0, 20, 0, 0, false));
+        String token = jwtService.generateToken(TEST_EMAIL);
+
+        mockMvc.perform(get("/api/user-wods")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk());
+
+        then(userWodService).should().findAll(TEST_EMAIL, 0, 20);
+    }
+
+    @Test
+    void userWodCreation_WithoutJwt_ReturnsJsonUnauthorized() throws Exception {
+        mockMvc.perform(post("/api/user-wods")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(validUserWodJson()))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.error").value("UNAUTHORIZED"));
+
+        then(userWodService).shouldHaveNoInteractions();
     }
 
     @Test
@@ -499,6 +538,23 @@ class SecurityHttpTest {
                   "name": "Burpee",
                   "category": "GYMNASTICS",
                   "measurementType": "REPS"
+                }
+                """;
+    }
+
+    private String validUserWodJson() {
+        return """
+                {
+                  "name": "Fran",
+                  "type": "FOR_TIME",
+                  "level": "RX",
+                  "exercises": [
+                    {
+                      "exerciseId": 1,
+                      "position": 1,
+                      "prescriptions": [{"value": 10, "unit": "REPS"}]
+                    }
+                  ]
                 }
                 """;
     }

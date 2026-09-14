@@ -47,7 +47,7 @@ public class WodService {
 
     @Transactional(readOnly = true)
     public WodDetailResponse findById(Integer id) {
-        Wod wod = wodRepository.findById(id)
+        Wod wod = wodRepository.findGlobalById(id)
                 .orElseThrow(() -> new WodNotFoundException(id));
 
         List<WodExerciseResponse> exercises = wodExerciseRepository
