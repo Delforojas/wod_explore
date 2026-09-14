@@ -20,6 +20,6 @@
 - [x] Ejecutar `npm run lint` desde `frontend/` y corregir fallos.
 - [x] Ejecutar `npm run build` desde `frontend/` y corregir fallos de TypeScript.
 - [x] Ejecutar detector Impeccable y revisar responsive y accesibilidad.
-- [ ] Revisar diff, status, alcance, secretos y ausencia de cambios backend.
-- [ ] Crear el commit exclusivo de la Issue #46.
-- [ ] Documentar la Issue con commit, verificaciones y validaciones manuales pendientes.
+- [x] Revisar diff, status, alcance, secretos y ausencia de cambios backend.
+- [x] Crear el commit exclusivo de la Issue #46.
+- [x] Documentar la Issue con commit, verificaciones y validaciones manuales pendientes.
