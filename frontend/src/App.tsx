@@ -10,6 +10,8 @@ import { ExercisesPage } from "./pages/ExercisesPage";
 import { CreateWodPage } from "./pages/CreateWodPage";
 import { HistoryPage } from "./pages/HistoryPage";
 import { HomePage } from "./pages/HomePage";
+import { MyWodDetailPage } from "./pages/MyWodDetailPage";
+import { MyWodsPage } from "./pages/MyWodsPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { StatisticsPage } from "./pages/StatisticsPage";
 import { WodDetailPage } from "./pages/WodDetailPage";
@@ -34,6 +36,8 @@ function App() {
       case "register": return <AuthPage mode="register" />;
       case "wods": return <WodsPage />;
       case "create-wod": return <CreateWodPage />;
+      case "my-wods": return <MyWodsPage />;
+      case "my-wod-detail": return <MyWodDetailPage id={route.id} />;
       case "wod-detail": return <WodDetailPage id={route.id} />;
       case "exercises": return <ExercisesPage />;
       case "exercise-detail": return <ExerciseDetailPage id={route.id} />;

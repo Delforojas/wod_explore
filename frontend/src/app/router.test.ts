@@ -16,6 +16,8 @@ describe("hash router", () => {
     ["#/login/", { page: "login" }],
     ["#/wods/18", { page: "wod-detail", id: 18 }],
     ["#/create-wod", { page: "create-wod" }],
+    ["#/my-wods", { page: "my-wods" }],
+    ["#/my-wods/31", { page: "my-wod-detail", id: 31 }],
     ["#/exercises/7", { page: "exercise-detail", id: 7 }],
     ["#/history", { page: "history" }],
     ["#/statistics", { page: "statistics" }],

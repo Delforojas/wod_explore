@@ -1,0 +1,24 @@
+# Tasks - Issue #47: Crear seccion Mis WODs
+
+- [x] Crear schemas Zod para resumen paginado y detalle de WOD personalizado.
+- [x] Anadir `getUserWods` y `getUserWod` al cliente API con JWT y validacion.
+- [x] Extender el router con `my-wods` y `my-wod-detail`.
+- [x] Anadir "Mis WODs" al rail desktop y navegacion movil.
+- [x] Crear listado autenticado con carga, error, vacio, reintento y paginacion.
+- [x] Derivar y mostrar el numero de ejercicios sin inventar campos del resumen.
+- [x] Enlazar cada WOD del listado con su detalle personal.
+- [x] Crear detalle autenticado con metadatos y CTA de retorno.
+- [x] Mostrar ejercicios en orden y prescripciones con unidades y etiquetas.
+- [x] Mantener aislamiento por usuario mediante los endpoints autenticados.
+- [x] Anadir estados de sesion privada y errores seguros para listado y detalle.
+- [x] Anadir estilos responsive y accesibles coherentes con `DESIGN.md`.
+- [x] Anadir tests de schemas, cliente, router y navegacion.
+- [x] Anadir tests de listado con datos, vacio, loading, error y paginacion.
+- [x] Anadir tests de detalle, orden, prescripciones y sesion anonima.
+- [x] Ejecutar `npm run test` desde `frontend/` y corregir fallos.
+- [x] Ejecutar `npm run lint` desde `frontend/` y corregir fallos.
+- [x] Ejecutar `npm run build` desde `frontend/` y corregir fallos TypeScript.
+- [x] Ejecutar detector Impeccable y revisar responsive y accesibilidad.
+- [x] Revisar diff, alcance, secretos y ausencia de cambios backend.
+- [x] Crear el commit exclusivo de la Issue #47.
+- [x] Documentar la Issue abierta con commit y validaciones manuales pendientes.
