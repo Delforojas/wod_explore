@@ -31,10 +31,29 @@ CREATE TABLE `wod_exercises` (
   PRIMARY KEY (`id`),
   KEY `wod_id` (`wod_id`),
   KEY `exercise_id` (`exercise_id`),
+  UNIQUE KEY `wod_exercises_wod_position_uk` (`wod_id`,`position`),
   CONSTRAINT `wod_exercises_ibfk_1` FOREIGN KEY (`wod_id`) REFERENCES `wods` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `wod_exercises_ibfk_2` FOREIGN KEY (`exercise_id`) REFERENCES `exercises` (`id`) ON DELETE RESTRICT
+  CONSTRAINT `wod_exercises_ibfk_2` FOREIGN KEY (`exercise_id`) REFERENCES `exercises` (`id`) ON DELETE RESTRICT,
+  CONSTRAINT `wod_exercises_position_chk` CHECK ((`position` > 0))
 ) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+DROP TABLE IF EXISTS `wod_exercise_prescriptions`;
+CREATE TABLE `wod_exercise_prescriptions` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `wod_exercise_id` int NOT NULL,
+  `value` decimal(8,2) NOT NULL,
+  `unit` varchar(20) NOT NULL,
+  `unit_label` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `wod_exercise_prescriptions_wod_exercise_idx` (`wod_exercise_id`),
+  UNIQUE KEY `wod_exercise_prescriptions_unit_uk` (`wod_exercise_id`,`unit`),
+  CONSTRAINT `wod_exercise_prescriptions_wod_exercise_fk` FOREIGN KEY (`wod_exercise_id`) REFERENCES `wod_exercises` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `wod_exercise_prescriptions_value_chk` CHECK ((`value` > 0)),
+  CONSTRAINT `wod_exercise_prescriptions_unit_chk` CHECK ((`unit` in (_utf8mb4'REPS',_utf8mb4'METERS',_utf8mb4'KG',_utf8mb4'SECONDS',_utf8mb4'OTHER'))),
+  CONSTRAINT `wod_exercise_prescriptions_integer_unit_chk` CHECK (((`unit` not in (_utf8mb4'REPS',_utf8mb4'SECONDS')) or (`value` = floor(`value`)))),
+  CONSTRAINT `wod_exercise_prescriptions_label_chk` CHECK ((((`unit` = _utf8mb4'OTHER') and (`unit_label` is not null) and (char_length(trim(`unit_label`)) > 0)) or ((`unit` <> _utf8mb4'OTHER') and (`unit_label` is null))))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `wod_exercises`
@@ -45,6 +64,11 @@ LOCK TABLES `wod_exercises` WRITE;
 INSERT INTO `wod_exercises` VALUES (1,1,113,NULL,1),(2,1,4,21,2),(3,1,113,NULL,3),(4,1,4,21,4),(5,1,113,NULL,5),(6,2,5,24,1),(7,2,129,24,2),(8,2,144,24,3),(9,2,2,24,4),(10,2,129,24,5),(11,2,144,24,6),(12,2,178,24,7),(13,3,179,3,1),(14,3,180,5,2),(15,3,138,7,3),(16,3,129,9,4),(17,4,3,30,1),(18,4,118,30,2),(19,4,113,NULL,3),(20,5,156,NULL,1),(21,5,129,30,2),(22,5,144,20,3),(23,5,122,10,4),(24,6,16,21,1),(25,6,147,50,2),(26,6,9,21,3),(27,6,147,50,4),(28,6,9,21,5),(29,6,147,50,6),(30,6,16,21,7),(31,7,113,NULL,1),(32,7,118,10,2),(33,7,113,NULL,3),(34,7,125,10,4),(35,8,143,NULL,1),(36,8,132,NULL,2),(37,8,125,3,3),(38,9,122,3,1),(39,9,5,6,2),(40,9,118,12,3),(41,9,116,24,4),(42,10,139,5,1),(43,10,1,25,2),(44,11,116,200,1),(45,11,9,50,2),(46,11,118,50,3),(47,11,113,NULL,4),(48,12,113,NULL,1),(49,12,119,7,2),(50,12,6,7,3),(51,12,122,7,4),(52,15,157,NULL,1),(53,15,12,12,2),(54,15,129,12,3),(55,15,39,12,4),(56,16,15,10,1),(57,16,141,10,2),(58,14,113,NULL,1),(59,14,127,150,2),(60,18,129,30,1),(61,18,12,20,2),(62,18,118,30,3),(63,19,118,50,1),(64,19,113,NULL,2),(65,19,15,21,3),(66,19,113,NULL,4),(67,19,15,21,5),(68,19,113,NULL,6),(69,19,118,50,7),(70,22,5,12,1),(71,22,118,20,2),(72,22,4,12,3),(73,22,137,20,4),(74,17,113,NULL,1),(75,17,139,3,2),(76,17,15,12,3),(77,20,125,25,1),(78,20,146,NULL,2),(79,20,17,25,3),(80,20,146,NULL,4),(81,20,122,25,5),(82,20,146,NULL,6),(83,20,119,25,7),(84,20,146,NULL,8),(85,20,125,25,9),(86,21,5,12,1),(87,21,21,9,2),(88,21,7,6,3);
 /*!40000 ALTER TABLE `wod_exercises` ENABLE KEYS */;
 UNLOCK TABLES;
+
+INSERT INTO `wod_exercise_prescriptions` (`wod_exercise_id`,`value`,`unit`)
+SELECT `id`, CAST(`reps` AS DECIMAL(8,2)), 'REPS'
+FROM `wod_exercises`
+WHERE `reps` IS NOT NULL;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

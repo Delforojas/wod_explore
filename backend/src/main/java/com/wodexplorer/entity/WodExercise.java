@@ -1,5 +1,9 @@
 package com.wodexplorer.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -8,6 +12,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,10 +32,15 @@ public class WodExercise {
     @JoinColumn(name = "exercise_id", nullable = false)
     private Exercise exercise;
 
+    @Column(insertable = false, updatable = false)
     private Integer reps;
 
     @Column(nullable = false)
     private Integer position;
+
+    @OneToMany(mappedBy = "wodExercise", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("id ASC")
+    private List<WodExercisePrescription> prescriptions = new ArrayList<>();
 
     public WodExercise() {
     }
@@ -68,5 +79,14 @@ public class WodExercise {
 
     public void setPosition(Integer position) {
         this.position = position;
+    }
+
+    public List<WodExercisePrescription> getPrescriptions() {
+        return prescriptions;
+    }
+
+    public void addPrescription(WodExercisePrescription prescription) {
+        prescriptions.add(prescription);
+        prescription.setWodExercise(this);
     }
 }

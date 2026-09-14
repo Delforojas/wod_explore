@@ -1,17 +1,25 @@
 package com.wodexplorer.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.Generated;
 import org.hibernate.generator.EventType;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 
 @Entity
@@ -41,6 +49,18 @@ public class Wod {
     @Column(name = "created_at", insertable = false, updatable = false)
     @Generated(event = EventType.INSERT)
     private LocalDateTime createdAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
+    private User owner;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private WodCategory category;
+
+    @OneToMany(mappedBy = "wod", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("position ASC")
+    private List<WodExercise> exercises = new ArrayList<>();
 
     public Wod() {
     }
@@ -95,5 +115,30 @@ public class Wod {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public WodCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(WodCategory category) {
+        this.category = category;
+    }
+
+    public List<WodExercise> getExercises() {
+        return exercises;
+    }
+
+    public void addExercise(WodExercise exercise) {
+        exercises.add(exercise);
+        exercise.setWod(this);
     }
 }

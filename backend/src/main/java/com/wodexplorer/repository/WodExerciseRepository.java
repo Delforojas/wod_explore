@@ -11,8 +11,9 @@ import com.wodexplorer.entity.WodExercise;
 public interface WodExerciseRepository extends Repository<WodExercise, Integer> {
 
     @Query("""
-            select we from WodExercise we
+            select distinct we from WodExercise we
             join fetch we.exercise
+            left join fetch we.prescriptions
             where we.wod.id = :wodId
             order by we.position asc
             """)
