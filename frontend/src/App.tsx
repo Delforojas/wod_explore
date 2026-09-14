@@ -37,7 +37,7 @@ function App() {
       case "register": return <AuthPage mode="register" />;
       case "wods": return <WodsPage />;
       case "create-wod": return <CreateWodPage />;
-      case "my-wods": return <MyWodsPage />;
+      case "my-wods": return <MyWodsPage deletionFeedback={route.feedback === "deleted"} />;
       case "my-wod-detail": return <MyWodDetailPage id={route.id} />;
       case "my-wod-edit": return <EditWodPage id={route.id} />;
       case "wod-detail": return <WodDetailPage id={route.id} />;

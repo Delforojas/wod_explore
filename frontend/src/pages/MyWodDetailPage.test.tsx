@@ -1,12 +1,22 @@
-import { screen, waitFor } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { getUserWod } from "../api/client";
+import { ApiError, deleteUserWod, getUserWod } from "../api/client";
 import type { UserWodDetail } from "../api/schemas";
 import { renderWithAuth } from "../test/test-utils";
 import { MyWodDetailPage } from "./MyWodDetailPage";
 
 vi.mock("../api/client", () => ({
+  ApiError: class ApiError extends Error {
+    status: number;
+
+    constructor(message: string, status: number) {
+      super(message);
+      this.status = status;
+    }
+  },
+  deleteUserWod: vi.fn(),
   getUserWod: vi.fn(),
 }));
 
@@ -40,7 +50,10 @@ const personalWod: UserWodDetail = {
 };
 
 describe("MyWodDetailPage", () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => {
+    vi.clearAllMocks();
+    window.location.hash = "#/my-wods/31";
+  });
 
   it("keeps personal WOD details private for anonymous users", () => {
     renderWithAuth(<MyWodDetailPage id={31} />);
@@ -76,5 +89,51 @@ describe("MyWodDetailPage", () => {
 
     await waitFor(() => expect(screen.getByRole("alert").textContent).toContain("WOD personalizado no disponible"));
     expect(screen.getByRole("link", { name: "Volver a Mis WODs" }).getAttribute("href")).toBe("#/my-wods");
+  });
+
+  it("requires confirmation and does not delete when cancelled", async () => {
+    const user = userEvent.setup();
+    vi.mocked(getUserWod).mockResolvedValue(personalWod);
+    renderWithAuth(<MyWodDetailPage id={31} />, { token: "token" });
+
+    await screen.findByRole("heading", { name: "Fran personal" });
+    await user.click(screen.getByRole("button", { name: "Eliminar WOD" }));
+
+    const dialog = screen.getByRole("dialog");
+    expect(dialog.textContent).toContain("¿Eliminar Fran personal?");
+    expect(document.activeElement).toBe(within(dialog).getByRole("button", { name: "Cancelar" }));
+
+    await user.click(within(dialog).getByRole("button", { name: "Cancelar" }));
+
+    expect(deleteUserWod).not.toHaveBeenCalled();
+  });
+
+  it("deletes after confirmation and navigates back with success feedback", async () => {
+    const user = userEvent.setup();
+    vi.mocked(getUserWod).mockResolvedValue(personalWod);
+    vi.mocked(deleteUserWod).mockResolvedValue(null);
+    renderWithAuth(<MyWodDetailPage id={31} />, { token: "token" });
+
+    await screen.findByRole("heading", { name: "Fran personal" });
+    await user.click(screen.getByRole("button", { name: "Eliminar WOD" }));
+    await user.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Eliminar WOD" }));
+
+    await waitFor(() => expect(deleteUserWod).toHaveBeenCalledWith(31, "token"));
+    expect(window.location.hash).toBe("#/my-wods?deleted=1");
+  });
+
+  it("keeps the confirmation open and explains why history blocks deletion", async () => {
+    const user = userEvent.setup();
+    vi.mocked(getUserWod).mockResolvedValue(personalWod);
+    vi.mocked(deleteUserWod).mockRejectedValue(new ApiError("blocked", 409));
+    renderWithAuth(<MyWodDetailPage id={31} />, { token: "token" });
+
+    await screen.findByRole("heading", { name: "Fran personal" });
+    await user.click(screen.getByRole("button", { name: "Eliminar WOD" }));
+    await user.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Eliminar WOD" }));
+
+    expect((await screen.findByRole("alert")).textContent).toContain("conserva resultados históricos");
+    expect(screen.getByRole("dialog").hasAttribute("open")).toBe(true);
+    expect(window.location.hash).toBe("#/my-wods/31");
   });
 });

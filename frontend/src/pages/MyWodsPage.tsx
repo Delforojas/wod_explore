@@ -29,7 +29,7 @@ function formatWodMetrics(type: WodType, timeLimit: number | null, rounds: numbe
   return `${WOD_TYPE_LABELS[type]} · ${metrics.join(" · ")}`;
 }
 
-export function MyWodsPage() {
+export function MyWodsPage({ deletionFeedback = false }: { deletionFeedback?: boolean }) {
   const { token } = useAuth();
   const [catalog, setCatalog] = useState<UserWodPage | null>(null);
   const [details, setDetails] = useState<Record<number, UserWodDetail>>({});
@@ -102,6 +102,14 @@ export function MyWodsPage() {
           <a className="button button--accent" href="#/create-wod">Crear WOD</a>
         </div>
       </header>
+
+      {deletionFeedback && (
+        <StateMessage
+          kind="success"
+          title="WOD eliminado"
+          message="El WOD personalizado se ha eliminado de tu archivo."
+        />
+      )}
 
       {catalog.items.length === 0 ? (
         <StateMessage kind="empty" title="Aún no tienes WODs personalizados" message="Diseña una sesión propia y aparecerá aquí para consultarla cuando quieras." action={{ label: "Crear mi primer WOD", href: "#/create-wod" }} />

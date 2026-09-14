@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { ApiError, createUserWod, getCurrentUser, getExercises, getHistory, getStatistics, getUserWod, getUserWods, getWods, updateUserWod } from "./client";
+import { ApiError, createUserWod, deleteUserWod, getCurrentUser, getExercises, getHistory, getStatistics, getUserWod, getUserWods, getWods, updateUserWod } from "./client";
 import { statisticsSchema } from "./schemas";
 
 describe("API client", () => {
@@ -213,6 +213,21 @@ describe("API client", () => {
     const options = fetchMock.mock.calls[0]?.[1] as RequestInit;
     expect(new Headers(options.headers).get("Authorization")).toBe("Bearer token-update");
     expect(JSON.parse(String(options.body))).toMatchObject({ name: "Fran actualizada", exercises: [{ position: 1 }] });
+  });
+
+  it("deletes a user WOD with DELETE and accepts an empty 204 response", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(null, { status: 204 }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(deleteUserWod(31, "token-delete")).resolves.toBeNull();
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "http://localhost:8080/api/user-wods/31",
+      expect.objectContaining({ headers: expect.any(Headers), method: "DELETE" }),
+    );
+    const options = fetchMock.mock.calls[0]?.[1] as RequestInit;
+    expect(new Headers(options.headers).get("Authorization")).toBe("Bearer token-delete");
+    expect(options.body).toBeUndefined();
   });
 
   it("lists and opens personal WODs with the session token", async () => {
