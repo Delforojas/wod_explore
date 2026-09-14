@@ -15,5 +15,5 @@
 - [x] Ejecutar `npm run lint` desde `frontend/`.
 - [x] Ejecutar `npm run build` desde `frontend/`.
 - [x] Revisar diff, alcance, secretos y cambios ajenos.
-- [ ] Crear el commit exclusivo de la Issue #60.
-- [ ] Documentar la Issue abierta con commit y validación manual aprobada.
+- [x] Crear el commit exclusivo de la Issue #60.
+- [x] Documentar la Issue abierta con commit y validación manual aprobada.
