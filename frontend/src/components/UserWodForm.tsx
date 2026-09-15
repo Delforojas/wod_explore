@@ -133,6 +133,25 @@ function isPositiveDecimal(value: string, integerOnly: boolean) {
   return decimals <= 2;
 }
 
+function validateExercisePrescriptions(exercises: DraftExercise[]): FormErrors {
+  const errors: FormErrors = {};
+  exercises.forEach((draft) => {
+    draft.prescriptions.forEach((prescription, index) => {
+      const fieldId = `prescription-${draft.key}-${index}`;
+      const integerOnly = prescription.unit === "REPS" || prescription.unit === "SECONDS";
+      if (!isPositiveDecimal(prescription.value, integerOnly)) {
+        errors[fieldId] = integerOnly
+          ? "Usa un número entero mayor que cero."
+          : "Usa un número positivo con un máximo de dos decimales.";
+      }
+      if (prescription.unit === "OTHER" && !prescription.unitLabel.trim()) {
+        errors[`${fieldId}-unit-label`] = "Describe la unidad de esta medida.";
+      }
+    });
+  });
+  return errors;
+}
+
 function validateDraft(
   name: string,
   type: WodType,
@@ -160,22 +179,7 @@ function validateDraft(
     errors.exercisePickerTrigger = "Añade al menos un ejercicio.";
   }
 
-  exercises.forEach((draft) => {
-    draft.prescriptions.forEach((prescription, index) => {
-      const fieldId = `prescription-${draft.key}-${index}`;
-      const integerOnly = prescription.unit === "REPS" || prescription.unit === "SECONDS";
-      if (!isPositiveDecimal(prescription.value, integerOnly)) {
-        errors[fieldId] = integerOnly
-          ? "Usa un número entero mayor que cero."
-          : "Usa un número positivo con un máximo de dos decimales.";
-      }
-      if (prescription.unit === "OTHER" && !prescription.unitLabel.trim()) {
-        errors[`${fieldId}-unit-label`] = "Describe la unidad de esta medida.";
-      }
-    });
-  });
-
-  return errors;
+  return { ...errors, ...validateExercisePrescriptions(exercises) };
 }
 
 function firstErrorId(errors: FormErrors) {
@@ -209,7 +213,8 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
   const [level, setLevel] = useState<WodLevel>(initialWod?.level ?? "RX");
   const [timeLimit, setTimeLimit] = useState(initialWod?.timeLimit === null || initialWod?.timeLimit === undefined ? "" : String(initialWod.timeLimit));
   const [rounds, setRounds] = useState(initialWod?.rounds === null || initialWod?.rounds === undefined ? "" : String(initialWod.rounds));
-  const [selectedExercises, setSelectedExercises] = useState<DraftExercise[]>(() => initialWod?.exercises.map(createDraftFromDetail) ?? []);
+  const [configuredExercises, setConfiguredExercises] = useState<DraftExercise[]>([]);
+  const [wodExercises, setWodExercises] = useState<DraftExercise[]>(() => initialWod?.exercises.map(createDraftFromDetail) ?? []);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -219,6 +224,7 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
   const [appliedPickerQuery, setAppliedPickerQuery] = useState("");
   const [pickerPage, setPickerPage] = useState(0);
   const [pickerResults, setPickerResults] = useState<ExercisePage | null>(null);
+  const [pickerSelection, setPickerSelection] = useState<Exercise[]>([]);
   const [isPickerLoading, setIsPickerLoading] = useState(false);
   const [pickerError, setPickerError] = useState<string | null>(null);
   const [pickerReload, setPickerReload] = useState(0);
@@ -251,6 +257,7 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
   function openPicker() {
     setPickerError(null);
     setIsPickerLoading(true);
+    setPickerSelection([]);
     setIsPickerOpen(true);
   }
 
@@ -259,6 +266,7 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
     if (dialog?.open && typeof dialog.close === "function") dialog.close();
     else dialog?.removeAttribute("open");
     setIsPickerOpen(false);
+    setPickerSelection([]);
   }
 
   function handlePickerSearch(event: FormEvent<HTMLFormElement>) {
@@ -281,8 +289,15 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
     setPickerReload((current) => current + 1);
   }
 
-  function addExercise(exercise: Exercise) {
-    setSelectedExercises((current) => [...current, createDraftExercise(exercise)]);
+  function togglePickerSelection(exercise: Exercise) {
+    setPickerSelection((current) => current.some((selected) => selected.id === exercise.id)
+      ? current.filter((selected) => selected.id !== exercise.id)
+      : [...current, exercise]);
+  }
+
+  function configureSelectedExercises() {
+    if (pickerSelection.length === 0) return;
+    setConfiguredExercises((current) => [...current, ...pickerSelection.map(createDraftExercise)]);
     setErrors((current) => {
       const next = { ...current };
       delete next.exercisePickerTrigger;
@@ -291,12 +306,43 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
     closePicker();
   }
 
+  function addConfiguredExercisesToWod() {
+    const prescriptionErrors = validateExercisePrescriptions(configuredExercises);
+    setErrors((current) => {
+      const next = { ...current };
+      delete next.addExercisesToWod;
+      configuredExercises.forEach((draft) => draft.prescriptions.forEach((_, index) => {
+        delete next[`prescription-${draft.key}-${index}`];
+        delete next[`prescription-${draft.key}-${index}-unit-label`];
+      }));
+      return { ...next, ...prescriptionErrors };
+    });
+    if (Object.keys(prescriptionErrors).length > 0) {
+      focusError(prescriptionErrors);
+      return;
+    }
+    setWodExercises((current) => [...current, ...configuredExercises]);
+    setConfiguredExercises([]);
+  }
+
   function removeExercise(key: string) {
-    setSelectedExercises((current) => current.filter((draft) => draft.key !== key));
+    setWodExercises((current) => current.filter((draft) => draft.key !== key));
+  }
+
+  function removeConfiguredExercise(key: string) {
+    setConfiguredExercises((current) => current.filter((draft) => draft.key !== key));
+    setErrors((current) => {
+      const next = { ...current };
+      Object.keys(next).forEach((errorId) => {
+        if (errorId.startsWith(`prescription-${key}-`)) delete next[errorId];
+      });
+      delete next.addExercisesToWod;
+      return next;
+    });
   }
 
   function moveExercise(index: number, offset: -1 | 1) {
-    setSelectedExercises((current) => {
+    setWodExercises((current) => {
       const target = index + offset;
       if (target < 0 || target >= current.length) return current;
       const next = [...current];
@@ -306,12 +352,14 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
   }
 
   function updatePrescription(key: string, index: number, field: "value" | "unitLabel", value: string) {
-    setSelectedExercises((current) => current.map((draft) => draft.key !== key ? draft : {
+    const updateDrafts = (current: DraftExercise[]) => current.map((draft) => draft.key !== key ? draft : {
       ...draft,
       prescriptions: draft.prescriptions.map((prescription, prescriptionIndex) => (
         prescriptionIndex === index ? { ...prescription, [field]: value } : prescription
       )),
-    }));
+    });
+    setConfiguredExercises(updateDrafts);
+    setWodExercises(updateDrafts);
     const errorId = field === "value" ? `prescription-${key}-${index}` : `prescription-${key}-${index}-unit-label`;
     setErrors((current) => {
       const next = { ...current };
@@ -326,7 +374,8 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
     setLevel("RX");
     setTimeLimit("");
     setRounds("");
-    setSelectedExercises([]);
+    setConfiguredExercises([]);
+    setWodExercises([]);
     setErrors({});
     setSaveError(null);
     setSavedWod(null);
@@ -338,7 +387,10 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
 
     setSaveError(null);
     setSavedWod(null);
-    const nextErrors = validateDraft(name, type, level, timeLimit, rounds, selectedExercises);
+    const nextErrors = {
+      ...validateDraft(name, type, level, timeLimit, rounds, wodExercises),
+      ...(configuredExercises.length > 0 ? { addExercisesToWod: "Añade los movimientos pendientes al WOD antes de guardarlo." } : {}),
+    };
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) {
       focusError(nextErrors);
@@ -351,7 +403,7 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
       level,
       timeLimit: timeLimit ? Number(timeLimit) : null,
       rounds: type === "AMRAP" || !rounds ? null : Number(rounds),
-      exercises: selectedExercises.map((draft, index) => ({
+      exercises: wodExercises.map((draft, index) => ({
         exerciseId: draft.exercise.id,
         position: index + 1,
         prescriptions: draft.prescriptions.map((prescription) => ({
@@ -393,79 +445,151 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
       </header>
 
       <div className="create-wod-layout">
-        <form className="form-panel create-wod-form" onSubmit={handleSubmit} noValidate aria-busy={isSaving}>
-          <div className="form-heading">
-            <span>{mode === "edit" ? "Edición en curso" : "Nuevo entrenamiento"}</span>
-            <strong>{mode === "edit" ? "La ficha sigue siendo tuya" : "La ficha empieza aquí"}</strong>
-            <p>{mode === "edit" ? "Actualiza la estructura y los movimientos que quieres repetir." : "Completa la estructura y añade los movimientos que quieres repetir."}</p>
+        <form className="form-panel create-wod-form" onSubmit={handleSubmit} noValidate aria-labelledby="create-wod-form-title" aria-busy={isSaving}>
+          <div className="form-heading create-wod-step-heading">
+            <span>{mode === "edit" ? "Edición en curso · paso 01" : "Flujo de creación · paso 01"}</span>
+            <h2 id="create-wod-form-title">{mode === "edit" ? "Ajusta la sesión" : "Define la sesión"}</h2>
+            <p>{mode === "edit" ? "Revisa los datos generales antes de ajustar sus movimientos." : "Empieza por los datos que definen cómo se entrena este WOD."}</p>
           </div>
 
-          <div className="create-wod-fields">
-            <div className="form-field create-wod-field--wide">
-              <label htmlFor="wod-name">Nombre del WOD</label>
-              <input id="wod-name" name="name" type="text" maxLength={100} value={name} onChange={(event) => setName(event.target.value)} aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "wod-name-error" : undefined} />
-              {errors.name && <p className="field-error" id="wod-name-error">{errors.name}</p>}
-            </div>
-            <div className="form-field">
-              <label htmlFor="wod-type">Estructura</label>
-              <select id="wod-type" name="type" value={type} onChange={(event) => {
-                const nextType = event.target.value;
-                if (nextType === "FOR_TIME" || nextType === "AMRAP" || nextType === "EMOM") setType(nextType);
-              }} aria-invalid={Boolean(errors.type)} aria-describedby={errors.type ? "wod-type-error" : undefined}>
-                <option value="FOR_TIME">Por tiempo</option>
-                <option value="AMRAP">AMRAP</option>
-                <option value="EMOM">EMOM</option>
-              </select>
-              {errors.type && <p className="field-error" id="wod-type-error">{errors.type}</p>}
-            </div>
-            <div className="form-field">
-              <label htmlFor="wod-level">Nivel</label>
-              <select id="wod-level" name="level" value={level} onChange={(event) => {
-                const nextLevel = event.target.value;
-                if (nextLevel === "BEGINNER" || nextLevel === "INTERMEDIATE" || nextLevel === "RX") setLevel(nextLevel);
-              }} aria-invalid={Boolean(errors.level)} aria-describedby={errors.level ? "wod-level-error" : undefined}>
-                <option value="BEGINNER">Principiante</option>
-                <option value="INTERMEDIATE">Intermedio</option>
-                <option value="RX">RX</option>
-              </select>
-              {errors.level && <p className="field-error" id="wod-level-error">{errors.level}</p>}
-            </div>
-            {(type === "AMRAP" || type === "EMOM" || type === "FOR_TIME") && (
-              <div className="form-field">
-                <label htmlFor="wod-time-limit">Time cap <span className="field-unit">segundos{type === "FOR_TIME" ? " · opcional" : " · obligatorio"}</span></label>
-                <input id="wod-time-limit" name="timeLimit" type="number" min="1" step="1" inputMode="numeric" value={timeLimit} onChange={(event) => setTimeLimit(event.target.value)} aria-invalid={Boolean(errors.timeLimit)} aria-describedby={errors.timeLimit ? "wod-time-limit-error" : undefined} required={type !== "FOR_TIME"} />
-                {errors.timeLimit && <p className="field-error" id="wod-time-limit-error">{errors.timeLimit}</p>}
+          <fieldset className="create-wod-config">
+            <legend>Datos generales</legend>
+            <div className="create-wod-fields">
+              <div className="form-field create-wod-field--wide">
+                <label htmlFor="wod-name">Nombre del WOD</label>
+                <input id="wod-name" name="name" type="text" maxLength={100} value={name} onChange={(event) => setName(event.target.value)} aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "wod-name-error" : undefined} />
+                {errors.name && <p className="field-error" id="wod-name-error">{errors.name}</p>}
               </div>
-            )}
-            {(type === "FOR_TIME" || type === "EMOM") && (
               <div className="form-field">
-                <label htmlFor="wod-rounds">Rondas <span className="field-unit">{type === "FOR_TIME" ? "opcional" : "opcional · intervalos"}</span></label>
-                <input id="wod-rounds" name="rounds" type="number" min="1" step="1" inputMode="numeric" value={rounds} onChange={(event) => setRounds(event.target.value)} aria-invalid={Boolean(errors.rounds)} aria-describedby={errors.rounds ? "wod-rounds-error" : undefined} />
-                {errors.rounds && <p className="field-error" id="wod-rounds-error">{errors.rounds}</p>}
+                <label htmlFor="wod-type">Estructura</label>
+                <select id="wod-type" name="type" autoComplete="off" value={type} onChange={(event) => {
+                  const nextType = event.target.value;
+                  if (nextType === "FOR_TIME" || nextType === "AMRAP" || nextType === "EMOM") setType(nextType);
+                }} aria-invalid={Boolean(errors.type)} aria-describedby={errors.type ? "wod-type-error" : undefined}>
+                  <option value="FOR_TIME">Por tiempo</option>
+                  <option value="AMRAP">AMRAP</option>
+                  <option value="EMOM">EMOM</option>
+                </select>
+                {errors.type && <p className="field-error" id="wod-type-error">{errors.type}</p>}
               </div>
-            )}
-          </div>
+              <div className="form-field">
+                <label htmlFor="wod-level">Nivel</label>
+                <select id="wod-level" name="level" autoComplete="off" value={level} onChange={(event) => {
+                  const nextLevel = event.target.value;
+                  if (nextLevel === "BEGINNER" || nextLevel === "INTERMEDIATE" || nextLevel === "RX") setLevel(nextLevel);
+                }} aria-invalid={Boolean(errors.level)} aria-describedby={errors.level ? "wod-level-error" : undefined}>
+                  <option value="BEGINNER">Principiante</option>
+                  <option value="INTERMEDIATE">Intermedio</option>
+                  <option value="RX">RX</option>
+                </select>
+                {errors.level && <p className="field-error" id="wod-level-error">{errors.level}</p>}
+              </div>
+              {(type === "AMRAP" || type === "EMOM" || type === "FOR_TIME") && (
+                <div className="form-field">
+                  <label htmlFor="wod-time-limit">Time cap <span className="field-unit">segundos{type === "FOR_TIME" ? " · opcional" : " · obligatorio"}</span></label>
+                  <input id="wod-time-limit" name="timeLimit" type="number" min="1" step="1" inputMode="numeric" value={timeLimit} onChange={(event) => setTimeLimit(event.target.value)} aria-invalid={Boolean(errors.timeLimit)} aria-describedby={errors.timeLimit ? "wod-time-limit-error" : undefined} required={type !== "FOR_TIME"} />
+                  {errors.timeLimit && <p className="field-error" id="wod-time-limit-error">{errors.timeLimit}</p>}
+                </div>
+              )}
+              {(type === "FOR_TIME" || type === "EMOM") && (
+                <div className="form-field">
+                  <label htmlFor="wod-rounds">Rondas <span className="field-unit">{type === "FOR_TIME" ? "opcional" : "opcional · intervalos"}</span></label>
+                  <input id="wod-rounds" name="rounds" type="number" min="1" step="1" inputMode="numeric" value={rounds} onChange={(event) => setRounds(event.target.value)} aria-invalid={Boolean(errors.rounds)} aria-describedby={errors.rounds ? "wod-rounds-error" : undefined} />
+                  {errors.rounds && <p className="field-error" id="wod-rounds-error">{errors.rounds}</p>}
+                </div>
+              )}
+            </div>
+          </fieldset>
 
-          <section className="create-wod-exercises" aria-labelledby="selected-exercises-title">
+          <section className="create-wod-exercises" aria-labelledby="configured-exercises-title">
             <div className="section-heading create-wod-section-heading">
               <div>
-                <h2 id="selected-exercises-title">Movimientos</h2>
-                <p className="section-description">Añade varios movimientos y ajusta sus medidas antes de guardar.</p>
+                <span className="create-wod-step-label">02 · Configuración</span>
+                <h2 id="configured-exercises-title">Configura los movimientos</h2>
+                <p className="section-description">Completa las medidas de cada ejercicio antes de incorporarlo al WOD.</p>
               </div>
-              <span>{selectedExercises.length}</span>
+              <span aria-label={`${configuredExercises.length} movimientos por configurar`}>{String(configuredExercises.length).padStart(2, "0")}</span>
             </div>
-            <button className="button button--secondary add-exercise-button" id="exercisePickerTrigger" type="button" onClick={openPicker} aria-describedby={errors.exercisePickerTrigger ? "exercise-picker-error" : undefined}>
-              Añadir ejercicio
-            </button>
+            <div className="create-wod-exercise-toolbar">
+              <p>{configuredExercises.length === 0 ? "Selecciona uno o varios movimientos para empezar a configurar el WOD." : "Completa las prescripciones y añádelos al WOD cuando estén listos."}</p>
+              <button className="button button--secondary add-exercise-button" id="exercisePickerTrigger" type="button" onClick={openPicker} aria-describedby={errors.exercisePickerTrigger ? "exercise-picker-error" : undefined}>
+                Añadir movimientos
+              </button>
+            </div>
             {errors.exercisePickerTrigger && <p className="field-error" id="exercise-picker-error" tabIndex={-1}>{errors.exercisePickerTrigger}</p>}
-            {selectedExercises.length === 0 ? (
+            {configuredExercises.length === 0 ? (
               <div className="create-wod-empty">
-                <strong>Aún no hay movimientos.</strong>
-                <p>Abre el catálogo para elegir el primero.</p>
+                <strong>No hay movimientos por configurar.</strong>
+                <p>Abre el catálogo para seleccionar uno o varios ejercicios.</p>
               </div>
             ) : (
-              <ol className="selected-exercise-list" aria-label="Ejercicios añadidos">
-                {selectedExercises.map((draft, index) => (
+              <ol className="selected-exercise-list" aria-label="Ejercicios por configurar">
+                {configuredExercises.map((draft, index) => (
+                  <li className="selected-exercise" key={draft.key}>
+                    <div className="selected-exercise__header">
+                      <span className="selected-exercise__position" aria-label={`Posición ${index + 1}`}>{String(index + 1).padStart(2, "0")}</span>
+                      <div className="selected-exercise__identity">
+                        <strong>{draft.exercise.name}</strong>
+                        <span>{EXERCISE_CATEGORY_LABELS[draft.exercise.category]} · {MEASUREMENT_LABELS[draft.exercise.measurementType]}</span>
+                      </div>
+                      <div className="selected-exercise__actions" aria-label={`Acciones para ${draft.exercise.name}`}>
+                        <button className="remove-button" type="button" onClick={() => removeConfiguredExercise(draft.key)} aria-label={`Eliminar ${draft.exercise.name}`}>Eliminar</button>
+                      </div>
+                    </div>
+                    <div className="prescription-fields">
+                      {draft.prescriptions.map((prescription, prescriptionIndex) => {
+                        const fieldId = `prescription-${draft.key}-${prescriptionIndex}`;
+                        const errorId = `${fieldId}-error`;
+                        const unitLabelErrorId = `${fieldId}-unit-label-error`;
+                        const fieldError = errors[fieldId];
+                        const unitLabelError = errors[`${fieldId}-unit-label`];
+                        const integerOnly = prescription.unit === "REPS" || prescription.unit === "SECONDS";
+                        return (
+                          <div className="prescription-field" key={prescription.unit}>
+                            <label htmlFor={fieldId}>{UNIT_LABELS[prescription.unit]}</label>
+                            <div className="prescription-input-wrap">
+                              <input id={fieldId} name={`prescription-${draft.key}-${prescription.unit}`} autoComplete="off" type="number" min="0.01" step={integerOnly ? "1" : "0.01"} inputMode={integerOnly ? "numeric" : "decimal"} value={prescription.value} onChange={(event) => updatePrescription(draft.key, prescriptionIndex, "value", event.target.value)} aria-invalid={Boolean(fieldError)} aria-describedby={[fieldError ? errorId : "", prescription.unit === "OTHER" && unitLabelError ? unitLabelErrorId : ""].filter(Boolean).join(" ") || undefined} />
+                              <span aria-hidden="true">{prescription.unit === "OTHER" ? "otra" : prescription.unit.toLowerCase()}</span>
+                            </div>
+                            {fieldError && <p className="field-error" id={errorId}>{fieldError}</p>}
+                            {prescription.unit === "OTHER" && (
+                              <>
+                                <label className="visually-related-label" htmlFor={`${fieldId}-unit-label`}>Nombre de la unidad</label>
+                                <input id={`${fieldId}-unit-label`} name={`prescription-${draft.key}-${prescription.unit}-label`} autoComplete="off" type="text" maxLength={100} placeholder="Ej. calorías" value={prescription.unitLabel} onChange={(event) => updatePrescription(draft.key, prescriptionIndex, "unitLabel", event.target.value)} aria-invalid={Boolean(unitLabelError)} aria-describedby={unitLabelError ? unitLabelErrorId : undefined} />
+                                {unitLabelError && <p className="field-error" id={unitLabelErrorId}>{unitLabelError}</p>}
+                              </>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            )}
+            <button className="button button--accent add-exercises-to-wod" id="add-exercises-to-wod" type="button" onClick={addConfiguredExercisesToWod} disabled={configuredExercises.length === 0} aria-describedby={errors.addExercisesToWod ? "add-exercises-to-wod-error" : undefined}>
+              Añadir ejercicios al WOD
+            </button>
+            {errors.addExercisesToWod && <p className="field-error" id="add-exercises-to-wod-error">{errors.addExercisesToWod}</p>}
+          </section>
+
+          <section className="create-wod-review" aria-labelledby="wod-exercises-title">
+            <div className="section-heading create-wod-section-heading">
+              <div>
+                <span className="create-wod-step-label">03 · WOD en construcción</span>
+                <h2 id="wod-exercises-title">Ejercicios en el WOD</h2>
+                <p className="section-description">Esta es la secuencia que se revisará y se enviará al guardar.</p>
+              </div>
+              <span aria-label={`${wodExercises.length} ejercicios añadidos`}>{String(wodExercises.length).padStart(2, "0")}</span>
+            </div>
+            {wodExercises.length === 0 ? (
+              <div className="create-wod-empty">
+                <strong>Aún no hay ejercicios en el WOD.</strong>
+                <p>Configura los movimientos y pulsa «Añadir ejercicios al WOD».</p>
+              </div>
+            ) : (
+              <ol className="selected-exercise-list" aria-label="Ejercicios en el WOD">
+                {wodExercises.map((draft, index) => (
                   <li className="selected-exercise" key={draft.key}>
                     <div className="selected-exercise__header">
                       <span className="selected-exercise__position" aria-label={`Posición ${index + 1}`}>{String(index + 1).padStart(2, "0")}</span>
@@ -475,7 +599,7 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
                       </div>
                       <div className="selected-exercise__actions" aria-label={`Acciones para ${draft.exercise.name}`}>
                         <button className="action-button" type="button" onClick={() => moveExercise(index, -1)} disabled={index === 0} aria-label={`Subir ${draft.exercise.name}`}>Subir</button>
-                        <button className="action-button" type="button" onClick={() => moveExercise(index, 1)} disabled={index === selectedExercises.length - 1} aria-label={`Bajar ${draft.exercise.name}`}>Bajar</button>
+                        <button className="action-button" type="button" onClick={() => moveExercise(index, 1)} disabled={index === wodExercises.length - 1} aria-label={`Bajar ${draft.exercise.name}`}>Bajar</button>
                         <button className="remove-button" type="button" onClick={() => removeExercise(draft.key)} aria-label={`Eliminar ${draft.exercise.name}`}>Eliminar</button>
                       </div>
                     </div>
@@ -491,14 +615,14 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
                           <div className="prescription-field" key={prescription.unit}>
                             <label htmlFor={fieldId}>{UNIT_LABELS[prescription.unit]}</label>
                             <div className="prescription-input-wrap">
-                              <input id={fieldId} type="number" min="0.01" step={integerOnly ? "1" : "0.01"} inputMode={integerOnly ? "numeric" : "decimal"} value={prescription.value} onChange={(event) => updatePrescription(draft.key, prescriptionIndex, "value", event.target.value)} aria-invalid={Boolean(fieldError)} aria-describedby={[fieldError ? errorId : "", prescription.unit === "OTHER" && unitLabelError ? unitLabelErrorId : ""].filter(Boolean).join(" ") || undefined} />
+                              <input id={fieldId} name={`prescription-${draft.key}-${prescription.unit}`} autoComplete="off" type="number" min="0.01" step={integerOnly ? "1" : "0.01"} inputMode={integerOnly ? "numeric" : "decimal"} value={prescription.value} onChange={(event) => updatePrescription(draft.key, prescriptionIndex, "value", event.target.value)} aria-invalid={Boolean(fieldError)} aria-describedby={[fieldError ? errorId : "", prescription.unit === "OTHER" && unitLabelError ? unitLabelErrorId : ""].filter(Boolean).join(" ") || undefined} />
                               <span aria-hidden="true">{prescription.unit === "OTHER" ? "otra" : prescription.unit.toLowerCase()}</span>
                             </div>
                             {fieldError && <p className="field-error" id={errorId}>{fieldError}</p>}
                             {prescription.unit === "OTHER" && (
                               <>
                                 <label className="visually-related-label" htmlFor={`${fieldId}-unit-label`}>Nombre de la unidad</label>
-                                <input id={`${fieldId}-unit-label`} type="text" maxLength={100} placeholder="Ej. calorías" value={prescription.unitLabel} onChange={(event) => updatePrescription(draft.key, prescriptionIndex, "unitLabel", event.target.value)} aria-invalid={Boolean(unitLabelError)} aria-describedby={unitLabelError ? unitLabelErrorId : undefined} />
+                                <input id={`${fieldId}-unit-label`} name={`prescription-${draft.key}-${prescription.unit}-label`} autoComplete="off" type="text" maxLength={100} placeholder="Ej. calorías" value={prescription.unitLabel} onChange={(event) => updatePrescription(draft.key, prescriptionIndex, "unitLabel", event.target.value)} aria-invalid={Boolean(unitLabelError)} aria-describedby={unitLabelError ? unitLabelErrorId : undefined} />
                                 {unitLabelError && <p className="field-error" id={unitLabelErrorId}>{unitLabelError}</p>}
                               </>
                             )}
@@ -522,13 +646,32 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
               ? { label: "Ver WOD actualizado", href: `#/my-wods/${savedWod.id}` }
               : { label: "Crear otro WOD", onClick: resetForm }}
           />}
-          <button className="button button--accent button--wide create-wod-submit" type="submit" disabled={isSaving}>{isSaving ? "Guardando…" : mode === "edit" ? "Guardar cambios" : "Guardar WOD"}</button>
+          <div className="create-wod-save-step">
+            <div>
+              <span className="create-wod-step-label">04 · Guardado</span>
+              <h2>Guarda tu sesión</h2>
+              <p>{wodExercises.length === 0 ? "Añade ejercicios al WOD para poder guardarlo." : "Comprueba la secuencia y guarda cuando la sesión esté lista."}</p>
+            </div>
+            <button className="button button--accent create-wod-submit" type="submit" disabled={isSaving}>{isSaving ? "Guardando…" : mode === "edit" ? "Guardar cambios" : "Guardar WOD"}</button>
+          </div>
         </form>
 
-        <aside className="create-wod-aside" aria-label="Resumen del diseño">
-          <p className="create-wod-aside__label">Diseño en curso</p>
-          <strong className="create-wod-aside__count metric-value metric-value--hero">{String(selectedExercises.length).padStart(2, "0")}</strong>
-          <p className="create-wod-aside__count-label">{selectedExercises.length === 1 ? "movimiento seleccionado" : "movimientos seleccionados"}</p>
+        <aside className="create-wod-aside" aria-label="Revisión del diseño">
+          <div className="create-wod-aside__header">
+            <div>
+              <p className="create-wod-aside__label">Revisión</p>
+              <h2>Tu sesión</h2>
+            </div>
+            <strong className="create-wod-aside__count metric-value">{String(wodExercises.length).padStart(2, "0")}</strong>
+          </div>
+          <p className="create-wod-aside__count-label">{wodExercises.length === 1 ? "movimiento en el WOD" : "movimientos en el WOD"}</p>
+          <div className={`create-wod-review-status ${wodExercises.length > 0 ? "create-wod-review-status--ready" : ""}`} aria-live="polite">
+            <span className="create-wod-review-status__marker" aria-hidden="true" />
+            <div>
+              <strong>{wodExercises.length > 0 ? "WOD en construcción" : "Falta la secuencia"}</strong>
+              <p>{wodExercises.length > 0 ? "La revisión muestra lo que se guardará." : "Configura y añade ejercicios para empezar a construirlo."}</p>
+             </div>
+          </div>
           <dl className="create-wod-summary">
             <div><dt>Estructura</dt><dd>{WOD_TYPE_LABELS[type]}</dd></div>
             <div><dt>Nivel</dt><dd>{WOD_LEVEL_LABELS[level]}</dd></div>
@@ -550,7 +693,7 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
         <form className="exercise-picker__search" onSubmit={handlePickerSearch}>
           <label htmlFor="exercise-picker-search">Buscar ejercicios</label>
           <div>
-            <input id="exercise-picker-search" type="search" value={pickerQuery} onChange={(event) => setPickerQuery(event.target.value)} placeholder="Ej. Back Squat" autoComplete="off" autoFocus />
+            <input id="exercise-picker-search" name="exerciseSearch" type="search" value={pickerQuery} onChange={(event) => setPickerQuery(event.target.value)} placeholder="Ej. Back Squat" autoComplete="off" autoFocus />
             <button className="button button--accent" type="submit">Buscar</button>
           </div>
         </form>
@@ -562,7 +705,15 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
             {pickerResults.items.map((exercise) => (
               <li key={exercise.id}>
                 <div><strong>{exercise.name}</strong><span>{EXERCISE_CATEGORY_LABELS[exercise.category]} · {MEASUREMENT_LABELS[exercise.measurementType]}</span></div>
-                <button className="button button--secondary" type="button" onClick={() => addExercise(exercise)}>Añadir</button>
+                <button
+                  className="button button--secondary"
+                  type="button"
+                  aria-pressed={pickerSelection.some((selected) => selected.id === exercise.id)}
+                  aria-label={`${pickerSelection.some((selected) => selected.id === exercise.id) ? "Quitar" : "Seleccionar"} ${exercise.name}`}
+                  onClick={() => togglePickerSelection(exercise)}
+                >
+                  {pickerSelection.some((selected) => selected.id === exercise.id) ? "Seleccionado" : "Seleccionar"}
+                </button>
               </li>
             ))}
           </ul>
@@ -571,7 +722,13 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
           <PaginationControls page={pickerPage} hasNext={pickerResults.hasNext} totalPages={pickerResults.totalPages} isLoading={isPickerLoading} onPrevious={() => changePickerPage(Math.max(0, pickerPage - 1))} onNext={() => changePickerPage(pickerPage + 1)} />
         )}
         <div className="exercise-picker__footer">
-          <button className="button button--quiet" type="button" onClick={closePicker}>Cerrar</button>
+          <span className="exercise-picker__selection-status" aria-live="polite">
+            {pickerSelection.length === 0 ? "Ningún movimiento seleccionado" : `${pickerSelection.length} movimiento${pickerSelection.length === 1 ? "" : "s"} seleccionado${pickerSelection.length === 1 ? "" : "s"}`}
+          </span>
+          <div className="exercise-picker__footer-actions">
+            <button className="button button--quiet" type="button" onClick={closePicker}>Cerrar</button>
+            <button className="button button--accent" type="button" onClick={configureSelectedExercises} disabled={pickerSelection.length === 0}>Configurar seleccionados</button>
+          </div>
         </div>
       </dialog>
     </section>

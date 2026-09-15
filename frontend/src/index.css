@@ -2597,14 +2597,38 @@ h2 {
   flex: 0 0 auto;
   margin: 0;
 }
+.exercise-picker__results .button[aria-pressed="true"] {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: var(--ink);
+}
 .exercise-picker .pagination-controls {
   margin: 0 24px;
 }
 .exercise-picker__footer {
+  align-items: center;
   border-top: 1px solid var(--line);
+  background: var(--paper);
   display: flex;
-  justify-content: end;
+  gap: 16px;
+  justify-content: space-between;
   padding: 14px 24px;
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+}
+.exercise-picker__selection-status {
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.4;
+}
+.exercise-picker__footer-actions {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
+.exercise-picker__footer .button {
+  margin: 0;
 }
 @media (max-width: 900px) {
   .app-frame {
@@ -5146,5 +5170,547 @@ h2 {
 
   .wod-detail-side .result-row small {
     grid-column: 2;
+  }
+}
+
+/* Create WOD uses a task-first layout while inheriting the global tokens. */
+.create-wod-page {
+  max-width: 1240px;
+}
+
+.create-wod-heading {
+  align-items: end;
+  border-bottom: 1px solid var(--line);
+  border-top: 3px solid var(--orange);
+  margin-bottom: 24px;
+  padding: 20px 0 24px;
+}
+
+.create-wod-heading h1 {
+  font-size: clamp(40px, 6vw, 68px);
+  letter-spacing: -0.05em;
+  max-width: 10ch;
+}
+
+.create-wod-heading .heading-support {
+  max-width: 42ch;
+}
+
+.create-wod-heading .heading-note {
+  color: var(--orange);
+  font-weight: 700;
+}
+
+.create-wod-layout {
+  align-items: start;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+}
+
+.create-wod-form {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--orange);
+  color: var(--ink);
+  gap: 0;
+  padding: clamp(20px, 4vw, 40px);
+}
+
+.create-wod-step-heading {
+  border-bottom: 1px solid var(--line);
+  gap: 8px;
+  margin-bottom: 28px;
+  padding-bottom: 22px;
+}
+
+.create-wod-step-heading > span,
+.create-wod-step-label {
+  color: var(--orange);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.create-wod-step-heading h2 {
+  color: var(--ink);
+  font-size: clamp(28px, 4vw, 38px);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  margin: 0;
+}
+
+.create-wod-step-heading p {
+  max-width: 48ch;
+}
+
+.create-wod-config {
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  margin: 0 0 34px;
+  min-inline-size: 0;
+  padding: 0 0 34px;
+}
+
+.create-wod-config legend {
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+  padding: 0;
+  text-transform: uppercase;
+}
+
+.create-wod-fields {
+  gap: 16px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.create-wod-form .form-field input,
+.create-wod-form .form-field select,
+.create-wod-form .prescription-field input {
+  background: var(--paper-deep);
+  border-color: var(--border-strong);
+  color: var(--ink);
+}
+
+.create-wod-form .form-field input:focus-visible,
+.create-wod-form .form-field select:focus-visible,
+.create-wod-form .prescription-field input:focus-visible,
+.exercise-picker input:focus-visible {
+  border-color: var(--orange);
+}
+
+.create-wod-form .field-unit {
+  color: var(--orange);
+}
+
+.create-wod-exercises {
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 34px;
+  min-width: 0;
+  padding-bottom: 34px;
+}
+
+.create-wod-review {
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 34px;
+  min-width: 0;
+  padding-bottom: 34px;
+}
+
+.create-wod-section-heading {
+  align-items: end;
+  border-bottom: 1px solid var(--ink);
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+}
+
+.create-wod-section-heading h2 {
+  font-size: 28px;
+  margin-top: 6px;
+}
+
+.create-wod-section-heading > span {
+  align-items: center;
+  background: var(--paper-deep);
+  border: 1px solid var(--line);
+  color: var(--orange);
+  display: inline-flex;
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+  height: 44px;
+  justify-content: center;
+  min-width: 52px;
+  padding: 0 10px;
+}
+
+.add-exercise-button {
+  margin: 0 0 20px;
+  width: 100%;
+}
+
+.create-wod-exercise-toolbar {
+  align-items: center;
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.create-wod-exercise-toolbar p {
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.45;
+  margin: 0;
+  max-width: 38ch;
+}
+
+.create-wod-exercise-toolbar .add-exercise-button {
+  flex: 0 0 auto;
+  margin: 0;
+  width: auto;
+}
+
+.add-exercises-to-wod {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.selected-exercise-list {
+  border-top: 2px solid var(--ink);
+}
+
+.selected-exercise {
+  padding: 22px 0 24px;
+}
+
+.selected-exercise__header {
+  gap: 14px;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+}
+
+.selected-exercise__position {
+  height: 44px;
+  width: 44px;
+}
+
+.selected-exercise__identity strong {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.selected-exercise__identity span {
+  color: var(--ink-soft);
+  font-size: 11px;
+}
+
+.selected-exercise__actions {
+  gap: 6px;
+}
+
+.action-button,
+.remove-button {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--ink-soft);
+  min-width: 44px;
+}
+
+.action-button:hover,
+.action-button:focus-visible,
+.remove-button:hover,
+.remove-button:focus-visible {
+  background: var(--paper-deep);
+  border-color: var(--orange);
+  color: var(--ink);
+}
+
+.remove-button {
+  color: var(--orange);
+}
+
+.prescription-fields {
+  gap: 16px;
+  margin: 20px 0 0 58px;
+}
+
+.prescription-field > label,
+.visually-related-label {
+  color: var(--ink-soft);
+}
+
+.prescription-input-wrap span {
+  background: var(--paper-deep);
+  border-color: var(--border-strong);
+  color: var(--orange);
+  font-weight: 800;
+}
+
+.create-wod-save-step {
+  align-items: end;
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+  padding-top: 4px;
+}
+
+.create-wod-save-step h2 {
+  font-size: 28px;
+  margin: 6px 0 5px;
+}
+
+.create-wod-save-step p {
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 0;
+  max-width: 42ch;
+}
+
+.create-wod-save-step .create-wod-submit {
+  flex: 0 0 auto;
+  margin: 0;
+  min-width: 170px;
+}
+
+.create-wod-aside {
+  background: var(--surface-raised);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--orange);
+  padding: clamp(20px, 3vw, 30px);
+  position: sticky;
+  top: calc(var(--topbar-height) + 24px);
+}
+
+.create-wod-aside__header {
+  align-items: start;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  padding-bottom: 18px;
+}
+
+.create-wod-aside__header h2 {
+  color: var(--white);
+  font-size: 28px;
+  margin: 4px 0 0;
+}
+
+.create-wod-aside__label {
+  margin-bottom: 0;
+}
+
+.create-wod-aside__count {
+  color: var(--orange);
+  font-size: 44px;
+  line-height: 0.9;
+}
+
+.create-wod-aside__count-label {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0;
+  padding: 14px 0 18px;
+}
+
+.create-wod-review-status {
+  align-items: start;
+  background: var(--paper-deep);
+  border: 1px solid var(--line);
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 10px minmax(0, 1fr);
+  margin: 20px 0;
+  padding: 14px;
+}
+
+.create-wod-review-status__marker {
+  background: var(--orange);
+  display: block;
+  height: 10px;
+  margin-top: 4px;
+  width: 10px;
+}
+
+.create-wod-review-status--ready .create-wod-review-status__marker {
+  background: var(--green);
+}
+
+.create-wod-review-status strong {
+  color: var(--white);
+  display: block;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.create-wod-review-status p {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.create-wod-summary div {
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+.create-wod-summary dd {
+  color: var(--white);
+  font-variant-numeric: tabular-nums;
+}
+
+.create-wod-aside__note {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin-top: 20px;
+  padding-top: 18px;
+}
+
+.exercise-picker {
+  overscroll-behavior: contain;
+}
+
+@media (min-width: 601px) and (max-width: 980px) {
+  .create-wod-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .create-wod-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .create-wod-aside {
+    position: static;
+  }
+}
+
+@media (max-width: 600px) {
+  .create-wod-heading {
+    padding-block: 16px 20px;
+  }
+
+  .create-wod-heading h1 {
+    font-size: clamp(38px, 15vw, 58px);
+  }
+
+  .create-wod-form {
+    min-width: 0;
+    padding: 20px 16px;
+  }
+
+  .create-wod-step-heading {
+    margin-bottom: 22px;
+    padding-bottom: 18px;
+  }
+
+  .create-wod-config {
+    margin-bottom: 26px;
+    padding-bottom: 26px;
+  }
+
+  .create-wod-fields,
+  .prescription-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .create-wod-exercises {
+    margin-bottom: 26px;
+    padding-bottom: 26px;
+  }
+
+  .create-wod-review {
+    margin-bottom: 26px;
+    padding-bottom: 26px;
+  }
+
+  .create-wod-section-heading {
+    align-items: start;
+  }
+
+  .create-wod-exercise-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .create-wod-exercise-toolbar p {
+    max-width: none;
+  }
+
+  .create-wod-exercise-toolbar .add-exercise-button {
+    width: 100%;
+  }
+
+  .selected-exercise__header {
+    grid-template-columns: 44px minmax(0, 1fr);
+  }
+
+  .selected-exercise__actions {
+    grid-column: 2;
+    justify-content: start;
+  }
+
+  .prescription-fields {
+    margin-left: 0;
+  }
+
+  .create-wod-save-step {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .create-wod-save-step .create-wod-submit {
+    width: 100%;
+  }
+
+  .create-wod-aside {
+    padding: 20px 16px;
+  }
+
+  .exercise-picker {
+    max-height: calc(100vh - 20px);
+  }
+
+  .exercise-picker__header {
+    padding: 18px 16px;
+  }
+
+  .exercise-picker__header h2 {
+    font-size: 25px;
+  }
+
+  .exercise-picker__search > div {
+    grid-template-columns: 1fr;
+  }
+
+  .exercise-picker__search > div .button,
+  .exercise-picker__results .button,
+  .exercise-picker__footer .button {
+    width: 100%;
+  }
+
+  .exercise-picker__footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .exercise-picker__footer-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .exercise-picker__results li {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .exercise-picker__results li > div {
+    width: 100%;
+  }
+
+  .exercise-picker .pagination-controls {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .exercise-picker .pagination-status {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .create-wod-form * {
+    scroll-behavior: auto;
+    transition-duration: 0.01ms;
   }
 }

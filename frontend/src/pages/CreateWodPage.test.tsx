@@ -52,10 +52,18 @@ function renderPage() {
 
 async function openPickerAndAdd(index: number) {
   const user = userEvent.setup();
-  await user.click(screen.getByRole("button", { name: "Añadir ejercicio" }));
+  await user.click(screen.getByRole("button", { name: "Añadir movimientos" }));
   const dialog = await screen.findByRole("dialog");
-  const addButtons = within(dialog).getAllByRole("button", { name: "Añadir" });
-  await user.click(addButtons[index]);
+  const selectButtons = within(dialog).getAllByRole("button", { name: /Seleccionar/ });
+  await user.click(selectButtons[index]!);
+  await user.click(within(dialog).getByRole("button", { name: "Configurar seleccionados" }));
+  if (index === 0) {
+    await user.type(screen.getByLabelText("repeticiones"), "1");
+    await user.type(screen.getByLabelText("kg"), "1");
+  } else {
+    await user.type(screen.getByLabelText("metros"), "1");
+  }
+  await user.click(screen.getByRole("button", { name: "Añadir ejercicios al WOD" }));
 }
 
 describe("CreateWodPage", () => {
@@ -68,22 +76,46 @@ describe("CreateWodPage", () => {
     expect(getExercises).not.toHaveBeenCalled();
   });
 
+  it("presents creation as a clear sequence with a live review", () => {
+    renderPage();
+
+    expect(screen.getByRole("heading", { name: "Crear WOD" })).toBeTruthy();
+    expect(screen.getByText("Define la sesión")).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Configura los movimientos" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Ejercicios en el WOD" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Añadir movimientos" })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Añadir otro movimiento" })).toBeNull();
+    expect(screen.getByRole("heading", { name: "Guarda tu sesión" })).toBeTruthy();
+    expect(screen.getByRole("complementary", { name: "Revisión del diseño" })).toBeTruthy();
+    expect(screen.getByText("Falta la secuencia")).toBeTruthy();
+  });
+
   it("adds several catalog exercises and keeps their measurement fields", async () => {
     const user = userEvent.setup();
     renderPage();
 
-    await user.click(screen.getByRole("button", { name: "Añadir ejercicio" }));
+    await user.click(screen.getByRole("button", { name: "Añadir movimientos" }));
     const dialog = await screen.findByRole("dialog");
-    await user.click(within(dialog).getAllByRole("button", { name: "Añadir" })[0]!);
-    await user.click(screen.getByRole("button", { name: "Añadir ejercicio" }));
-    const secondDialog = await screen.findByRole("dialog");
-    await user.click(within(secondDialog).getAllByRole("button", { name: "Añadir" })[1]!);
+    const selectButtons = within(dialog).getAllByRole("button", { name: /Seleccionar/ });
+    const configureSelectedButton = within(dialog).getByRole("button", { name: "Configurar seleccionados" });
+    expect(configureSelectedButton.hasAttribute("disabled")).toBe(true);
+    await user.click(selectButtons[0]!);
+    expect(configureSelectedButton.hasAttribute("disabled")).toBe(false);
+    await user.click(selectButtons[1]!);
+    expect(screen.queryByRole("list", { name: "Ejercicios en el WOD" })).toBeNull();
+    expect(within(dialog).getByText("2 movimientos seleccionados")).toBeTruthy();
+    await user.click(configureSelectedButton);
+    await user.type(screen.getByLabelText("repeticiones"), "10");
+    await user.type(screen.getByLabelText("kg"), "60");
+    await user.type(screen.getByLabelText("metros"), "500");
+    expect(screen.queryByRole("list", { name: "Ejercicios en el WOD" })).toBeNull();
+    await user.click(screen.getByRole("button", { name: "Añadir ejercicios al WOD" }));
 
-    const selectedExercises = screen.getByRole("list", { name: "Ejercicios añadidos" });
+    const selectedExercises = screen.getByRole("list", { name: "Ejercicios en el WOD" });
     expect(within(selectedExercises).getByText("Back Squat")).toBeTruthy();
     expect(within(selectedExercises).getByText("Run")).toBeTruthy();
-    expect(screen.getByLabelText("kg")).toBeTruthy();
-    expect(screen.getByLabelText("metros")).toBeTruthy();
+    expect(screen.getByDisplayValue("60")).toBeTruthy();
+    expect(screen.getByDisplayValue("500")).toBeTruthy();
   });
 
   it("searches and paginates the exercise catalog", async () => {
@@ -93,7 +125,7 @@ describe("CreateWodPage", () => {
     vi.mocked(getExercises).mockResolvedValueOnce(firstPage).mockResolvedValueOnce(firstPage).mockResolvedValue(secondPage);
     renderWithAuth(<CreateWodPage />, { token: "token" });
 
-    await user.click(screen.getByRole("button", { name: "Añadir ejercicio" }));
+    await user.click(screen.getByRole("button", { name: "Añadir movimientos" }));
     await screen.findByRole("button", { name: "Siguiente" });
     await user.type(screen.getByLabelText("Buscar ejercicios"), "snatch");
     await user.click(screen.getByRole("button", { name: "Buscar" }));
@@ -117,11 +149,31 @@ describe("CreateWodPage", () => {
     renderPage();
 
     await openPickerAndAdd(0);
-    const selectedExercises = screen.getByRole("list", { name: "Ejercicios añadidos" });
+    const selectedExercises = screen.getByRole("list", { name: "Ejercicios en el WOD" });
     await user.click(within(selectedExercises).getByRole("button", { name: "Eliminar Back Squat" }));
 
-    expect(screen.queryByRole("list", { name: "Ejercicios añadidos" })).toBeNull();
-    expect(screen.getByText("Aún no hay movimientos.")).toBeTruthy();
+    expect(screen.queryByRole("list", { name: "Ejercicios en el WOD" })).toBeNull();
+    expect(screen.getByText("Aún no hay ejercicios en el WOD.")).toBeTruthy();
+  });
+
+  it("requires configured prescriptions before adding exercises to the WOD", async () => {
+    const user = userEvent.setup();
+    renderPage();
+
+    await user.click(screen.getByRole("button", { name: "Añadir movimientos" }));
+    const dialog = await screen.findByRole("dialog");
+    await user.click(within(dialog).getAllByRole("button", { name: /Seleccionar/ })[0]!);
+    await user.click(within(dialog).getByRole("button", { name: "Configurar seleccionados" }));
+    await user.click(screen.getByRole("button", { name: "Añadir ejercicios al WOD" }));
+
+    expect(screen.getByText("Usa un número entero mayor que cero.")).toBeTruthy();
+    expect(screen.queryByRole("list", { name: "Ejercicios en el WOD" })).toBeNull();
+    await user.type(screen.getByLabelText("Nombre del WOD"), "WOD pendiente");
+    await user.type(screen.getByLabelText(/Time cap/), "300");
+    await user.click(screen.getByRole("button", { name: "Guardar WOD" }));
+
+    expect(screen.getByText("Añade los movimientos pendientes al WOD antes de guardarlo.")).toBeTruthy();
+    expect(createUserWod).not.toHaveBeenCalled();
   });
 
   it("shows only the time cap for AMRAP and validates missing fields", async () => {
@@ -145,15 +197,19 @@ describe("CreateWodPage", () => {
 
     await user.type(screen.getByLabelText("Nombre del WOD"), "  Sesión propia  ");
     await user.type(screen.getByLabelText(/Time cap/), "600");
-    await user.click(screen.getByRole("button", { name: "Añadir ejercicio" }));
+    await user.click(screen.getByRole("button", { name: "Añadir movimientos" }));
     const dialog = await screen.findByRole("dialog");
-    await user.click(within(dialog).getAllByRole("button", { name: "Añadir" })[0]!);
-    await user.click(screen.getByRole("button", { name: "Añadir ejercicio" }));
-    const secondDialog = await screen.findByRole("dialog");
-    await user.click(within(secondDialog).getAllByRole("button", { name: "Añadir" })[1]!);
+    await user.click(within(dialog).getAllByRole("button", { name: /Seleccionar/ })[0]!);
+    await user.click(within(dialog).getByRole("button", { name: "Configurar seleccionados" }));
     await user.type(screen.getByLabelText("repeticiones"), "10");
     await user.type(screen.getByLabelText("kg"), "60");
+    await user.click(screen.getByRole("button", { name: "Añadir ejercicios al WOD" }));
+    await user.click(screen.getByRole("button", { name: "Añadir movimientos" }));
+    const secondDialog = await screen.findByRole("dialog");
+    await user.click(within(secondDialog).getAllByRole("button", { name: /Seleccionar/ })[1]!);
+    await user.click(within(secondDialog).getByRole("button", { name: "Configurar seleccionados" }));
     await user.type(screen.getByLabelText("metros"), "500");
+    await user.click(screen.getByRole("button", { name: "Añadir ejercicios al WOD" }));
     await user.click(screen.getByRole("button", { name: "Subir Run" }));
     await user.click(screen.getByRole("button", { name: "Guardar WOD" }));
 
@@ -182,7 +238,9 @@ describe("CreateWodPage", () => {
     await user.type(screen.getByLabelText("Nombre del WOD"), "Mi WOD");
     await user.type(screen.getByLabelText(/Time cap/), "300");
     await openPickerAndAdd(0);
+    await user.clear(screen.getByLabelText("repeticiones"));
     await user.type(screen.getByLabelText("repeticiones"), "10");
+    await user.clear(screen.getByLabelText("kg"));
     await user.type(screen.getByLabelText("kg"), "40");
     await user.click(screen.getByRole("button", { name: "Guardar WOD" }));
     await user.click(screen.getByRole("button", { name: "Guardando…" }));
@@ -202,7 +260,9 @@ describe("CreateWodPage", () => {
     await user.type(screen.getByLabelText("Nombre del WOD"), "WOD con error");
     await user.type(screen.getByLabelText(/Time cap/), "300");
     await openPickerAndAdd(0);
+    await user.clear(screen.getByLabelText("repeticiones"));
     await user.type(screen.getByLabelText("repeticiones"), "10");
+    await user.clear(screen.getByLabelText("kg"));
     await user.type(screen.getByLabelText("kg"), "40");
     await user.click(screen.getByRole("button", { name: "Guardar WOD" }));
 
