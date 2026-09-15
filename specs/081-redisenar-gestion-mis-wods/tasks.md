@@ -38,9 +38,9 @@
 
 ## Entrega
 
-- [ ] Revisar staging y crear un commit propio de #81 sin incluir untracked
+- [x] Revisar staging y crear un commit propio de #81 sin incluir untracked
       ajenos.
-- [ ] Ejecutar `git log -1 --oneline` y `git status` despues del commit.
+- [x] Ejecutar `git log -1 --oneline` y `git status` despues del commit.
 - [ ] Documentar la Issue #81 con archivos, verificaciones, hash, mensaje y
       rama; mantenerla abierta y sin push.
 
