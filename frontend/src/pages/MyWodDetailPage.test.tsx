@@ -103,6 +103,8 @@ describe("MyWodDetailPage", () => {
     const orderedNames = screen.getAllByRole("heading", { level: 3 }).map((heading) => heading.textContent);
     expect(orderedNames).toEqual(["Run", "Calorías"]);
     expect(screen.getByRole("link", { name: "Volver a Mis WODs" }).getAttribute("href")).toBe("#/my-wods");
+    expect(screen.getByRole("link", { name: "Editar Fran personal" }).getAttribute("href")).toBe("#/my-wods/31/edit");
+    expect(screen.getByRole("button", { name: "Eliminar WOD" })).toBeTruthy();
   });
 
   it("shows the empty result state and FOR_TIME fields", async () => {

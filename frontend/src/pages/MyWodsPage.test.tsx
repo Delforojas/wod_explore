@@ -1,13 +1,22 @@
-import { screen, waitFor } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { getUserWod, getUserWods } from "../api/client";
+import { ApiError, deleteUserWod, getUserWod, getUserWods } from "../api/client";
 import type { UserWodDetail, UserWodPage } from "../api/schemas";
 import { renderWithAuth } from "../test/test-utils";
 import { MyWodsPage } from "./MyWodsPage";
 
 vi.mock("../api/client", () => ({
+  ApiError: class ApiError extends Error {
+    status: number;
+
+    constructor(message: string, status: number) {
+      super(message);
+      this.status = status;
+    }
+  },
+  deleteUserWod: vi.fn(),
   getUserWod: vi.fn(),
   getUserWods: vi.fn(),
 }));
@@ -87,6 +96,8 @@ describe("MyWodsPage", () => {
     expect(screen.getByText("Por tiempo · 600 s")).toBeTruthy();
     const link = screen.getByRole("link", { name: /Fran personal.*Ver detalle/ });
     expect(link.getAttribute("href")).toBe("#/my-wods/31");
+    expect(screen.getByRole("link", { name: "Editar Fran personal" }).getAttribute("href")).toBe("#/my-wods/31/edit");
+    expect(screen.queryByRole("button", { name: "Eliminar WOD" })).toBeNull();
   });
 
   it("paginates the personal archive with the current token", async () => {
@@ -122,5 +133,56 @@ describe("MyWodsPage", () => {
     renderWithAuth(<MyWodsPage />, { token: "token" });
 
     expect((await screen.findByRole("alert")).textContent).toContain("Archivo no disponible");
+  });
+
+  it("requires confirmation and keeps the WOD when deletion is cancelled", async () => {
+    const user = userEvent.setup();
+    vi.mocked(getUserWods).mockResolvedValue(pageWithWod);
+    vi.mocked(getUserWod).mockResolvedValue(personalWod);
+    renderWithAuth(<MyWodsPage />, { token: "token" });
+
+    await screen.findByText("Fran personal");
+    await user.click(screen.getByRole("button", { name: "Eliminar" }));
+
+    const dialog = screen.getByRole("dialog");
+    expect(dialog.textContent).toContain("¿Eliminar Fran personal?");
+    expect(deleteUserWod).not.toHaveBeenCalled();
+
+    await user.click(within(dialog).getByRole("button", { name: "Cancelar" }));
+
+    expect(deleteUserWod).not.toHaveBeenCalled();
+    expect(screen.getByText("Fran personal")).toBeTruthy();
+  });
+
+  it("deletes from the list and reloads it without a manual refresh", async () => {
+    const user = userEvent.setup();
+    vi.mocked(getUserWods).mockResolvedValueOnce(pageWithWod).mockResolvedValue({ ...pageWithWod, items: [], totalElements: 0, totalPages: 0 });
+    vi.mocked(getUserWod).mockResolvedValue(personalWod);
+    vi.mocked(deleteUserWod).mockResolvedValue(null);
+    renderWithAuth(<MyWodsPage />, { token: "token" });
+
+    await screen.findByText("Fran personal");
+    await user.click(screen.getByRole("button", { name: "Eliminar" }));
+    await user.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Eliminar WOD" }));
+
+    await waitFor(() => expect(deleteUserWod).toHaveBeenCalledWith(31, "token"));
+    await waitFor(() => expect(screen.queryByText("Fran personal")).toBeNull());
+    expect(getUserWods).toHaveBeenCalledTimes(2);
+  });
+
+  it("keeps the WOD visible and explains deletion errors", async () => {
+    const user = userEvent.setup();
+    vi.mocked(getUserWods).mockResolvedValue(pageWithWod);
+    vi.mocked(getUserWod).mockResolvedValue(personalWod);
+    vi.mocked(deleteUserWod).mockRejectedValue(new ApiError("blocked", 409));
+    renderWithAuth(<MyWodsPage />, { token: "token" });
+
+    await screen.findByText("Fran personal");
+    await user.click(screen.getByRole("button", { name: "Eliminar" }));
+    await user.click(within(screen.getByRole("dialog")).getByRole("button", { name: "Eliminar WOD" }));
+
+    expect((await screen.findByRole("alert")).textContent).toContain("conserva resultados históricos");
+    expect(screen.getByText("Fran personal")).toBeTruthy();
+    expect(screen.getByRole("dialog").hasAttribute("open")).toBe(true);
   });
 });
