@@ -43,10 +43,10 @@
 
 ## Entrega
 
-- [ ] Revisar `git diff` y `git status`, separando archivos de #83 de cambios
+- [x] Revisar `git diff` y `git status`, separando archivos de #83 de cambios
       ajenos.
-- [ ] Crear un commit selectivo de #83 con mensaje que incluya `(#83)`.
-- [ ] Ejecutar `git log -1 --oneline` y `git status` despues del commit.
+- [x] Crear un commit selectivo de #83 con mensaje que incluya `(#83)`.
+- [x] Ejecutar `git log -1 --oneline` y `git status` despues del commit.
 - [ ] Documentar la Issue #83 con archivos, verificaciones, hash, mensaje y
       rama; mantenerla abierta y sin push.
 
