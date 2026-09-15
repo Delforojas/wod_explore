@@ -26,7 +26,7 @@ const MEASUREMENT_LABELS: Record<MeasurementType, string> = {
 };
 
 function formatExerciseCount(total: number) {
-  return `${total} ${total === 1 ? "movimiento" : "movimientos"} disponibles`;
+  return `${total} ${total === 1 ? "movimiento disponible" : "movimientos disponibles"}`;
 }
 
 export function ExercisesPage() {
@@ -71,18 +71,22 @@ export function ExercisesPage() {
   }
 
   return (
-    <section className="catalog-page catalog-page--exercises">
-      <header className="page-heading">
-        <div>
+    <section className="catalog-page exercise-catalog-page">
+      <header className="exercise-catalog-header">
+        <div className="exercise-catalog-header__body">
           <h1>Ejercicios</h1>
-          <p className="heading-support">Movimientos para entender mejor cada sesión.</p>
+          <p>Elige el movimiento que necesitas para preparar, ejecutar y revisar tu entrenamiento.</p>
         </div>
-        <p className="heading-note" aria-live="polite">
+        <p className="exercise-catalog-count" aria-live="polite">
           {catalog ? formatExerciseCount(catalog.totalElements) : "Explora por nombre"}
         </p>
       </header>
-      <form className="search-field" onSubmit={handleSubmit}>
-        <label htmlFor="exercise-search">Buscar ejercicios</label>
+
+      <form className="exercise-search" onSubmit={handleSubmit} aria-label="Buscar ejercicios">
+        <div className="exercise-search__field">
+          <label htmlFor="exercise-search">Buscar por nombre</label>
+          <p id="exercise-search-hint">Usa el nombre del movimiento para ir directo al resultado.</p>
+        </div>
         <input
           id="exercise-search"
           name="name"
@@ -95,35 +99,52 @@ export function ExercisesPage() {
         />
         <button className="button button--accent" type="submit">Buscar</button>
       </form>
-      <p className="catalog-hint" id="exercise-search-hint">Busca por nombre para ir directo al movimiento que necesitas.</p>
-      <section className="catalog-results" aria-labelledby="exercise-results-title">
-        <div className="catalog-results-heading">
-          <h2 id="exercise-results-title">Resultados de ejercicios</h2>
-          <p className="catalog-results-heading__status" aria-live="polite">
+
+      <section className="exercise-results" aria-labelledby="exercise-results-title">
+        <header className="exercise-results-heading">
+          <div>
+            <h2 id="exercise-results-title">Catálogo de movimientos</h2>
+            <p>Compara categoría y medición antes de abrir el detalle del ejercicio.</p>
+          </div>
+          <p className="exercise-results-heading__status" aria-live="polite">
             {catalog
               ? appliedQuery
                 ? `Resultados para “${appliedQuery}”`
                 : "Todos los movimientos"
               : "Los resultados aparecerán aquí"}
           </p>
-        </div>
+        </header>
         {!token && <StateMessage kind="private" title="El catálogo es privado" message="Inicia sesión para consultar ejercicios y sus detalles." action={{ label: "Entrar", href: "#/login" }} />}
         {token && isLoading && <LoadingMessage />}
         {token && !isLoading && error && <StateMessage kind={errorKind} title={errorKind === "network-error" ? "No hay conexión con los ejercicios" : "No pudimos cargar los ejercicios"} message={error} action={{ label: "Reintentar", onClick: () => { setIsLoading(true); setError(null); setReloadToken((currentToken) => currentToken + 1); } }} />}
         {token && !isLoading && !error && catalog?.items.length === 0 && <StateMessage kind="empty" title="No hay coincidencias" message="Prueba con otro nombre de ejercicio." />}
         {token && !isLoading && !error && catalog && catalog.items.length > 0 && (
-          <ul className="catalog-list">
+          <>
+            <div className="exercise-list-heading" aria-hidden="true">
+              <span>Movimiento</span>
+              <span>Perfil deportivo</span>
+              <span>Abrir</span>
+            </div>
+            <ul className="exercise-list">
             {catalog.items.map((exercise) => (
-              <li className="catalog-list__item" key={exercise.id}>
-                <a className="catalog-row catalog-row--exercise" href={`#/exercises/${exercise.id}`}>
-                  <span className="row-number">{String(exercise.id).padStart(3, "0")}</span>
-                  <span className="row-main"><strong>{exercise.name}</strong><small className="row-main__category"><span>Categoría</span>{EXERCISE_CATEGORY_LABELS[exercise.category]}</small></span>
-                  <span className="row-meta"><small>Medición</small>{MEASUREMENT_LABELS[exercise.measurementType]}</span>
-                  <span className="row-arrow" aria-hidden="true">-&gt;</span>
+              <li className="exercise-list__item" key={exercise.id}>
+                <a
+                  className="exercise-row"
+                  href={`#/exercises/${exercise.id}`}
+                  aria-label={`${exercise.name}. Categoría ${EXERCISE_CATEGORY_LABELS[exercise.category]}. Medición ${MEASUREMENT_LABELS[exercise.measurementType]}. Ver detalle del ejercicio`}
+                >
+                  <span className="exercise-row__number" aria-hidden="true">{String(exercise.id).padStart(3, "0")}</span>
+                  <span className="exercise-row__identity"><strong>{exercise.name}</strong><small>Movimiento #{exercise.id}</small></span>
+                  <span className="exercise-row__details">
+                    <span><small>Categoría</small><strong>{EXERCISE_CATEGORY_LABELS[exercise.category]}</strong></span>
+                    <span><small>Medición</small><strong>{MEASUREMENT_LABELS[exercise.measurementType]}</strong></span>
+                  </span>
+                  <span className="exercise-row__arrow" aria-hidden="true">-&gt;</span>
                 </a>
               </li>
             ))}
-          </ul>
+            </ul>
+          </>
         )}
         {token && !isLoading && !error && catalog && (
           <PaginationControls
