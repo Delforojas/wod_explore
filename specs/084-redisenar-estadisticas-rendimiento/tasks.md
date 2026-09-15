@@ -45,10 +45,10 @@
 
 ## Entrega
 
-- [ ] Revisar `git diff` y `git status`, separando archivos de #84 de cambios
+- [x] Revisar `git diff` y `git status`, separando archivos de #84 de cambios
       ajenos.
-- [ ] Crear un commit selectivo de #84 con mensaje que incluya `(#84)`.
-- [ ] Ejecutar `git log -1 --oneline` y `git status` despues del commit.
+- [x] Crear un commit selectivo de #84 con mensaje que incluya `(#84)`.
+- [x] Ejecutar `git log -1 --oneline` y `git status` despues del commit.
 - [ ] Documentar la Issue #84 con archivos, verificaciones, hash, mensaje y
       rama; mantenerla abierta y sin push.
 
