@@ -34,11 +34,14 @@ const personalWod: UserWodDetail = {
     },
     {
       exerciseId: 1,
-      name: "Calorías",
-      category: "OTHER",
-      measurementType: "OTHER",
+      name: "Back Squat",
+      category: "WEIGHTLIFTING",
+      measurementType: "WEIGHT",
       position: 2,
-      prescriptions: [{ value: 30, unit: "OTHER", unitLabel: "calorías" }],
+      prescriptions: [
+        { value: 10, unit: "REPS", unitLabel: null },
+        { value: 60, unit: "KG", unitLabel: null },
+      ],
     },
   ],
 };
@@ -61,10 +64,27 @@ describe("EditWodPage", () => {
     expect(screen.getByDisplayValue("Fran personal")).toBeTruthy();
     expect(screen.getByDisplayValue("600")).toBeTruthy();
     expect(screen.getByDisplayValue("500")).toBeTruthy();
-    expect(screen.getByDisplayValue("30")).toBeTruthy();
+    expect(screen.getByDisplayValue("10")).toBeTruthy();
+    expect(screen.getByDisplayValue("60")).toBeTruthy();
     expect(screen.getByText("Run")).toBeTruthy();
-    expect(screen.getByText("Calorías")).toBeTruthy();
+    expect(screen.getByText("Back Squat")).toBeTruthy();
     expect(getUserWod).toHaveBeenCalledWith(31, "token-edit");
+  });
+
+  it("shows the missing reps field when loading a legacy weighted WOD", async () => {
+    vi.mocked(getUserWod).mockResolvedValue({
+      ...personalWod,
+      exercises: [{
+        ...personalWod.exercises[1]!,
+        prescriptions: [{ value: 60, unit: "KG", unitLabel: null }],
+      }],
+    });
+    renderWithAuth(<EditWodPage id={31} />, { token: "token-edit" });
+
+    await screen.findByRole("heading", { name: "Editar WOD" });
+
+    expect(screen.getByLabelText("repeticiones").getAttribute("value")).toBe("");
+    expect(screen.getByLabelText("kg").getAttribute("value")).toBe("60");
   });
 
   it("sends the edited values through PUT and preserves the loaded exercises", async () => {
@@ -84,7 +104,10 @@ describe("EditWodPage", () => {
       timeLimit: 600,
       exercises: [
         { exerciseId: 2, position: 1, prescriptions: [{ value: 500, unit: "METERS", unitLabel: null }] },
-        { exerciseId: 1, position: 2, prescriptions: [{ value: 30, unit: "OTHER", unitLabel: "calorías" }] },
+        { exerciseId: 1, position: 2, prescriptions: [
+          { value: 10, unit: "REPS", unitLabel: null },
+          { value: 60, unit: "KG", unitLabel: null },
+        ] },
       ],
     }), "token-edit");
     expect(await screen.findByText("WOD actualizado")).toBeTruthy();
