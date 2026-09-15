@@ -50,20 +50,20 @@
 - [x] Documentar la Issue #83 con archivos, verificaciones, hash, mensaje y
       rama; mantenerla abierta y sin push.
 
-## Validaciones manuales pendientes
+## Validaciones manuales aprobadas
 
-- [ ] Abrir `#/history` autenticado y confirmar que el resultado deportivo es lo
+- [x] Abrir `#/history` autenticado y confirmar que el resultado deportivo es lo
       primero que se identifica en cada fila.
-- [ ] Confirmar que WOD y ejercicio se distinguen, que la fecha es comprensible
+- [x] Confirmar que WOD y ejercicio se distinguen, que la fecha es comprensible
       y que cada enlace navega al detalle correcto.
-- [ ] Verificar que resultados con tiempo y con rondas/repeticiones mantienen su
+- [x] Verificar que resultados con tiempo y con rondas/repeticiones mantienen su
       formato y que las marcas muestran unidad y tipo de registro.
-- [ ] Probar fechas cruzadas e iguales para comprobar la cronologia estable.
-- [ ] Probar estado privado sin autenticacion, carga, vacio, error y reintento
+- [x] Probar fechas cruzadas e iguales para comprobar la cronologia estable.
+- [x] Probar estado privado sin autenticacion, carga, vacio, error y reintento
       sin exponer datos de otra cuenta.
-- [ ] Usar `Anterior` y `Siguiente` y confirmar que respetan `hasNext` y los
+- [x] Usar `Anterior` y `Siguiente` y confirmar que respetan `hasNext` y los
       limites de paginacion.
-- [ ] Verificar 320 px, movil, tablet y escritorio sin overflow horizontal,
+- [x] Verificar 320 px, movil, tablet y escritorio sin overflow horizontal,
       nombres largos cortados ni perdida de foco con teclado.
 
 El siguiente paso, despues de aprobar estas comprobaciones, es
