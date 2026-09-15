@@ -41,7 +41,7 @@
 - [x] Revisar staging y crear un commit propio de #81 sin incluir untracked
       ajenos.
 - [x] Ejecutar `git log -1 --oneline` y `git status` despues del commit.
-- [ ] Documentar la Issue #81 con archivos, verificaciones, hash, mensaje y
+- [x] Documentar la Issue #81 con archivos, verificaciones, hash, mensaje y
       rama; mantenerla abierta y sin push.
 
 ## Validaciones manuales pendientes
