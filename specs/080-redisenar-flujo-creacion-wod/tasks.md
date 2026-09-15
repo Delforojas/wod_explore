@@ -73,6 +73,15 @@ Comentario de entrega: https://github.com/Delforojas/wod_explore/issues/80#issue
 - [x] Cubrir que la accion se habilita al seleccionar y permanece bloqueada sin
       seleccion.
 
+## Revision feedback: acciones no redundantes
+
+- [x] Mantener `Anadir movimientos` como accion de seleccion y eliminar la CTA
+      externa redundante `Anadir otro movimiento`.
+- [x] Renombrar la confirmacion del selector a `Anadir seleccionados al WOD` y
+      mantener `Guardar WOD` como accion final.
+- [x] Actualizar la cobertura del flujo y verificar responsive sin overflow en
+      movil, tablet y escritorio mediante revision estatica.
+
 ## Validaciones manuales pendientes
 
 - [ ] Abrir `#/create-wod` autenticado y confirmar que la secuencia de trabajo se

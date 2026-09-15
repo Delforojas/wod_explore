@@ -5341,15 +5341,10 @@ h2 {
   max-width: 38ch;
 }
 
-.create-wod-exercise-toolbar .add-exercise-button,
-.add-exercise-button--repeat {
+.create-wod-exercise-toolbar .add-exercise-button {
   flex: 0 0 auto;
   margin: 0;
   width: auto;
-}
-
-.add-exercise-button--repeat {
-  margin-top: 18px;
 }
 
 .selected-exercise-list {
@@ -5610,8 +5605,7 @@ h2 {
     max-width: none;
   }
 
-  .create-wod-exercise-toolbar .add-exercise-button,
-  .add-exercise-button--repeat {
+  .create-wod-exercise-toolbar .add-exercise-button {
     width: 100%;
   }
 

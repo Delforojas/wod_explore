@@ -48,6 +48,8 @@ unidades actuales.
   paginacion, carga, vacio, error y reintento.
 - Permitir marcar varios ejercicios en el selector y anadirlos al WOD mediante
   una confirmacion unica, sin modificar el borrador hasta confirmar.
+- Mantener `Anadir movimientos` como unica accion para abrir el selector y
+  `Anadir seleccionados al WOD` como unica confirmacion de esa seleccion.
 - Mantener acciones reales para anadir, subir, bajar, eliminar, cerrar y guardar.
 - Mantener errores junto al campo, `aria-invalid`, `aria-describedby` y foco en
   el primer error.
@@ -96,9 +98,9 @@ adyacentes a sus valores y los errores deben localizarse en su campo.
 
 El selector continua siendo un `<dialog>` nativo con titulo accesible, cierre,
 busqueda, resultados paginados, estados de carga/vacio/error y seleccion multiple.
-La accion `Anadir seleccionados` incorpora todos los ejercicios marcados en una
-sola operacion. Cerrar el selector sin confirmar no altera el formulario ni sus
-valores.
+La accion `Anadir seleccionados al WOD` incorpora todos los ejercicios marcados
+en una sola operacion. Cerrar el selector sin confirmar no altera el formulario
+ni sus valores.
 
 ### RF-5 - Estados de formulario
 
@@ -126,6 +128,9 @@ dialogo y la navegacion movil no deben tapar el control enfocado.
 - [ ] Los estados de carga, error, exito y selector son visibles y comprensibles.
 - [ ] El selector permite marcar varios ejercicios y anadirlos todos mediante una
       accion explicita de confirmacion.
+- [ ] `Anadir movimientos` y `Anadir seleccionados al WOD` tienen
+      responsabilidades distintas, sin una CTA duplicada, y `Guardar WOD` es la
+      accion final del flujo.
 - [ ] El formulario conserva los datos ante errores recuperables y bloquea
   envios duplicados durante el guardado.
 - [ ] La accion principal tiene prioridad adecuada frente a acciones secundarias.

@@ -56,7 +56,7 @@ async function openPickerAndAdd(index: number) {
   const dialog = await screen.findByRole("dialog");
   const selectButtons = within(dialog).getAllByRole("button", { name: /Seleccionar/ });
   await user.click(selectButtons[index]!);
-  await user.click(within(dialog).getByRole("button", { name: "Añadir seleccionados" }));
+  await user.click(within(dialog).getByRole("button", { name: "Añadir seleccionados al WOD" }));
 }
 
 describe("CreateWodPage", () => {
@@ -75,6 +75,8 @@ describe("CreateWodPage", () => {
     expect(screen.getByRole("heading", { name: "Crear WOD" })).toBeTruthy();
     expect(screen.getByText("Define la sesión")).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Añade los movimientos" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Añadir movimientos" })).toBeTruthy();
+    expect(screen.queryByRole("button", { name: "Añadir otro movimiento" })).toBeNull();
     expect(screen.getByRole("heading", { name: "Guarda tu sesión" })).toBeTruthy();
     expect(screen.getByRole("complementary", { name: "Revisión del diseño" })).toBeTruthy();
     expect(screen.getByText("Falta la secuencia")).toBeTruthy();
@@ -87,14 +89,14 @@ describe("CreateWodPage", () => {
     await user.click(screen.getByRole("button", { name: "Añadir movimientos" }));
     const dialog = await screen.findByRole("dialog");
     const selectButtons = within(dialog).getAllByRole("button", { name: /Seleccionar/ });
-    const addSelectedButton = within(dialog).getByRole("button", { name: "Añadir seleccionados" });
+    const addSelectedButton = within(dialog).getByRole("button", { name: "Añadir seleccionados al WOD" });
     expect(addSelectedButton.hasAttribute("disabled")).toBe(true);
     await user.click(selectButtons[0]!);
     expect(addSelectedButton.hasAttribute("disabled")).toBe(false);
     await user.click(selectButtons[1]!);
     expect(screen.queryByRole("list", { name: "Ejercicios añadidos" })).toBeNull();
     expect(within(dialog).getByText("2 movimientos seleccionados")).toBeTruthy();
-    await user.click(within(dialog).getByRole("button", { name: "Añadir seleccionados" }));
+    await user.click(within(dialog).getByRole("button", { name: "Añadir seleccionados al WOD" }));
 
     const selectedExercises = screen.getByRole("list", { name: "Ejercicios añadidos" });
     expect(within(selectedExercises).getByText("Back Squat")).toBeTruthy();
@@ -165,11 +167,11 @@ describe("CreateWodPage", () => {
     await user.click(screen.getByRole("button", { name: "Añadir movimientos" }));
     const dialog = await screen.findByRole("dialog");
     await user.click(within(dialog).getAllByRole("button", { name: /Seleccionar/ })[0]!);
-    await user.click(within(dialog).getByRole("button", { name: "Añadir seleccionados" }));
-    await user.click(screen.getByRole("button", { name: "Añadir otro movimiento" }));
+    await user.click(within(dialog).getByRole("button", { name: "Añadir seleccionados al WOD" }));
+    await user.click(screen.getByRole("button", { name: "Añadir movimientos" }));
     const secondDialog = await screen.findByRole("dialog");
     await user.click(within(secondDialog).getAllByRole("button", { name: /Seleccionar/ })[1]!);
-    await user.click(within(secondDialog).getByRole("button", { name: "Añadir seleccionados" }));
+    await user.click(within(secondDialog).getByRole("button", { name: "Añadir seleccionados al WOD" }));
     await user.type(screen.getByLabelText("repeticiones"), "10");
     await user.type(screen.getByLabelText("kg"), "60");
     await user.type(screen.getByLabelText("metros"), "500");

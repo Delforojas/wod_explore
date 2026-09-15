@@ -527,11 +527,6 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
                 ))}
               </ol>
             )}
-            {selectedExercises.length > 0 && (
-              <button className="button button--secondary add-exercise-button add-exercise-button--repeat" type="button" onClick={openPicker}>
-                Añadir otro movimiento
-              </button>
-            )}
           </section>
 
           {isSaving && <StateMessage kind="loading" title="Guardando WOD" message="Estamos archivando tu diseño." />}
@@ -625,7 +620,7 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
           </span>
           <div className="exercise-picker__footer-actions">
             <button className="button button--quiet" type="button" onClick={closePicker}>Cerrar</button>
-            <button className="button button--accent" type="button" onClick={addSelectedExercises} disabled={pickerSelection.length === 0}>Añadir seleccionados</button>
+            <button className="button button--accent" type="button" onClick={addSelectedExercises} disabled={pickerSelection.length === 0}>Añadir seleccionados al WOD</button>
           </div>
         </div>
       </dialog>

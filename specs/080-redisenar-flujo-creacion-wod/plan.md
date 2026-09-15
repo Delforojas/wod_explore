@@ -48,8 +48,11 @@ no autoriza una migracion de estilos.
 - No se modifica el modo edicion fuera de la apariencia compartida; su carga y
   `PUT` deben continuar pasando los mismos tests.
 - La seleccion multiple del dialogo vive solo mientras esta abierto: marcar no
-  muta el WOD, `Anadir seleccionados` crea todos los borradores en el orden
-  marcado y cerrar sin confirmar descarta unicamente esa seleccion temporal.
+  muta el WOD, `Anadir seleccionados al WOD` crea todos los borradores en el
+  orden marcado y cerrar sin confirmar descarta unicamente esa seleccion
+  temporal.
+- `Anadir movimientos` abre el selector y `Guardar WOD` guarda la sesion; no se
+  conserva una CTA externa que repita la apertura del selector.
 
 ## Riesgos y controles
 
