@@ -37,13 +37,13 @@ Los contratos vigentes son `userWodPageSchema` y `userWodDetailSchema` en
 - Reorganizar el encabezado de Mis WODs para identificar el archivo personal,
   su cantidad y la accion de crear.
 - Convertir cada WOD en una fila de gestion escaneable con nombre, formato,
-  nivel, ejercicios, fecha y destinos explicitos de ver y editar.
+  nivel, ejercicios, fecha y destinos explicitos de ver, editar y eliminar.
 - Mantener la navegacion por fila/enlace real, paginacion, carga paralela de
   detalles, aislamiento autenticado y todos los estados existentes.
 - Reorganizar el detalle personal en una cabecera de gestion, un manifiesto de
   sesion, la secuencia de ejercicios y el panel de resultados.
 - Diferenciar visualmente la consulta, la edicion y la eliminacion; la accion
-  destructiva seguira disponible unicamente en el detalle y requerira
+  destructiva estara disponible en la zona de acciones de cada fila y requerira
   confirmacion.
 - Mantener el dialogo nativo, foco, Escape, estados de borrado, error 409,
   feedback de exito y navegacion existentes.
@@ -60,8 +60,8 @@ Los contratos vigentes son `userWodPageSchema` y `userWodDetailSchema` en
 - Anadir operaciones CRUD, filtros, ordenaciones o metricas nuevas.
 - Modificar backend, base de datos, router, autenticacion o dependencias.
 - Redisenar Crear WOD, el catalogo global, resultados u otras paginas.
-- Eliminar la confirmacion, mover el borrado al listado o cambiar la politica
-  de WODs con resultados historicos.
+- Eliminar la confirmacion o cambiar la politica de WODs con resultados
+  historicos.
 - Crear un sistema global de componentes o migrar a Tailwind.
 
 ## Requisitos funcionales
@@ -75,9 +75,10 @@ clara para crear el primer WOD.
 
 ### RF-2 - Gestion de filas
 
-Cada WOD tiene un destino principal para consultar el detalle y una accion
-secundaria para editarlo. Los enlaces son reales, tienen nombres accesibles y
-no mezclan la eliminacion con el listado.
+Cada WOD tiene un destino principal para consultar el detalle, una accion
+secundaria para editarlo y una accion destructiva para eliminarlo. Los enlaces
+son reales, tienen nombres accesibles y el borrado solo se ejecuta despues de
+confirmar.
 
 ### RF-3 - Detalle gestionable
 
@@ -103,6 +104,8 @@ y targets de al menos 44 px, y las acciones se pueden completar con teclado.
 
 - [ ] Los WODs propios se identifican y gestionan facilmente.
 - [ ] Las acciones de ver, editar y eliminar tienen una jerarquia clara.
+- [ ] Cada fila de WOD personal muestra `Ver WOD`, `Editar` y `Eliminar` en su
+  zona de acciones.
 - [ ] La accion destructiva se distingue y no compite con la consulta habitual.
 - [ ] Empty, loading, error y confirmaciones siguen el sistema global.
 - [ ] La interfaz sigue `DESIGN.md`.
@@ -110,6 +113,8 @@ y targets de al menos 44 px, y las acciones se pueden completar con teclado.
 - [ ] Teclado y foco siguen funcionando.
 - [ ] No existen regresiones funcionales en listado, detalle, edicion, resultados
   o eliminacion.
+- [ ] El borrado del listado pide confirmacion, evita dobles envios, actualiza el
+  archivo sin recarga manual y conserva la fila cuando la API falla.
 - [ ] Tests, lint y build pasan.
 
 ## Referencias

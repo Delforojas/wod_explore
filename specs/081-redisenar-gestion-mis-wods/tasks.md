@@ -15,7 +15,7 @@
 ## Implementacion
 
 - [x] Reorganizar el archivo personal de `MyWodsPage` con jerarquia de datos y
-      acciones explicitas de consulta y edicion.
+      acciones explicitas de consulta, edicion y eliminacion.
 - [x] Mantener los estados privado, carga, vacio, error, red, exito y paginacion
       sin cambiar el contrato de `getUserWods`/`getUserWod`.
 - [x] Reorganizar `MyWodDetailPage` para separar consulta, resultados, edicion y
@@ -26,6 +26,18 @@
       desde 320 px sin overflow ni perdida de foco.
 - [x] Actualizar tests de listado y detalle para cubrir gestion y no regresion.
 
+## Revision feedback: eliminar desde el listado
+
+- [x] Añadir `Eliminar` a cada fila de `MyWodsPage` usando `deleteUserWod` y sin
+      crear un contrato nuevo.
+- [x] Reutilizar confirmacion, foco, Escape, estados de carga/error y bloqueo de
+      dobles envios; cancelar no debe llamar a la API.
+- [x] Recargar automaticamente el listado tras un borrado correcto y conservar
+      la fila si la eliminacion falla.
+- [x] Cubrir confirmacion, cancelacion, borrado correcto, error, ver y editar en
+      los tests del listado.
+- [x] Ajustar la zona de acciones para tres controles utilizables desde 320 px.
+
 ## Verificacion
 
 - [x] Ejecutar `npm test` desde `frontend/` y resolver fallos de #81.
@@ -35,6 +47,12 @@
 - [x] Ejecutar una vez el detector mecanico de Impeccable sobre los targets
       finales y resolver hallazgos mecanicos si aparecen.
 - [x] Realizar revision estatica responsive, accesibilidad y alcance.
+
+## Verificacion de revision
+
+- [x] Ejecutar `npm test`, `npm run lint`, `npm run build` y `git diff --check`.
+- [x] Ejecutar una vez el detector mecanico de Impeccable sobre los targets
+      finales.
 
 ## Entrega
 
@@ -48,8 +66,8 @@
 
 - [ ] Abrir `#/my-wods` autenticado y confirmar que el archivo, el contador y la
       accion `Crear WOD` se entienden en la primera vista.
-- [ ] Confirmar que cada fila permite distinguir y usar `Ver WOD` y `Editar`, y
-      que no muestra borrado directo.
+- [ ] Confirmar que cada fila permite distinguir y usar `Ver WOD`, `Editar` y
+      `Eliminar`.
 - [ ] Abrir un detalle y confirmar que identidad, metricas, ejercicios y
       resultados se leen antes de las acciones de gestion.
 - [ ] Abrir `Eliminar WOD`, comprobar nombre, foco inicial, `Cancelar` y cierre
@@ -64,6 +82,12 @@
       acciones accesibles mediante teclado y foco visible.
 - [ ] Confirmar que la edicion y el registro de resultados siguen navegando y
       funcionando desde el detalle.
+- [ ] En el listado, pulsar `Eliminar`, cancelar y confirmar que no se llama a la
+      API ni desaparece el WOD.
+- [ ] Confirmar un borrado correcto y verificar que la fila desaparece sin
+      recargar manualmente la pagina.
+- [ ] Simular un error de eliminacion y confirmar que el WOD permanece visible
+      con un mensaje comprensible y sin permitir dobles envios.
 
 El siguiente paso, despues de aprobar manualmente estas comprobaciones, es
 `/finish-issue 81`.
