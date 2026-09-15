@@ -15,5 +15,5 @@
 - [x] Ejecutar `./mvnw test` y corregir fallos relacionados con la Issue.
 - [x] Ejecutar `./mvnw package` y corregir fallos relacionados con la Issue.
 - [x] Revisar alcance, diff, status y ausencia de secretos.
-- [ ] Crear el commit exclusivo de la Issue #61.
-- [ ] Documentar commit, verificaciones y rama en la Issue sin cerrarla.
+- [x] Crear el commit exclusivo de la Issue #61.
+- [x] Documentar commit, verificaciones y rama en la Issue sin cerrarla.
