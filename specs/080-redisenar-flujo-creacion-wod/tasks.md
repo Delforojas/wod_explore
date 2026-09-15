@@ -48,6 +48,24 @@
 
 Comentario de entrega: https://github.com/Delforojas/wod_explore/issues/80#issuecomment-5681266780
 
+## Revision responsive y CTA multiple
+
+- [x] Apilar en movil la barra de ejercicios, el buscador, los resultados y la
+      paginacion del selector sin ocultar controles ni cambiar su contrato.
+- [x] Exponer una CTA contextual `Anadir otro movimiento` despues de la lista
+      para repetir la seleccion y conservar las medidas ya introducidas.
+- [x] Cubrir la repeticion de seleccion en los tests de creacion y verificar
+      tests, lint, build y `git diff --check`.
+
+## Revision feedback: seleccion multiple
+
+- [x] Permitir marcar varios ejercicios en el dialogo sin mutar el WOD antes de
+      confirmar.
+- [x] Anadir una accion `Anadir seleccionados` que incorpore todas las marcas y
+      conserve el borrador al cerrar sin confirmar.
+- [x] Cubrir la confirmacion multiple y ejecutar tests, lint, build y
+      `git diff --check`.
+
 ## Validaciones manuales pendientes
 
 - [ ] Abrir `#/create-wod` autenticado y confirmar que la secuencia de trabajo se

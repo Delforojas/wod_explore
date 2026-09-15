@@ -52,10 +52,11 @@ function renderPage() {
 
 async function openPickerAndAdd(index: number) {
   const user = userEvent.setup();
-  await user.click(screen.getByRole("button", { name: "Añadir ejercicio" }));
+  await user.click(screen.getByRole("button", { name: "Añadir movimientos" }));
   const dialog = await screen.findByRole("dialog");
-  const addButtons = within(dialog).getAllByRole("button", { name: "Añadir" });
-  await user.click(addButtons[index]);
+  const selectButtons = within(dialog).getAllByRole("button", { name: /Seleccionar/ });
+  await user.click(selectButtons[index]!);
+  await user.click(within(dialog).getByRole("button", { name: "Añadir seleccionados" }));
 }
 
 describe("CreateWodPage", () => {
@@ -83,12 +84,14 @@ describe("CreateWodPage", () => {
     const user = userEvent.setup();
     renderPage();
 
-    await user.click(screen.getByRole("button", { name: "Añadir ejercicio" }));
+    await user.click(screen.getByRole("button", { name: "Añadir movimientos" }));
     const dialog = await screen.findByRole("dialog");
-    await user.click(within(dialog).getAllByRole("button", { name: "Añadir" })[0]!);
-    await user.click(screen.getByRole("button", { name: "Añadir ejercicio" }));
-    const secondDialog = await screen.findByRole("dialog");
-    await user.click(within(secondDialog).getAllByRole("button", { name: "Añadir" })[1]!);
+    const selectButtons = within(dialog).getAllByRole("button", { name: /Seleccionar/ });
+    await user.click(selectButtons[0]!);
+    await user.click(selectButtons[1]!);
+    expect(screen.queryByRole("list", { name: "Ejercicios añadidos" })).toBeNull();
+    expect(within(dialog).getByText("2 movimientos seleccionados")).toBeTruthy();
+    await user.click(within(dialog).getByRole("button", { name: "Añadir seleccionados" }));
 
     const selectedExercises = screen.getByRole("list", { name: "Ejercicios añadidos" });
     expect(within(selectedExercises).getByText("Back Squat")).toBeTruthy();
@@ -104,7 +107,7 @@ describe("CreateWodPage", () => {
     vi.mocked(getExercises).mockResolvedValueOnce(firstPage).mockResolvedValueOnce(firstPage).mockResolvedValue(secondPage);
     renderWithAuth(<CreateWodPage />, { token: "token" });
 
-    await user.click(screen.getByRole("button", { name: "Añadir ejercicio" }));
+    await user.click(screen.getByRole("button", { name: "Añadir movimientos" }));
     await screen.findByRole("button", { name: "Siguiente" });
     await user.type(screen.getByLabelText("Buscar ejercicios"), "snatch");
     await user.click(screen.getByRole("button", { name: "Buscar" }));
@@ -156,12 +159,14 @@ describe("CreateWodPage", () => {
 
     await user.type(screen.getByLabelText("Nombre del WOD"), "  Sesión propia  ");
     await user.type(screen.getByLabelText(/Time cap/), "600");
-    await user.click(screen.getByRole("button", { name: "Añadir ejercicio" }));
+    await user.click(screen.getByRole("button", { name: "Añadir movimientos" }));
     const dialog = await screen.findByRole("dialog");
-    await user.click(within(dialog).getAllByRole("button", { name: "Añadir" })[0]!);
-    await user.click(screen.getByRole("button", { name: "Añadir ejercicio" }));
+    await user.click(within(dialog).getAllByRole("button", { name: /Seleccionar/ })[0]!);
+    await user.click(within(dialog).getByRole("button", { name: "Añadir seleccionados" }));
+    await user.click(screen.getByRole("button", { name: "Añadir otro movimiento" }));
     const secondDialog = await screen.findByRole("dialog");
-    await user.click(within(secondDialog).getAllByRole("button", { name: "Añadir" })[1]!);
+    await user.click(within(secondDialog).getAllByRole("button", { name: /Seleccionar/ })[1]!);
+    await user.click(within(secondDialog).getByRole("button", { name: "Añadir seleccionados" }));
     await user.type(screen.getByLabelText("repeticiones"), "10");
     await user.type(screen.getByLabelText("kg"), "60");
     await user.type(screen.getByLabelText("metros"), "500");

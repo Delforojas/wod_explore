@@ -46,6 +46,8 @@ unidades actuales.
   unidades sin cambiar sus datos.
 - Mantener y hacer mas claro el selector nativo de ejercicios, su busqueda,
   paginacion, carga, vacio, error y reintento.
+- Permitir marcar varios ejercicios en el selector y anadirlos al WOD mediante
+  una confirmacion unica, sin modificar el borrador hasta confirmar.
 - Mantener acciones reales para anadir, subir, bajar, eliminar, cerrar y guardar.
 - Mantener errores junto al campo, `aria-invalid`, `aria-describedby` y foco en
   el primer error.
@@ -93,8 +95,10 @@ adyacentes a sus valores y los errores deben localizarse en su campo.
 ### RF-4 - Selector de ejercicios
 
 El selector continua siendo un `<dialog>` nativo con titulo accesible, cierre,
-busqueda, resultados paginados, estados de carga/vacio/error y botones de anadir.
-Cerrar el selector no altera el formulario ni sus valores.
+busqueda, resultados paginados, estados de carga/vacio/error y seleccion multiple.
+La accion `Anadir seleccionados` incorpora todos los ejercicios marcados en una
+sola operacion. Cerrar el selector sin confirmar no altera el formulario ni sus
+valores.
 
 ### RF-5 - Estados de formulario
 
@@ -120,6 +124,8 @@ dialogo y la navegacion movil no deben tapar el control enfocado.
   matriz vigente del contrato.
 - [ ] Las validaciones aparecen junto al campo y el foco llega al primer error.
 - [ ] Los estados de carga, error, exito y selector son visibles y comprensibles.
+- [ ] El selector permite marcar varios ejercicios y anadirlos todos mediante una
+      accion explicita de confirmacion.
 - [ ] El formulario conserva los datos ante errores recuperables y bloquea
   envios duplicados durante el guardado.
 - [ ] La accion principal tiene prioridad adecuada frente a acciones secundarias.

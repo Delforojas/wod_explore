@@ -219,6 +219,7 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
   const [appliedPickerQuery, setAppliedPickerQuery] = useState("");
   const [pickerPage, setPickerPage] = useState(0);
   const [pickerResults, setPickerResults] = useState<ExercisePage | null>(null);
+  const [pickerSelection, setPickerSelection] = useState<Exercise[]>([]);
   const [isPickerLoading, setIsPickerLoading] = useState(false);
   const [pickerError, setPickerError] = useState<string | null>(null);
   const [pickerReload, setPickerReload] = useState(0);
@@ -251,6 +252,7 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
   function openPicker() {
     setPickerError(null);
     setIsPickerLoading(true);
+    setPickerSelection([]);
     setIsPickerOpen(true);
   }
 
@@ -259,6 +261,7 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
     if (dialog?.open && typeof dialog.close === "function") dialog.close();
     else dialog?.removeAttribute("open");
     setIsPickerOpen(false);
+    setPickerSelection([]);
   }
 
   function handlePickerSearch(event: FormEvent<HTMLFormElement>) {
@@ -281,8 +284,15 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
     setPickerReload((current) => current + 1);
   }
 
-  function addExercise(exercise: Exercise) {
-    setSelectedExercises((current) => [...current, createDraftExercise(exercise)]);
+  function togglePickerSelection(exercise: Exercise) {
+    setPickerSelection((current) => current.some((selected) => selected.id === exercise.id)
+      ? current.filter((selected) => selected.id !== exercise.id)
+      : [...current, exercise]);
+  }
+
+  function addSelectedExercises() {
+    if (pickerSelection.length === 0) return;
+    setSelectedExercises((current) => [...current, ...pickerSelection.map(createDraftExercise)]);
     setErrors((current) => {
       const next = { ...current };
       delete next.exercisePickerTrigger;
@@ -458,9 +468,12 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
               </div>
               <span aria-label={`${selectedExercises.length} movimientos seleccionados`}>{String(selectedExercises.length).padStart(2, "0")}</span>
             </div>
-            <button className="button button--secondary add-exercise-button" id="exercisePickerTrigger" type="button" onClick={openPicker} aria-describedby={errors.exercisePickerTrigger ? "exercise-picker-error" : undefined}>
-              Añadir ejercicio
-            </button>
+            <div className="create-wod-exercise-toolbar">
+              <p>{selectedExercises.length === 0 ? "Empieza con un movimiento y añade los demás desde el mismo selector." : "Puedes sumar otro movimiento sin perder las medidas ya introducidas."}</p>
+              <button className="button button--secondary add-exercise-button" id="exercisePickerTrigger" type="button" onClick={openPicker} aria-describedby={errors.exercisePickerTrigger ? "exercise-picker-error" : undefined}>
+                Añadir movimientos
+              </button>
+            </div>
             {errors.exercisePickerTrigger && <p className="field-error" id="exercise-picker-error" tabIndex={-1}>{errors.exercisePickerTrigger}</p>}
             {selectedExercises.length === 0 ? (
               <div className="create-wod-empty">
@@ -513,6 +526,11 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
                   </li>
                 ))}
               </ol>
+            )}
+            {selectedExercises.length > 0 && (
+              <button className="button button--secondary add-exercise-button add-exercise-button--repeat" type="button" onClick={openPicker}>
+                Añadir otro movimiento
+              </button>
             )}
           </section>
 
@@ -585,7 +603,15 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
             {pickerResults.items.map((exercise) => (
               <li key={exercise.id}>
                 <div><strong>{exercise.name}</strong><span>{EXERCISE_CATEGORY_LABELS[exercise.category]} · {MEASUREMENT_LABELS[exercise.measurementType]}</span></div>
-                <button className="button button--secondary" type="button" onClick={() => addExercise(exercise)}>Añadir</button>
+                <button
+                  className="button button--secondary"
+                  type="button"
+                  aria-pressed={pickerSelection.some((selected) => selected.id === exercise.id)}
+                  aria-label={`${pickerSelection.some((selected) => selected.id === exercise.id) ? "Quitar" : "Seleccionar"} ${exercise.name}`}
+                  onClick={() => togglePickerSelection(exercise)}
+                >
+                  {pickerSelection.some((selected) => selected.id === exercise.id) ? "Seleccionado" : "Seleccionar"}
+                </button>
               </li>
             ))}
           </ul>
@@ -594,7 +620,13 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
           <PaginationControls page={pickerPage} hasNext={pickerResults.hasNext} totalPages={pickerResults.totalPages} isLoading={isPickerLoading} onPrevious={() => changePickerPage(Math.max(0, pickerPage - 1))} onNext={() => changePickerPage(pickerPage + 1)} />
         )}
         <div className="exercise-picker__footer">
-          <button className="button button--quiet" type="button" onClick={closePicker}>Cerrar</button>
+          <span className="exercise-picker__selection-status" aria-live="polite">
+            {pickerSelection.length === 0 ? "Ningún movimiento seleccionado" : `${pickerSelection.length} movimiento${pickerSelection.length === 1 ? "" : "s"} seleccionado${pickerSelection.length === 1 ? "" : "s"}`}
+          </span>
+          <div className="exercise-picker__footer-actions">
+            <button className="button button--quiet" type="button" onClick={closePicker}>Cerrar</button>
+            <button className="button button--accent" type="button" onClick={addSelectedExercises} disabled={pickerSelection.length === 0}>Añadir seleccionados</button>
+          </div>
         </div>
       </dialog>
     </section>

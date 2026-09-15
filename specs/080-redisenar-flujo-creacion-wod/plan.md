@@ -20,7 +20,8 @@ no autoriza una migracion de estilos.
    prescripciones, acciones por fila y accion principal manteniendo los mismos
    handlers y estado local.
 5. Mantener el `<dialog>` nativo del selector y pulir sus estados, cierre,
-   busqueda, paginacion y feedback sin cambiar las llamadas API.
+   busqueda, paginacion, seleccion temporal multiple y feedback sin cambiar las
+   llamadas API.
 6. Reescribir unicamente los estilos especificos de creacion en
    `frontend/src/index.css`, con una experiencia mobile-first desde 320 px,
    tablet y escritorio, focus visible, targets de 44 px y reduced motion.
@@ -46,6 +47,9 @@ no autoriza una migracion de estilos.
   #72; los textos de opcional/obligatorio solo hacen visibles esas reglas.
 - No se modifica el modo edicion fuera de la apariencia compartida; su carga y
   `PUT` deben continuar pasando los mismos tests.
+- La seleccion multiple del dialogo vive solo mientras esta abierto: marcar no
+  muta el WOD, `Anadir seleccionados` crea todos los borradores en el orden
+  marcado y cerrar sin confirmar descarta unicamente esa seleccion temporal.
 
 ## Riesgos y controles
 
