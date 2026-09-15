@@ -39,9 +39,10 @@ unidades actuales.
 ### Incluido
 
 - Reorganizar visualmente la cabecera, el bloque de datos generales, la lista de
-  movimientos y la revision lateral o inferior.
+  movimientos, la revision y el guardado.
 - Hacer evidente el paso actual y la jerarquia entre estructura del WOD,
-  ejercicios, prescripciones y guardado.
+  configuracion de ejercicios, ejercicios incorporados, prescripciones y
+  guardado.
 - Mejorar la lectura de las filas de ejercicios, sus posiciones, acciones y
   unidades sin cambiar sus datos.
 - Mantener y hacer mas claro el selector nativo de ejercicios, su busqueda,
@@ -49,7 +50,11 @@ unidades actuales.
 - Permitir marcar varios ejercicios en el selector y anadirlos al WOD mediante
   una confirmacion unica, sin modificar el borrador hasta confirmar.
 - Mantener `Anadir movimientos` como unica accion para abrir el selector y
-  `Anadir seleccionados al WOD` como unica confirmacion de esa seleccion.
+  cargar movimientos pendientes de configuracion.
+- Incorporar los movimientos pendientes al WOD mediante `Anadir ejercicios al
+  WOD` despues de validar sus prescripciones.
+- Mantener `Guardar WOD` como accion final para persistir el WOD completo con la
+  API existente.
 - Mantener acciones reales para anadir, subir, bajar, eliminar, cerrar y guardar.
 - Mantener errores junto al campo, `aria-invalid`, `aria-describedby` y foco en
   el primer error.
@@ -78,8 +83,9 @@ unidades actuales.
 ### RF-1 - Flujo operativo
 
 La pantalla muestra una secuencia comprensible de trabajo: identidad del WOD,
-configuracion general, movimientos, revision y accion principal. El nombre de la
-sesion y la accion de guardado tienen prioridad sobre copy secundario.
+configuracion general, configuracion de movimientos, incorporacion al WOD,
+revision y guardado. El nombre de la sesion y la accion de guardado tienen
+prioridad sobre copy secundario.
 
 ### RF-2 - Datos generales
 
@@ -89,18 +95,21 @@ un campo es opcional u obligatorio sin modificar las reglas existentes.
 
 ### RF-3 - Movimientos y prescripciones
 
-Los ejercicios seleccionados se presentan como una secuencia ordenada y densa.
-Cada fila mantiene nombre, categoria, tipo de medicion, posicion, prescripciones
-compatibles y acciones de subir, bajar y eliminar. Las unidades deben permanecer
-adyacentes a sus valores y los errores deben localizarse en su campo.
+Los movimientos pendientes se presentan como ejercicios configurables y solo se
+incorporan al WOD despues de pulsar `Anadir ejercicios al WOD` con prescripciones
+validas. La revision presenta los ejercicios incorporados como una secuencia
+ordenada y densa. Cada fila mantiene nombre, categoria, tipo de medicion,
+posicion, prescripciones compatibles y acciones de subir, bajar y eliminar. Las
+unidades deben permanecer adyacentes a sus valores y los errores deben
+localizarse en su campo.
 
 ### RF-4 - Selector de ejercicios
 
 El selector continua siendo un `<dialog>` nativo con titulo accesible, cierre,
 busqueda, resultados paginados, estados de carga/vacio/error y seleccion multiple.
-La accion `Anadir seleccionados al WOD` incorpora todos los ejercicios marcados
-en una sola operacion. Cerrar el selector sin confirmar no altera el formulario
-ni sus valores.
+La accion `Configurar seleccionados` carga los ejercicios marcados como
+pendientes sin incorporarlos al WOD. Cerrar el selector sin confirmar no altera
+el formulario ni sus valores.
 
 ### RF-5 - Estados de formulario
 
@@ -128,9 +137,12 @@ dialogo y la navegacion movil no deben tapar el control enfocado.
 - [ ] Los estados de carga, error, exito y selector son visibles y comprensibles.
 - [ ] El selector permite marcar varios ejercicios y anadirlos todos mediante una
       accion explicita de confirmacion.
-- [ ] `Anadir movimientos` y `Anadir seleccionados al WOD` tienen
-      responsabilidades distintas, sin una CTA duplicada, y `Guardar WOD` es la
-      accion final del flujo.
+- [ ] Los ejercicios pendientes permiten configurar sus prescripciones y
+      `Anadir ejercicios al WOD` los incorpora solo cuando son validos.
+- [ ] La revision muestra unicamente los ejercicios incorporados, sus
+      prescripciones y su orden antes de `Guardar WOD`.
+- [ ] `Anadir movimientos`, `Anadir ejercicios al WOD` y `Guardar WOD` tienen
+      responsabilidades distintas y no duplican acciones.
 - [ ] El formulario conserva los datos ante errores recuperables y bloquea
   envios duplicados durante el guardado.
 - [ ] La accion principal tiene prioridad adecuada frente a acciones secundarias.

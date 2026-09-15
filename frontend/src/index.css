@@ -5294,6 +5294,13 @@ h2 {
   padding-bottom: 34px;
 }
 
+.create-wod-review {
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 34px;
+  min-width: 0;
+  padding-bottom: 34px;
+}
+
 .create-wod-section-heading {
   align-items: end;
   border-bottom: 1px solid var(--ink);
@@ -5345,6 +5352,11 @@ h2 {
   flex: 0 0 auto;
   margin: 0;
   width: auto;
+}
+
+.add-exercises-to-wod {
+  margin-top: 20px;
+  width: 100%;
 }
 
 .selected-exercise-list {
@@ -5587,6 +5599,11 @@ h2 {
   }
 
   .create-wod-exercises {
+    margin-bottom: 26px;
+    padding-bottom: 26px;
+  }
+
+  .create-wod-review {
     margin-bottom: 26px;
     padding-bottom: 26px;
   }

@@ -82,14 +82,28 @@ Comentario de entrega: https://github.com/Delforojas/wod_explore/issues/80#issue
 - [x] Actualizar la cobertura del flujo y verificar responsive sin overflow en
       movil, tablet y escritorio mediante revision estatica.
 
+## Revision feedback: separar configuracion e incorporacion
+
+- [x] Separar los ejercicios pendientes de configuracion de los que ya forman
+      parte del WOD en construccion.
+- [x] Validar prescripciones antes de `Anadir ejercicios al WOD` y mantener la
+      secuencia revisable como unica fuente del payload de guardado.
+- [x] Impedir `Guardar WOD` mientras existan movimientos pendientes sin
+      incorporar a la secuencia.
+- [x] Actualizar tests y documentacion para distinguir seleccion, configuracion,
+      incorporacion, revision y guardado.
+
 ## Validaciones manuales pendientes
 
 - [ ] Abrir `#/create-wod` autenticado y confirmar que la secuencia de trabajo se
       entiende en la primera vista.
 - [ ] Probar viewport de 320 px, tablet y escritorio: sin overflow horizontal ni
       controles ocultos.
-- [ ] Añadir dos ejercicios, cambiar sus prescripciones, subir/bajar y eliminar
-      uno; confirmar que la secuencia visible comunica el orden real.
+- [ ] Seleccionar dos ejercicios, pulsar `Configurar seleccionados`, completar
+      sus prescripciones y pulsar `Añadir ejercicios al WOD`; confirmar que la
+      revisión muestra ambos con sus medidas y orden.
+- [ ] Intentar añadir un ejercicio pendiente sin completar sus prescripciones y
+      confirmar que permanece fuera del WOD y muestra el error junto al campo.
 - [ ] Cambiar entre `FOR_TIME`, `AMRAP` y `EMOM`; confirmar que rondas y límite
       muestran exactamente su estado opcional u obligatorio.
 - [ ] Abrir el selector, buscar, paginar, cerrar con Escape y reabrir; confirmar

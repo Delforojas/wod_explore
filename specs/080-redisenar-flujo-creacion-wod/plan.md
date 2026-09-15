@@ -15,10 +15,11 @@ no autoriza una migracion de estilos.
 2. Inspeccionar el formulario actual, sus contratos, estados y tests para
    identificar cambios visuales sin alterar el payload ni las reglas de dominio.
 3. Reorganizar el markup de `UserWodForm` en bloques semanticos: cabecera de
-   tarea, configuracion del WOD, secuencia de movimientos, revision y acciones.
+   tarea, configuracion del WOD, configuracion pendiente, WOD en construccion,
+   revision y acciones.
 4. Mejorar la exposicion de labels, campos condicionales, posiciones,
-   prescripciones, acciones por fila y accion principal manteniendo los mismos
-   handlers y estado local.
+   prescripciones, acciones por fila y acciones de transicion manteniendo los
+   mismos contratos y estado local.
 5. Mantener el `<dialog>` nativo del selector y pulir sus estados, cierre,
    busqueda, paginacion, seleccion temporal multiple y feedback sin cambiar las
    llamadas API.
@@ -26,8 +27,9 @@ no autoriza una migracion de estilos.
    `frontend/src/index.css`, con una experiencia mobile-first desde 320 px,
    tablet y escritorio, focus visible, targets de 44 px y reduced motion.
 7. Actualizar `CreateWodPage.test.tsx` y, si es necesario, los tests compartidos
-   del formulario para cubrir jerarquia observable, errores, orden, estados,
-   selector y conservacion del borrador; evitar assertions de CSS.
+   del formulario para cubrir configuracion pendiente, incorporacion validada,
+   revision, errores, orden, estados, selector y guardado; evitar assertions de
+   CSS.
 8. Ejecutar tests, lint, build, TypeScript, `git diff --check`, detector
    mecanico de Impeccable una sola vez sobre los targets finales y revision
    estatica de responsive/accesibilidad.
@@ -48,11 +50,11 @@ no autoriza una migracion de estilos.
 - No se modifica el modo edicion fuera de la apariencia compartida; su carga y
   `PUT` deben continuar pasando los mismos tests.
 - La seleccion multiple del dialogo vive solo mientras esta abierto: marcar no
-  muta el WOD, `Anadir seleccionados al WOD` crea todos los borradores en el
-  orden marcado y cerrar sin confirmar descarta unicamente esa seleccion
-  temporal.
-- `Anadir movimientos` abre el selector y `Guardar WOD` guarda la sesion; no se
-  conserva una CTA externa que repita la apertura del selector.
+  muta el WOD, `Configurar seleccionados` crea movimientos pendientes y cerrar
+  sin confirmar descarta unicamente esa seleccion temporal.
+- `Anadir ejercicios al WOD` valida las prescripciones pendientes y mueve los
+  borradores validos a la secuencia revisable; `Guardar WOD` serializa solo esa
+  secuencia mediante la API existente.
 
 ## Riesgos y controles
 
