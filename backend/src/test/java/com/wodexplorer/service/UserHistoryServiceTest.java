@@ -72,8 +72,10 @@ class UserHistoryServiceTest {
 
         assertThat(response.wodResults().items()).hasSize(1);
         assertThat(response.wodResults().items().getFirst().wodId()).isEqualTo(20);
+        assertThat(response.wodResults().items().getFirst().wodName()).isEqualTo("Fran");
         assertThat(response.exerciseResults().items()).hasSize(1);
         assertThat(response.exerciseResults().items().getFirst().exerciseId()).isEqualTo(125);
+        assertThat(response.exerciseResults().items().getFirst().exerciseName()).isEqualTo("Back Squat");
         then(wodResultRepository).should().findByUser_Id(4, PageRequest.of(0, 20,
                 Sort.by(Sort.Order.desc("completedAt"), Sort.Order.desc("id"))));
         then(exerciseResultRepository).should().findByUser_Id(4, PageRequest.of(0, 20,
@@ -102,6 +104,7 @@ class UserHistoryServiceTest {
     private Wod wod(int id) {
         Wod wod = new Wod();
         wod.setId(id);
+        wod.setName("Fran");
         wod.setType(WodType.FOR_TIME);
         return wod;
     }
@@ -109,6 +112,7 @@ class UserHistoryServiceTest {
     private Exercise exercise(int id) {
         Exercise exercise = new Exercise();
         ReflectionTestUtils.setField(exercise, "id", id);
+        exercise.setName("Back Squat");
         exercise.setMeasurementType(MeasurementType.WEIGHT);
         return exercise;
     }

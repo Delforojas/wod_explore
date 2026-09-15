@@ -7,10 +7,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.wodexplorer.dto.ExerciseResultResponse;
 import com.wodexplorer.dto.PageResponse;
+import com.wodexplorer.dto.HistoryExerciseResultResponse;
+import com.wodexplorer.dto.HistoryWodResultResponse;
 import com.wodexplorer.dto.UserHistoryResponse;
-import com.wodexplorer.dto.WodResultResponse;
 import com.wodexplorer.entity.ExerciseResult;
 import com.wodexplorer.entity.User;
 import com.wodexplorer.entity.WodResult;
@@ -39,12 +39,12 @@ public class UserHistoryService {
     public UserHistoryResponse findOwnHistory(String authenticatedEmail, int page, int size) {
         User user = findAuthenticatedUser(authenticatedEmail);
 
-        PageResponse<WodResultResponse> wodResults = PageResponse.from(wodResultRepository.findByUser_Id(
+        PageResponse<HistoryWodResultResponse> wodResults = PageResponse.from(wodResultRepository.findByUser_Id(
                 user.getId(),
                 PageRequest.of(page, size, Sort.by(
                         Sort.Order.desc("completedAt"), Sort.Order.desc("id"))))
                 .map(this::toWodResponse));
-        PageResponse<ExerciseResultResponse> exerciseResults = PageResponse.from(
+        PageResponse<HistoryExerciseResultResponse> exerciseResults = PageResponse.from(
                 exerciseResultRepository.findByUser_Id(
                         user.getId(),
                         PageRequest.of(page, size, Sort.by(
@@ -67,10 +67,11 @@ public class UserHistoryService {
                 .orElseThrow(AuthenticatedUserNotFoundException::new);
     }
 
-    private WodResultResponse toWodResponse(WodResult result) {
-        return new WodResultResponse(
+    private HistoryWodResultResponse toWodResponse(WodResult result) {
+        return new HistoryWodResultResponse(
                 result.getId(),
                 result.getWod().getId(),
+                result.getWod().getName(),
                 result.getTimeSeconds(),
                 result.getRounds(),
                 result.getReps(),
@@ -78,10 +79,11 @@ public class UserHistoryService {
                 result.getCompletedAt());
     }
 
-    private ExerciseResultResponse toExerciseResponse(ExerciseResult result) {
-        return new ExerciseResultResponse(
+    private HistoryExerciseResultResponse toExerciseResponse(ExerciseResult result) {
+        return new HistoryExerciseResultResponse(
                 result.getId(),
                 result.getExercise().getId(),
+                result.getExercise().getName(),
                 result.getValue(),
                 result.getUnit(),
                 result.getRecordType(),
