@@ -43,11 +43,11 @@
 
 ## Entrega
 
-- [ ] Revisar `git diff` y `git status`, separando archivos de #82 de cambios
+- [x] Revisar `git diff` y `git status`, separando archivos de #82 de cambios
       ajenos.
-- [ ] Crear un commit selectivo de #82 con mensaje que incluya `(#82)`.
-- [ ] Ejecutar `git log -1 --oneline` y `git status` despues del commit.
-- [ ] Documentar la Issue #82 con archivos, verificaciones, hash, mensaje y
+- [x] Crear un commit selectivo de #82 con mensaje que incluya `(#82)`.
+- [x] Ejecutar `git log -1 --oneline` y `git status` despues del commit.
+- [x] Documentar la Issue #82 con archivos, verificaciones, hash, mensaje y
       rama; mantenerla abierta y sin push.
 
 ## Validaciones manuales pendientes
