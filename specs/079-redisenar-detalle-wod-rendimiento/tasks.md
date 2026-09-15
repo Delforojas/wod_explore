@@ -27,9 +27,11 @@
 - [x] Ejecutar el detector mecanico de Impeccable una sola vez sobre los targets
       finales y resolver hallazgos mecanicos si aparecen.
 - [x] Realizar revision estatica responsive, accesibilidad y alcance.
-- [ ] Crear commit propio de #79 y verificar `git status` posterior.
-- [ ] Documentar la Issue #79 con commit, rama, verificaciones y validaciones
+- [x] Crear commit propio de #79 (`8fb2abb`) y verificar `git status` posterior.
+- [x] Documentar la Issue #79 con commit, rama, verificaciones y validaciones
       manuales pendientes, sin hacer push ni cerrar la Issue.
+
+Comentario de entrega: https://github.com/Delforojas/wod_explore/issues/79#issuecomment-5680271983
 
 ## Handoff manual
 
