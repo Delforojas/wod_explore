@@ -22,7 +22,7 @@
 - [x] Ejecutar `npm run lint` y corregir errores relacionados.
 - [x] Ejecutar `npm run build` y corregir errores de TypeScript/build.
 - [ ] Revisar responsive, teclado, foco, estados y ausencia de mappings locales.
-- [ ] Revisar diff y status excluyendo cambios ajenos.
-- [ ] Crear el commit exclusivo de la Issue #71.
-- [ ] Documentar la Issue con commit, verificaciones y validaciones manuales
+- [x] Revisar diff y status excluyendo cambios ajenos.
+- [x] Crear el commit exclusivo de la Issue #71.
+- [x] Documentar la Issue con commit, verificaciones y validaciones manuales
   pendientes sin cerrarla.
