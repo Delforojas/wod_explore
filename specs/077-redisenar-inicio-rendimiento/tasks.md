@@ -28,8 +28,8 @@
 - [x] Ejecutar `git diff --check` y revisar el diff propio.
 - [x] Realizar revision estatica responsive, accesibilidad y alcance; documentar
       si no es posible una inspeccion visual interactiva.
-- [ ] Crear commit propio de #77 y verificar `git status` posterior.
-- [ ] Documentar la Issue #77 con el commit, verificaciones y validaciones
+- [x] Crear commit propio de #77 y verificar `git status` posterior.
+- [x] Documentar la Issue #77 con el commit, verificaciones y validaciones
       manuales pendientes sin cerrarla ni hacer push.
 
 ## Evidencia adicional
