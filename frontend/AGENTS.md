@@ -6,7 +6,31 @@ Este archivo aplica a todo el contenido dentro de `frontend/`.
 
 Las reglas globales definidas en el `AGENTS.md` raíz siguen siendo obligatorias.
 
-Si existe conflicto entre este archivo y el `AGENTS.md` raíz, prevalecen las reglas globales salvo que una spec autorice explícitamente una excepción.
+`DESIGN.md` es la fuente de verdad del lenguaje visual de WOD Explorer y debe
+
+consultarse antes de implementar o modificar cualquier interfaz visual.
+
+Toda tarea frontend debe respetar, en este orden:
+
+1. La Constitución del proyecto.
+
+2. La spec activa.
+
+3. El `AGENTS.md` raíz.
+
+4. Este `frontend/AGENTS.md`.
+
+5. `DESIGN.md` para decisiones visuales y de interacción.
+
+6. Las skills aplicables.
+
+Si existe un conflicto entre estas fuentes, prevalece la de mayor prioridad.
+
+Si una spec autoriza explícitamente una evolución del sistema visual, puede
+
+modificarse `DESIGN.md` como parte de esa Issue. En caso contrario, no se debe
+
+alterar ni contradecir el lenguaje visual definido en `DESIGN.md`.
 
 ---
 
@@ -116,18 +140,65 @@ No inventar endpoints.
 
 ## Diseño
 
-Mantener una estética deportiva y tecnológica coherente con WOD Explorer.
+`DESIGN.md` es la fuente de verdad del lenguaje visual de WOD Explorer.
+
+Antes de implementar o modificar cualquier interfaz visual:
+
+1. leer `DESIGN.md`;
+
+2. identificar los tokens, patrones y componentes aplicables;
+
+3. comprobar la spec activa;
+
+4. implementar respetando ambas fuentes.
+
+La spec define qué debe conseguir la pantalla o funcionalidad.
+
+`DESIGN.md` define cómo debe expresarse visualmente dentro del producto.
+
+No introducir decisiones visuales que contradigan `DESIGN.md` salvo que la spec
+
+autorice explícitamente una evolución del sistema visual.
+
+No introducir sin justificación:
+
+- nuevas familias tipográficas;
+
+- nuevos colores;
+
+- nuevos radios;
+
+- nuevas sombras;
+
+- nuevos patrones de componentes;
+
+- nuevos estilos de navegación;
+
+- nuevos patrones de representación de métricas.
+
+Cuando exista un token o patrón equivalente en el sistema visual, reutilizarlo.
+
+Si una necesidad visual no está contemplada en `DESIGN.md`, no inventar una
+
+nueva convención global silenciosamente. Evaluar si se trata de una necesidad
+
+local o de una evolución del sistema visual.
 
 Priorizar:
 
-- Jerarquía visual clara.
-- Layouts modernos.
-- Interfaces escaneables.
-- Consistencia visual.
-- Responsive design.
-- Mobile-first.
+- jerarquía visual clara;
 
-Evitar modificar radicalmente el lenguaje visual sin que una spec lo autorice.
+- información deportiva escaneable;
+
+- consistencia;
+
+- densidad informativa adecuada;
+
+- responsive mobile-first;
+
+- accesibilidad;
+
+- reutilización del sistema visual existente.
 
 ---
 

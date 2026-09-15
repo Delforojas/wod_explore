@@ -220,11 +220,22 @@ Cuando trabajes con Tailwind:
 
 ### Diseño y accesibilidad
 
-Cuando revises diseño, responsive, UX o accesibilidad:
+Cuando una tarea afecte a interfaz, responsive, UX o diseño visual:
 
-- sigue `impeccable`
+- lee `DESIGN.md` antes de tomar decisiones visuales;
 
-- sigue `web-design-guidelines`
+- sigue las reglas específicas de `frontend/AGENTS.md`;
+
+
+`DESIGN.md` define la identidad visual del producto.
+
+Las skills de diseño aportan criterios y buenas prácticas, pero no pueden
+
+sustituir, reinterpretar ni ampliar por sí mismas la identidad definida en
+
+`DESIGN.md`, salvo que la spec activa autorice explícitamente modificar el
+
+sistema visual.
 
 ### Datos JSON
 

@@ -441,18 +441,51 @@ Si la Issue ya estaba cerrada antes de ejecutar este comando:
 - completa igualmente todas las comprobaciones Git y de publicación;
 - no vuelvas a cerrarla innecesariamente.
 
-## 11. Verificación final
+# 11. Verificación final
 
 Comprueba:
 
-- rama local correcta;
 - rama base identificada;
+
 - ningún cambio perteneciente a la Issue pendiente de commit;
+
 - commit correcto;
+
 - rama publicada en remoto;
+
 - commit disponible en remoto;
+
+- Pull Request integrado correctamente en `main`;
+
+- los cambios de la Issue existen en `origin/main`;
+
 - validación manual registrada;
+
 - Issue cerrada.
+
+Después de confirmar todo lo anterior:
+
+1. cambia a `main`;
+
+2. ejecuta una actualización equivalente a:
+
+`git pull --ff-only origin main`
+
+3. comprueba que `main` local contiene los cambios de la Issue;
+
+4. comprueba que `main` está sincronizado con `origin/main`;
+
+5. comprueba que el working tree no contiene cambios inesperados;
+
+6. termina obligatoriamente el comando estando en `main`.
+
+El comando NO debe finalizar dejando al usuario en la rama de la Issue.
+
+Si no es posible volver a `main` de forma segura:
+
+DETENTE.
+
+No finalices el workflow hasta resolver el problema.
 
 Si quedan cambios locales ajenos a la Issue, indícalos claramente sin modificarlos.
 
