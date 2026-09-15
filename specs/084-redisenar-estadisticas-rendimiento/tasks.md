@@ -49,7 +49,7 @@
       ajenos.
 - [x] Crear un commit selectivo de #84 con mensaje que incluya `(#84)`.
 - [x] Ejecutar `git log -1 --oneline` y `git status` despues del commit.
-- [ ] Documentar la Issue #84 con archivos, verificaciones, hash, mensaje y
+- [x] Documentar la Issue #84 con archivos, verificaciones, hash, mensaje y
       rama; mantenerla abierta y sin push.
 
 ## Validaciones manuales pendientes
