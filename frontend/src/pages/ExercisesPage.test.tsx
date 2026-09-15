@@ -24,9 +24,9 @@ const populatedPage: ExercisePage = {
   items: [{ id: 2, name: "Back Squat", category: "WEIGHTLIFTING", measurementType: "WEIGHT" }],
   page: 0,
   size: 20,
-  totalElements: 1,
-  totalPages: 1,
-  hasNext: false,
+  totalElements: 21,
+  totalPages: 2,
+  hasNext: true,
 };
 
 function deferred<T>() {
@@ -67,8 +67,8 @@ describe("ExercisesPage", () => {
     expect(exerciseLink.getAttribute("href")).toBe("#/exercises/2");
     expect(screen.getByText("Halterofilia")).toBeTruthy();
     expect(screen.getByText("Peso")).toBeTruthy();
-    expect(screen.getByText("1 movimiento disponibles")).toBeTruthy();
-    expect(screen.getByRole("heading", { name: "Resultados de ejercicios" })).toBeTruthy();
+    expect(screen.getByText("21 movimientos disponibles")).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Catálogo de movimientos" })).toBeTruthy();
   });
 
   it("sends the search query and page navigation to the API", async () => {
@@ -77,7 +77,7 @@ describe("ExercisesPage", () => {
     renderWithAuth(<ExercisesPage />, { token: "token" });
     await screen.findByRole("link", { name: /Back Squat/ });
 
-    await user.type(screen.getByLabelText("Buscar ejercicios"), "snatch");
+    await user.type(screen.getByLabelText("Buscar por nombre"), "snatch");
     await user.click(screen.getByRole("button", { name: "Buscar" }));
 
     await waitFor(() => expect(getExercises).toHaveBeenLastCalledWith(
@@ -86,6 +86,22 @@ describe("ExercisesPage", () => {
       { page: 0, size: 20 },
     ));
     expect(screen.getByText('Resultados para “snatch”')).toBeTruthy();
+  });
+
+  it("sends the current page to the API and updates pagination context", async () => {
+    vi.mocked(getExercises).mockResolvedValue(populatedPage);
+    const user = userEvent.setup();
+    renderWithAuth(<ExercisesPage />, { token: "token" });
+
+    await screen.findByRole("link", { name: /Back Squat/ });
+    await user.click(screen.getByRole("button", { name: "Siguiente" }));
+
+    await waitFor(() => expect(getExercises).toHaveBeenLastCalledWith(
+      "token",
+      { name: "" },
+      { page: 1, size: 20 },
+    ));
+    expect(screen.getByText("Página 2 de 2")).toBeTruthy();
   });
 
   it("invites an anonymous visitor to log in", () => {
