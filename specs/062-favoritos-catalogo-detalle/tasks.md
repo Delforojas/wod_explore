@@ -1,0 +1,23 @@
+# Tasks - Issue #62: Integrar favoritos autenticados en catalogo y detalle
+
+- [x] Confirmar el contrato de #62 frente a las Specs 026 y 061.
+- [ ] Añadir schemas Zod y tipos derivados para favoritos.
+- [ ] Añadir al cliente API GET, PUT y DELETE de favoritos autenticados.
+- [ ] Extender el contexto de autenticacion con la coleccion y acciones de favoritos.
+- [ ] Limpiar favoritos en logout, expiracion y cambio de token.
+- [ ] Crear el boton accesible y reutilizable de favorito.
+- [ ] Integrar favorito y filtro combinado en `WodsPage`.
+- [ ] Diferenciar estados vacios, carga, error y reintento del catalogo.
+- [ ] Integrar el estado compartido en `WodDetailPage`.
+- [ ] Ajustar responsive, foco y layout sin anidar controles interactivos.
+- [ ] Añadir tests de API client y schemas.
+- [ ] Añadir tests del ciclo de vida del contexto y mutaciones.
+- [ ] Añadir tests de catalogo, filtro, estados y accesibilidad observable.
+- [ ] Añadir tests de detalle y sincronizacion con el catalogo.
+- [ ] Ejecutar `npm test` y corregir fallos relacionados con la Issue.
+- [ ] Ejecutar `npm run lint` y corregir errores relacionados con la Issue.
+- [ ] Ejecutar `npm run build` y corregir errores de TypeScript/build.
+- [ ] Revisar responsive, accesibilidad, alcance y ausencia de persistencia local.
+- [ ] Revisar diff y status excluyendo cambios ajenos.
+- [ ] Crear el commit exclusivo de la Issue #62.
+- [ ] Documentar commit, verificaciones y rama en la Issue sin cerrarla.

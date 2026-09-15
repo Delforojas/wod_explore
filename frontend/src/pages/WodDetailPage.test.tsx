@@ -73,6 +73,19 @@ describe("WodDetailPage", () => {
     expect(await screen.findByText("Todavía no tienes resultados para este WOD.")).toBeTruthy();
   });
 
+  it("reflects the shared favorite state and exposes an accessible toggle", async () => {
+    vi.mocked(getWod).mockResolvedValue(makeWod("FOR_TIME"));
+    vi.mocked(getWodResults).mockResolvedValue(emptyResults);
+    renderWithAuth(<WodDetailPage id={1} />, {
+      token: "token",
+      favoriteWodIds: new Set([1]),
+      favoritesStatus: "ready",
+    });
+
+    expect(await screen.findByRole("button", { name: "Quitar Fran de favoritos" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Quitar Fran de favoritos" }).getAttribute("aria-pressed")).toBe("true");
+  });
+
   it("sends the FOR_TIME payload", async () => {
     const user = userEvent.setup();
     renderLoadedWod("FOR_TIME");

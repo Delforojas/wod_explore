@@ -6,6 +6,7 @@ import {
   exerciseResultSchema,
   exerciseSchema,
   evolutionSchema,
+  favoriteWodSchema,
   historySchema,
   loginResponseSchema,
   statisticsSchema,
@@ -156,6 +157,18 @@ export function getWods(
 
 export function getWod(id: number, token: string) {
   return request(`/wods/${id}`, wodDetailSchema, {}, token);
+}
+
+export function getFavorites(token: string) {
+  return request("/users/me/favorites", z.array(favoriteWodSchema), {}, token);
+}
+
+export function addFavorite(wodId: number, token: string) {
+  return request(`/users/me/favorites/${wodId}`, z.null(), { method: "PUT" }, token);
+}
+
+export function removeFavorite(wodId: number, token: string) {
+  return request(`/users/me/favorites/${wodId}`, z.null(), { method: "DELETE" }, token);
 }
 
 export function getUserWods(token: string, pagination: PaginationOptions = {}) {

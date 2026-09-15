@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { ApiError, createUserWod, deleteUserWod, getCurrentUser, getExercises, getHistory, getStatistics, getUserWod, getUserWods, getWods, updateUserWod } from "./client";
+import { addFavorite, ApiError, createUserWod, deleteUserWod, getCurrentUser, getExercises, getFavorites, getHistory, getStatistics, getUserWod, getUserWods, getWods, removeFavorite, updateUserWod } from "./client";
 import { statisticsSchema } from "./schemas";
 
 describe("API client", () => {
@@ -115,6 +115,37 @@ describe("API client", () => {
       "http://localhost:8080/api/wods?page=2&size=5&name=Fran&type=FOR_TIME&level=RX",
       expect.objectContaining({ headers: expect.any(Headers) }),
     );
+  });
+
+  it("lists and mutates authenticated favorites without a request body", async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify([{ wodId: 3, favoritedAt: "2026-09-15T10:00:00" }]), { status: 200 }))
+      .mockResolvedValueOnce(new Response(null, { status: 204 }))
+      .mockResolvedValueOnce(new Response(null, { status: 204 }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(getFavorites("token-favorites")).resolves.toEqual([{ wodId: 3, favoritedAt: "2026-09-15T10:00:00" }]);
+    await expect(addFavorite(3, "token-favorites")).resolves.toBeNull();
+    await expect(removeFavorite(3, "token-favorites")).resolves.toBeNull();
+
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      1,
+      "http://localhost:8080/api/users/me/favorites",
+      expect.objectContaining({ headers: expect.any(Headers) }),
+    );
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      2,
+      "http://localhost:8080/api/users/me/favorites/3",
+      expect.objectContaining({ headers: expect.any(Headers), method: "PUT" }),
+    );
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      3,
+      "http://localhost:8080/api/users/me/favorites/3",
+      expect.objectContaining({ headers: expect.any(Headers), method: "DELETE" }),
+    );
+    expect((fetchMock.mock.calls[1]?.[1] as RequestInit).body).toBeUndefined();
+    expect((fetchMock.mock.calls[2]?.[1] as RequestInit).body).toBeUndefined();
+    expect(new Headers(fetchMock.mock.calls[0]?.[1]?.headers).get("Authorization")).toBe("Bearer token-favorites");
   });
 
   it("sends exercise search to the paginated API", async () => {
