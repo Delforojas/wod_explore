@@ -29,7 +29,8 @@ principal. No se anadiran cards uniformes ni una grafica que mezcle unidades.
    valores, unidades, fechas, enlaces, bandas y accesibilidad observable.
 7. Ejecutar `npm test`, `npm run lint`, `npm run build` y `git diff --check`.
 8. Revisar el diff completo, confirmar que solo contiene cambios de #84, crear
-   un commit selectivo con `(#84)` y documentar la Issue sin push ni cierre.
+   un commit selectivo con `(#84)` y documentar la Issue sin push; cerrarla
+   despues de la aprobacion manual.
 
 ## Decisiones de implementacion
 

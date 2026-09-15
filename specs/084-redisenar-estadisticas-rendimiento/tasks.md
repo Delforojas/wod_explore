@@ -66,5 +66,5 @@
 - [x] Verificar 320 px, movil, tablet y escritorio sin overflow, con nombres
       largos, zoom y navegacion por teclado.
 
-Las comprobaciones manuales fueron aprobadas. La Issue puede cerrarse como
+Las comprobaciones manuales fueron aprobadas y la Issue fue cerrada como
 completada.
