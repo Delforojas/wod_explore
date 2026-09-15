@@ -150,28 +150,33 @@ export function MyWodDetailPage({ id }: { id: number }) {
   }
 
   return (
-    <section className="detail-page detail-page--my-wod" aria-labelledby="my-wod-detail-title">
-      <a className="back-link" href="#/my-wods">Volver a Mis WODs</a>
-      <header className="detail-heading">
-        <div className="detail-heading__body">
+    <section className="detail-page detail-page--my-wod my-wod-management-detail" aria-labelledby="my-wod-detail-title">
+      <a className="back-link my-wod-back-link" href="#/my-wods">Volver a Mis WODs</a>
+      <header className="detail-heading my-wod-management-heading">
+        <div className="my-wod-management-heading__body">
+          <p className="surface-kicker">Gestión de WOD personal</p>
           <h1 id="my-wod-detail-title">{wod.name}</h1>
           <p className="detail-summary">{WOD_TYPE_LABELS[wod.type]} · {WOD_LEVEL_LABELS[wod.level]}</p>
         </div>
-        <div className="detail-heading__meta">
-          <span className="tag tag--accent">WOD personal</span>
-          <span className="detail-reference">WOD #{wod.id}</span>
-          <a className="button button--accent" href={`#/my-wods/${wod.id}/edit`}>Editar</a>
-          <button
-            className="button button--danger"
-            type="button"
-            ref={deleteTriggerRef}
-            aria-haspopup="dialog"
-            onClick={openDeleteDialog}
-          >
-            Eliminar WOD
-          </button>
+        <div className="my-wod-management-heading__actions">
+          <div className="my-wod-management-heading__meta">
+            <span className="tag tag--accent">WOD personal</span>
+            <span className="detail-reference">WOD #{wod.id}</span>
           </div>
-        </header>
+          <div className="my-wod-management-actions">
+            <a className="button button--accent" href={`#/my-wods/${wod.id}/edit`} aria-label={`Editar ${wod.name}`}>Editar</a>
+            <button
+              className="button button--danger"
+              type="button"
+              ref={deleteTriggerRef}
+              aria-haspopup="dialog"
+              onClick={openDeleteDialog}
+            >
+              Eliminar WOD
+            </button>
+          </div>
+          </div>
+      </header>
 
       <div className="my-wod-detail-grid">
         <article className="my-wod-detail-manifest">

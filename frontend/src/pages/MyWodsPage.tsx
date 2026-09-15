@@ -92,13 +92,17 @@ export function MyWodsPage({ deletionFeedback = false }: { deletionFeedback?: bo
 
   return (
     <section className="catalog-page my-wods-page" aria-labelledby="my-wods-title">
-      <header className="page-heading my-wods-page__heading">
-        <div className="page-heading__body">
+      <header className="my-wods-archive-header">
+        <div className="my-wods-archive-header__body">
+          <p className="surface-kicker">Archivo personal</p>
           <h1 id="my-wods-title">Mis WODs</h1>
-          <p className="heading-support">El archivo de las sesiones que has diseñado para volver a entrenar.</p>
+          <p>Las sesiones que has diseñado para volver a entrenar, revisar y ajustar.</p>
         </div>
-        <div className="page-heading__actions">
-          <p className="heading-note" aria-live="polite">{catalog.totalElements} {catalog.totalElements === 1 ? "WOD guardado" : "WODs guardados"}</p>
+        <div className="my-wods-archive-header__actions">
+          <div className="my-wods-count" aria-live="polite">
+            <strong>{catalog.totalElements}</strong>
+            <span>{catalog.totalElements === 1 ? "WOD guardado" : "WODs guardados"}</span>
+          </div>
           <a className="button button--accent" href="#/create-wod">Crear WOD</a>
         </div>
       </header>
@@ -115,9 +119,13 @@ export function MyWodsPage({ deletionFeedback = false }: { deletionFeedback?: bo
         <StateMessage kind="empty" title="Aún no tienes WODs personalizados" message="Diseña una sesión propia y aparecerá aquí para consultarla cuando quieras." action={{ label: "Crear mi primer WOD", href: "#/create-wod" }} />
       ) : (
         <section className="my-wods-results" aria-labelledby="my-wods-results-title">
-          <div className="catalog-results-heading">
-            <h2 id="my-wods-results-title">Tu archivo personal</h2>
-            <p className="catalog-results-heading__status">Ordenado por creación más reciente</p>
+          <div className="my-wods-management-heading">
+            <div>
+              <p className="surface-kicker">Gestión</p>
+              <h2 id="my-wods-results-title">Sesiones diseñadas</h2>
+              <p>Abre una sesión para consultar sus detalles o editar su configuración.</p>
+            </div>
+            <p className="my-wods-management-heading__status">Ordenadas por creación más reciente</p>
           </div>
           <ul className="catalog-list my-wods-list">
             {catalog.items.map((wod) => {
@@ -125,19 +133,34 @@ export function MyWodsPage({ deletionFeedback = false }: { deletionFeedback?: bo
               const exerciseCount = detail?.exercises.length ?? 0;
               return (
                 <li className="catalog-list__item" key={wod.id}>
-                  <a className="catalog-row my-wod-row" href={`#/my-wods/${wod.id}`} aria-label={`${wod.name}. Ver detalle de Mis WODs`}>
-                    <span className="row-number">{String(wod.id).padStart(3, "0")}</span>
-                    <span className="row-main">
-                      <strong>{wod.name}</strong>
-                      <small className="row-main__type"><span>Formato</span>{formatWodMetrics(wod.type, wod.timeLimit, wod.rounds)}</small>
-                    </span>
-                    <span className="my-wod-row__meta">
-                      <small>{wod.level ? WOD_LEVEL_LABELS[wod.level] : "Todos los niveles"}</small>
-                      <b className="metric-value metric-value--compact">{exerciseCount} {exerciseCount === 1 ? "ejercicio" : "ejercicios"}</b>
-                      <time dateTime={wod.createdAt}>{dateFormatter.format(new Date(wod.createdAt))}</time>
-                    </span>
-                    <span className="row-arrow" aria-hidden="true">-&gt;</span>
-                  </a>
+                  <article className="my-wod-entry">
+                    <span className="my-wod-entry__index" aria-hidden="true">{String(wod.id).padStart(3, "0")}</span>
+                    <div className="my-wod-entry__content">
+                      <div className="my-wod-entry__identity">
+                        <span className="tag tag--accent">WOD personal</span>
+                        <h3>{wod.name}</h3>
+                      </div>
+                      <p className="my-wod-entry__format">{formatWodMetrics(wod.type, wod.timeLimit, wod.rounds)}</p>
+                    </div>
+                    <dl className="my-wod-entry__metrics">
+                      <div>
+                        <dt>Nivel</dt>
+                        <dd>{wod.level ? WOD_LEVEL_LABELS[wod.level] : "Todos los niveles"}</dd>
+                      </div>
+                      <div>
+                        <dt>Ejercicios</dt>
+                        <dd className="metric-value metric-value--compact">{exerciseCount} {exerciseCount === 1 ? "ejercicio" : "ejercicios"}</dd>
+                      </div>
+                      <div>
+                        <dt>Creado</dt>
+                        <dd><time dateTime={wod.createdAt}>{dateFormatter.format(new Date(wod.createdAt))}</time></dd>
+                      </div>
+                    </dl>
+                    <div className="my-wod-entry__actions">
+                      <a className="button button--accent" href={`#/my-wods/${wod.id}`} aria-label={`${wod.name}. Ver detalle de Mis WODs`}>Ver WOD</a>
+                      <a className="button button--secondary" href={`#/my-wods/${wod.id}/edit`} aria-label={`Editar ${wod.name}`}>Editar</a>
+                    </div>
+                  </article>
                 </li>
               );
             })}

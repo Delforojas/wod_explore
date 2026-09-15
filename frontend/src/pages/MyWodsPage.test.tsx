@@ -87,6 +87,8 @@ describe("MyWodsPage", () => {
     expect(screen.getByText("Por tiempo · 600 s")).toBeTruthy();
     const link = screen.getByRole("link", { name: /Fran personal.*Ver detalle/ });
     expect(link.getAttribute("href")).toBe("#/my-wods/31");
+    expect(screen.getByRole("link", { name: "Editar Fran personal" }).getAttribute("href")).toBe("#/my-wods/31/edit");
+    expect(screen.queryByRole("button", { name: "Eliminar WOD" })).toBeNull();
   });
 
   it("paginates the personal archive with the current token", async () => {
