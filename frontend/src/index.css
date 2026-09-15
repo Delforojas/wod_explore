@@ -4757,3 +4757,394 @@ h2 {
     grid-row: 2;
   }
 }
+
+/* 079: hoja de ejecucion de WOD */
+.wod-detail-page {
+  margin-inline: auto;
+  max-width: 1280px;
+  min-width: 0;
+}
+
+.wod-detail-back-link {
+  display: inline-flex;
+  margin-bottom: 18px;
+  min-height: var(--touch-target);
+  align-items: center;
+}
+
+.wod-detail-header {
+  align-items: end;
+  border-bottom: 1px solid var(--border-strong);
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding-bottom: 20px;
+}
+
+.wod-detail-header__body,
+.wod-detail-header__meta,
+.wod-detail-main,
+.wod-detail-side {
+  min-width: 0;
+}
+
+.wod-detail-header h1 {
+  font-size: 48px;
+  line-height: 0.95;
+  margin: 0;
+  max-width: 18ch;
+}
+
+.wod-detail-summary,
+.wod-detail-date {
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 12px 0 0;
+}
+
+.wod-detail-header__meta {
+  align-items: end;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wod-detail-header__meta .favorite-button {
+  max-width: 100%;
+}
+
+.wod-detail-reference {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.wod-performance-summary {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin: 16px 0 0;
+}
+
+.wod-performance-metric {
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 16px;
+}
+
+.wod-performance-metric:last-child {
+  border-right: 0;
+}
+
+.wod-performance-metric dt,
+.wod-exercise-prescription small {
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.wod-performance-metric dd {
+  color: var(--ink);
+  font-size: 21px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.wod-performance-metric:first-child dd {
+  color: var(--orange);
+}
+
+.wod-detail-date {
+  color: var(--text-muted);
+  font-size: 11px;
+  margin: 12px 0 24px;
+}
+
+.wod-detail-layout {
+  align-items: start;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
+}
+
+.wod-exercise-section {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  min-width: 0;
+  padding: 24px;
+}
+
+.wod-section-heading {
+  align-items: end;
+  border-bottom: 1px solid var(--border-strong);
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  margin-bottom: 2px;
+  padding-bottom: 14px;
+}
+
+.wod-section-heading h2 {
+  font-size: 28px;
+  margin: 0;
+}
+
+.wod-section-heading p {
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 8px 0 0;
+  max-width: 46ch;
+}
+
+.wod-section-count {
+  color: var(--orange);
+  font-size: 24px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.wod-exercise-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.wod-exercise-row {
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 44px minmax(0, 1fr) minmax(130px, 0.45fr);
+  min-width: 0;
+  padding: 18px 0;
+}
+
+.wod-exercise-position {
+  align-items: center;
+  background: var(--surface-raised);
+  color: var(--orange);
+  display: flex;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  height: 44px;
+  justify-content: center;
+  width: 44px;
+}
+
+.wod-exercise-identity,
+.wod-exercise-prescription {
+  min-width: 0;
+}
+
+.wod-exercise-identity h3 {
+  font-size: 21px;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.wod-exercise-identity p,
+.wod-exercise-prescription span {
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1.35;
+  margin: 6px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.wod-exercise-prescription {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: right;
+}
+
+.wod-exercise-prescription strong {
+  color: var(--ink);
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.wod-exercise-prescription span {
+  margin: 0;
+}
+
+.wod-detail-side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.wod-detail-side .result-form,
+.wod-detail-side .result-list {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  min-width: 0;
+}
+
+.wod-detail-side .result-form {
+  border-top: 3px solid var(--orange);
+  gap: 17px;
+  padding: 24px;
+}
+
+.wod-detail-side .result-form .form-heading {
+  padding-bottom: 14px;
+}
+
+.wod-detail-side .result-form .form-heading h2 {
+  font-size: 25px;
+  margin: 0;
+}
+
+.wod-detail-side .result-form .form-heading p {
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 7px 0 0;
+}
+
+.wod-detail-side .result-form input,
+.wod-detail-side .result-form select {
+  background: var(--background);
+  border-color: var(--border-strong);
+  color: var(--ink);
+  min-height: var(--touch-target);
+}
+
+.wod-detail-side .result-list {
+  padding: 24px;
+}
+
+.wod-detail-side .result-list .section-heading {
+  border-bottom-color: var(--border-strong);
+}
+
+.wod-detail-side .result-list .section-heading h2 {
+  font-size: 25px;
+}
+
+.wod-detail-side .result-row {
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  padding: 16px 0;
+}
+
+.wod-detail-side .result-row strong {
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+@media (max-width: 900px) {
+  .wod-performance-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .wod-performance-metric:nth-child(3) {
+    border-right: 0;
+  }
+
+  .wod-performance-metric:nth-child(-n + 3) {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .wod-detail-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .wod-detail-header {
+    align-items: start;
+    grid-template-columns: 1fr;
+  }
+
+  .wod-detail-header h1 {
+    font-size: 38px;
+  }
+
+  .wod-detail-header__meta {
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .wod-performance-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .wod-performance-metric,
+  .wod-performance-metric:nth-child(3) {
+    border-bottom: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+  }
+
+  .wod-performance-metric:nth-child(2n) {
+    border-right: 0;
+  }
+
+  .wod-performance-metric:nth-last-child(-n + 2) {
+    border-bottom: 0;
+  }
+
+  .wod-exercise-section,
+  .wod-detail-side .result-form,
+  .wod-detail-side .result-list {
+    padding: 16px;
+  }
+
+  .wod-section-heading {
+    align-items: start;
+  }
+
+  .wod-exercise-row {
+    align-items: start;
+    gap: 12px;
+    grid-template-columns: 36px minmax(0, 1fr);
+  }
+
+  .wod-exercise-position {
+    height: 36px;
+    width: 36px;
+  }
+
+  .wod-exercise-identity {
+    grid-column: 2;
+  }
+
+  .wod-exercise-prescription {
+    border-top: 1px solid var(--line);
+    grid-column: 2;
+    padding-top: 12px;
+    text-align: left;
+  }
+
+  .wod-detail-side .result-row {
+    align-items: start;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .wod-detail-side .result-row small {
+    grid-column: 2;
+  }
+}
