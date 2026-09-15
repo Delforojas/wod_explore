@@ -123,12 +123,13 @@ describe("WodsPage", () => {
     expect(await screen.findByRole("link", { name: /Fran/ })).toBeTruthy();
     expect(screen.getByRole("link", { name: /Helen/ })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Quitar Fran de favoritos" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Añadir Helen a favoritos" }).textContent).toBe("Añadir a favoritos");
 
     await user.click(screen.getByRole("button", { name: "Solo favoritos" }));
 
     expect(screen.getByRole("link", { name: /Fran/ })).toBeTruthy();
     expect(screen.queryByRole("link", { name: /Helen/ })).toBeNull();
-    expect(screen.getByRole("button", { name: "Quitar Fran de favoritos" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Quitar Fran de favoritos" }).textContent).toBe("Quitar de favoritos");
 
     await user.click(screen.getByRole("button", { name: "Quitar Fran de favoritos" }));
     expect(toggleFavorite).toHaveBeenCalledWith(1);

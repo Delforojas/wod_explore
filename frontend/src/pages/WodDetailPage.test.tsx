@@ -82,7 +82,7 @@ describe("WodDetailPage", () => {
       favoritesStatus: "ready",
     });
 
-    expect(await screen.findByRole("button", { name: "Quitar Fran de favoritos" })).toBeTruthy();
+    expect((await screen.findByRole("button", { name: "Quitar Fran de favoritos" })).textContent).toBe("Quitar de favoritos");
     expect(screen.getByRole("button", { name: "Quitar Fran de favoritos" }).getAttribute("aria-pressed")).toBe("true");
   });
 
