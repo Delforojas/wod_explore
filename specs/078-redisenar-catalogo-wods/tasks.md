@@ -32,9 +32,11 @@
       finales y resolver hallazgos mecanicos si aparecen.
 - [x] Realizar revision estatica responsive, accesibilidad y alcance; indicar
       honestamente cualquier inspeccion visual manual no disponible.
-- [ ] Crear commit propio de #78 y verificar `git status` posterior.
-- [ ] Documentar la Issue #78 con commit, rama, verificaciones y validaciones
+- [x] Crear commit propio de #78 (`6a1056d`) y verificar `git status` posterior.
+- [x] Documentar la Issue #78 con commit, rama, verificaciones y validaciones
       manuales pendientes, sin hacer push ni cerrar la Issue.
+
+Comentario de entrega: https://github.com/Delforojas/wod_explore/issues/78#issuecomment-5679915154
 
 ## Handoff manual
 
