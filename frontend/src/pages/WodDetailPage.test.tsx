@@ -15,16 +15,16 @@ vi.mock("../api/client", () => ({
 
 const emptyResults: WodResult[] = [];
 
-function makeWod(type: WodType): WodDetail {
+function makeWod(type: WodType, exercises: WodDetail["exercises"] = []): WodDetail {
   return {
     id: 1,
     name: "Fran",
     type,
-    timeLimit: null,
+    timeLimit: 240,
     rounds: 3,
     level: "RX",
     createdAt: "2026-09-12T16:00:00",
-    exercises: [],
+    exercises,
   };
 }
 
@@ -69,8 +69,29 @@ describe("WodDetailPage", () => {
     renderLoadedWod("FOR_TIME");
 
     expect(await screen.findByRole("heading", { name: "Fran" })).toBeTruthy();
+    expect(screen.getByText("04:00", { selector: ".wod-performance-metric dd" })).toBeTruthy();
+    expect(screen.getByText("3", { selector: ".wod-performance-metric dd" })).toBeTruthy();
+    expect(screen.getByText("0", { selector: ".wod-performance-metric dd" })).toBeTruthy();
     expect(screen.getByText("Este WOD no tiene ejercicios asociados.")).toBeTruthy();
     expect(await screen.findByText("Todavía no tienes resultados para este WOD.")).toBeTruthy();
+  });
+
+  it("renders the exercise sequence with available prescription data", async () => {
+    vi.mocked(getWod).mockResolvedValue(makeWod("FOR_TIME", [
+      { id: 4, name: "Thruster", category: "WEIGHTLIFTING", measurementType: "WEIGHT", reps: 15, position: 1 },
+      { id: 5, name: "Run", category: "CARDIO", measurementType: "DISTANCE", reps: null, position: 2 },
+    ]));
+    vi.mocked(getWodResults).mockResolvedValue(emptyResults);
+
+    renderWithAuth(<WodDetailPage id={1} />, { token: "token" });
+
+    expect(await screen.findByRole("heading", { name: "Secuencia de ejercicios" })).toBeTruthy();
+    expect(screen.getByText("Thruster")).toBeTruthy();
+    expect(screen.getByText("Run")).toBeTruthy();
+    expect(screen.getByText("15 reps", { selector: ".wod-exercise-prescription strong" })).toBeTruthy();
+    expect(screen.getByText("Distancia", { selector: ".wod-exercise-prescription strong" })).toBeTruthy();
+    expect(screen.getByText("01", { selector: ".wod-exercise-position" })).toBeTruthy();
+    expect(screen.getByText("02", { selector: ".wod-exercise-position" })).toBeTruthy();
   });
 
   it("reflects the shared favorite state and exposes an accessible toggle", async () => {
