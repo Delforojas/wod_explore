@@ -76,7 +76,7 @@ function unitsForMeasurement(measurementType: MeasurementType): WodExercisePresc
   switch (measurementType) {
     case "REPS": return ["REPS"];
     case "DISTANCE": return ["METERS"];
-    case "WEIGHT": return ["KG"];
+    case "WEIGHT": return ["REPS", "KG"];
     case "TIME": return ["SECONDS"];
     case "WEIGHT_DISTANCE": return ["KG", "METERS"];
     case "OTHER": return ["OTHER"];
@@ -96,6 +96,10 @@ function createDraftExercise(exercise: Exercise): DraftExercise {
 }
 
 function createDraftFromDetail(exercise: UserWodDetail["exercises"][number]): DraftExercise {
+  const prescriptionsByUnit = new Map(
+    exercise.prescriptions.map((prescription) => [prescription.unit, prescription]),
+  );
+
   return {
     key: `exercise-${nextDraftKey++}`,
     exercise: {
@@ -104,11 +108,14 @@ function createDraftFromDetail(exercise: UserWodDetail["exercises"][number]): Dr
       category: exercise.category,
       measurementType: exercise.measurementType,
     },
-    prescriptions: exercise.prescriptions.map((prescription) => ({
-      unit: prescription.unit,
-      value: String(prescription.value),
-      unitLabel: prescription.unitLabel ?? "",
-    })),
+    prescriptions: unitsForMeasurement(exercise.measurementType).map((unit) => {
+      const prescription = prescriptionsByUnit.get(unit);
+      return {
+        unit,
+        value: prescription ? String(prescription.value) : "",
+        unitLabel: prescription?.unitLabel ?? "",
+      };
+    }),
   };
 }
 

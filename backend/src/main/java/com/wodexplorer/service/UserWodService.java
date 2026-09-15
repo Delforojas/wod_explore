@@ -336,7 +336,9 @@ public class UserWodService {
         return switch (measurementType) {
             case REPS -> EnumSet.of(WodExercisePrescriptionUnit.REPS);
             case DISTANCE -> EnumSet.of(WodExercisePrescriptionUnit.METERS);
-            case WEIGHT -> EnumSet.of(WodExercisePrescriptionUnit.KG);
+            case WEIGHT -> EnumSet.of(
+                    WodExercisePrescriptionUnit.REPS,
+                    WodExercisePrescriptionUnit.KG);
             case TIME -> EnumSet.of(WodExercisePrescriptionUnit.SECONDS);
             case WEIGHT_DISTANCE -> EnumSet.of(
                     WodExercisePrescriptionUnit.KG,

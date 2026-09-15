@@ -151,6 +151,7 @@ describe("CreateWodPage", () => {
     await user.click(screen.getByRole("button", { name: "Añadir ejercicio" }));
     const secondDialog = await screen.findByRole("dialog");
     await user.click(within(secondDialog).getAllByRole("button", { name: "Añadir" })[1]!);
+    await user.type(screen.getByLabelText("repeticiones"), "10");
     await user.type(screen.getByLabelText("kg"), "60");
     await user.type(screen.getByLabelText("metros"), "500");
     await user.click(screen.getByRole("button", { name: "Subir Run" }));
@@ -162,7 +163,10 @@ describe("CreateWodPage", () => {
       timeLimit: 600,
       exercises: [
         { exerciseId: 2, position: 1, prescriptions: [{ value: 500, unit: "METERS", unitLabel: null }] },
-        { exerciseId: 1, position: 2, prescriptions: [{ value: 60, unit: "KG", unitLabel: null }] },
+        { exerciseId: 1, position: 2, prescriptions: [
+          { value: 10, unit: "REPS", unitLabel: null },
+          { value: 60, unit: "KG", unitLabel: null },
+        ] },
       ],
     });
     expect(screen.getByText("WOD guardado")).toBeTruthy();
@@ -178,6 +182,7 @@ describe("CreateWodPage", () => {
     await user.type(screen.getByLabelText("Nombre del WOD"), "Mi WOD");
     await user.type(screen.getByLabelText(/Time cap/), "300");
     await openPickerAndAdd(0);
+    await user.type(screen.getByLabelText("repeticiones"), "10");
     await user.type(screen.getByLabelText("kg"), "40");
     await user.click(screen.getByRole("button", { name: "Guardar WOD" }));
     await user.click(screen.getByRole("button", { name: "Guardando…" }));
@@ -197,6 +202,7 @@ describe("CreateWodPage", () => {
     await user.type(screen.getByLabelText("Nombre del WOD"), "WOD con error");
     await user.type(screen.getByLabelText(/Time cap/), "300");
     await openPickerAndAdd(0);
+    await user.type(screen.getByLabelText("repeticiones"), "10");
     await user.type(screen.getByLabelText("kg"), "40");
     await user.click(screen.getByRole("button", { name: "Guardar WOD" }));
 

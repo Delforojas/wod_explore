@@ -353,6 +353,63 @@ class UserWodServiceTest {
                         WodExercisePrescriptionUnit.METERS);
     }
 
+    @Test
+    void create_ValidatesWeightWithRepsAndKg() {
+        User owner = user(7, "owner@example.com");
+        Exercise weightedExercise = exercise(12, "Back Squat", MeasurementType.WEIGHT);
+        given(userRepository.findByEmail("owner@example.com")).willReturn(Optional.of(owner));
+        given(exerciseRepository.findAllById(any())).willReturn(List.of(weightedExercise));
+        given(wodRepository.saveAndFlush(any(Wod.class)))
+                .willAnswer(invocation -> invocation.getArgument(0));
+
+        UserWodDetailResponse response = userWodService.create(
+                request(WodType.FOR_TIME, null, exerciseRequest(12, 1,
+                        prescription("10", WodExercisePrescriptionUnit.REPS, null),
+                        prescription("60", WodExercisePrescriptionUnit.KG, null))),
+                AUTHENTICATED_EMAIL);
+
+        assertThat(response.exercises().get(0).prescriptions())
+                .extracting("unit")
+                .containsExactlyInAnyOrder(WodExercisePrescriptionUnit.REPS,
+                        WodExercisePrescriptionUnit.KG);
+        assertThat(response.exercises().get(0).prescriptions())
+                .extracting("value")
+                .containsExactlyInAnyOrder(new BigDecimal("10"), new BigDecimal("60"));
+    }
+
+    @Test
+    void create_RejectsWeightWithoutBothRepsAndKg() {
+        User owner = user(7, "owner@example.com");
+        Exercise weightedExercise = exercise(12, "Back Squat", MeasurementType.WEIGHT);
+        given(userRepository.findByEmail("owner@example.com")).willReturn(Optional.of(owner));
+        given(exerciseRepository.findAllById(any())).willReturn(List.of(weightedExercise));
+
+        assertThatThrownBy(() -> userWodService.create(
+                request(WodType.FOR_TIME, null, exerciseRequest(12, 1,
+                        prescription("60", WodExercisePrescriptionUnit.KG, null))),
+                AUTHENTICATED_EMAIL))
+                .isInstanceOf(InvalidUserWodException.class)
+                .hasMessage("Las prescripciones no son compatibles con el tipo de medicion del ejercicio");
+        then(wodRepository).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void create_RejectsRepeatedPrescriptionUnit() {
+        User owner = user(7, "owner@example.com");
+        Exercise weightedExercise = exercise(12, "Back Squat", MeasurementType.WEIGHT);
+        given(userRepository.findByEmail("owner@example.com")).willReturn(Optional.of(owner));
+        given(exerciseRepository.findAllById(any())).willReturn(List.of(weightedExercise));
+
+        assertThatThrownBy(() -> userWodService.create(
+                request(WodType.FOR_TIME, null, exerciseRequest(12, 1,
+                        prescription("10", WodExercisePrescriptionUnit.REPS, null),
+                        prescription("12", WodExercisePrescriptionUnit.REPS, null))),
+                AUTHENTICATED_EMAIL))
+                .isInstanceOf(InvalidUserWodException.class)
+                .hasMessage("No se permiten unidades repetidas en un ejercicio");
+        then(wodRepository).shouldHaveNoInteractions();
+    }
+
     private UserWodCreateRequest request(
             WodType type,
             Integer timeLimit,

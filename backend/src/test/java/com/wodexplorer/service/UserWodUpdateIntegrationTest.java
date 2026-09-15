@@ -49,7 +49,7 @@ class UserWodUpdateIntegrationTest extends MySqlIntegrationTest {
         String email = uniqueEmail();
         int ownerId = insertUser(email);
         int oldExerciseId = insertExercise("REPS");
-        int firstNewExerciseId = insertExercise("DISTANCE");
+        int firstNewExerciseId = insertExercise("WEIGHT");
         int secondNewExerciseId = insertExercise("REPS");
         int wodId = insertWod(ownerId, "Before update");
         int oldWodExerciseId = insertWodExercise(wodId, oldExerciseId, 1);
@@ -60,9 +60,10 @@ class UserWodUpdateIntegrationTest extends MySqlIntegrationTest {
                 updateRequest(
                         "After update",
                         WodType.FOR_TIME,
-                        null,
-                        exerciseRequest(firstNewExerciseId, 1,
-                                prescription("400", WodExercisePrescriptionUnit.METERS)),
+                         null,
+                         exerciseRequest(firstNewExerciseId, 1,
+                                 prescription("10", WodExercisePrescriptionUnit.REPS),
+                                 prescription("60", WodExercisePrescriptionUnit.KG)),
                         exerciseRequest(secondNewExerciseId, 2,
                                 prescription("12", WodExercisePrescriptionUnit.REPS))),
                 email);
@@ -88,6 +89,13 @@ class UserWodUpdateIntegrationTest extends MySqlIntegrationTest {
                 "SELECT COUNT(*) FROM wod_exercise_prescriptions WHERE wod_exercise_id = ?",
                 Integer.class, oldWodExerciseId))
                 .isZero();
+        int newWodExerciseId = jdbcTemplate.queryForObject(
+                "SELECT id FROM wod_exercises WHERE wod_id = ? AND exercise_id = ?",
+                Integer.class, wodId, firstNewExerciseId);
+        assertThat(jdbcTemplate.queryForList(
+                "SELECT unit FROM wod_exercise_prescriptions WHERE wod_exercise_id = ? ORDER BY unit",
+                String.class, newWodExerciseId))
+                .containsExactly("KG", "REPS");
         assertThat(wodRepository.findByIdAndOwner_Id(wodId, ownerId)).isPresent();
         assertThat(wodExerciseRepository.findByWodIdWithExerciseOrderByPositionAsc(wodId))
                 .extracting(exercise -> exercise.getPosition())
@@ -152,8 +160,8 @@ class UserWodUpdateIntegrationTest extends MySqlIntegrationTest {
     private UserWodExerciseRequest exerciseRequest(
             int exerciseId,
             int position,
-            UserWodPrescriptionRequest prescription) {
-        return new UserWodExerciseRequest(exerciseId, position, List.of(prescription));
+            UserWodPrescriptionRequest... prescriptions) {
+        return new UserWodExerciseRequest(exerciseId, position, List.of(prescriptions));
     }
 
     private UserWodPrescriptionRequest prescription(
