@@ -527,7 +527,7 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
 
         <aside className="create-wod-aside" aria-label="Resumen del diseño">
           <p className="create-wod-aside__label">Diseño en curso</p>
-          <strong className="create-wod-aside__count">{String(selectedExercises.length).padStart(2, "0")}</strong>
+          <strong className="create-wod-aside__count metric-value metric-value--hero">{String(selectedExercises.length).padStart(2, "0")}</strong>
           <p className="create-wod-aside__count-label">{selectedExercises.length === 1 ? "movimiento seleccionado" : "movimientos seleccionados"}</p>
           <dl className="create-wod-summary">
             <div><dt>Estructura</dt><dd>{WOD_TYPE_LABELS[type]}</dd></div>

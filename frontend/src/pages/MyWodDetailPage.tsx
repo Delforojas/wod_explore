@@ -185,13 +185,13 @@ export function MyWodDetailPage({ id }: { id: number }) {
               <div className="manifest-line"><dt>Nivel</dt><dd>{WOD_LEVEL_LABELS[wod.level]}</dd></div>
               <div className="manifest-line"><dt>Límite</dt><dd>{wod.timeLimit !== null ? `${wod.timeLimit} segundos` : "Sin límite"}</dd></div>
               <div className="manifest-line"><dt>Rondas</dt><dd>{wod.rounds ?? "Variable"}</dd></div>
-              <div className="manifest-line"><dt>Ejercicios</dt><dd><data value={wod.exercises.length}>{wod.exercises.length}</data></dd></div>
+              <div className="manifest-line"><dt>Ejercicios</dt><dd><data className="metric-value metric-value--compact" value={wod.exercises.length}>{wod.exercises.length}</data></dd></div>
             </dl>
             <p className="detail-date">Creado <time dateTime={wod.createdAt}>{dateFormatter.format(new Date(wod.createdAt))}</time></p>
           </section>
 
           <section className="detail-section my-wod-exercises" aria-labelledby="my-wod-exercises-title">
-            <div className="section-heading"><div><h2 id="my-wod-exercises-title">Ejercicios de la sesión</h2><p className="section-description">La secuencia y las medidas que definiste.</p></div><span>{wod.exercises.length}</span></div>
+            <div className="section-heading"><div><h2 id="my-wod-exercises-title">Ejercicios de la sesión</h2><p className="section-description">La secuencia y las medidas que definiste.</p></div><span className="metric-value metric-value--compact">{wod.exercises.length}</span></div>
             {wod.exercises.length === 0 ? <StateMessage kind="empty" title="Este WOD no tiene ejercicios asociados." /> : (
               <ol className="my-wod-exercise-list">
                 {wod.exercises.map((exercise, index) => (
@@ -204,7 +204,7 @@ export function MyWodDetailPage({ id }: { id: number }) {
                       </div>
                     </div>
                     <ul className="my-wod-prescriptions" aria-label={`Prescripciones de ${exercise.name}`}>
-                      {exercise.prescriptions.map((prescription) => <li key={`${prescription.unit}-${prescription.unitLabel ?? ""}`}><strong>{formatPrescription(prescription.unit, prescription.value, prescription.unitLabel)}</strong><span>{prescription.unit === "OTHER" ? "Medida personalizada" : "Prescripción"}</span></li>)}
+                      {exercise.prescriptions.map((prescription) => <li key={`${prescription.unit}-${prescription.unitLabel ?? ""}`}><strong className="metric-value metric-value--row">{formatPrescription(prescription.unit, prescription.value, prescription.unitLabel)}</strong><span>{prescription.unit === "OTHER" ? "Medida personalizada" : "Prescripción"}</span></li>)}
                     </ul>
                   </li>
                 ))}
@@ -217,7 +217,7 @@ export function MyWodDetailPage({ id }: { id: number }) {
           <WodResultsPanel wodId={wod.id} wodType={wod.type} token={token} />
           <aside className="my-wod-detail-aside" aria-label="Resumen del WOD personal">
             <p className="my-wod-detail-aside__label">Archivo personal</p>
-            <strong>{String(wod.exercises.length).padStart(2, "0")}</strong>
+            <strong className="metric-value metric-value--hero">{String(wod.exercises.length).padStart(2, "0")}</strong>
             <p>{wod.exercises.length === 1 ? "movimiento en la sesión" : "movimientos en la sesión"}</p>
             <a className="button button--secondary" href="#/create-wod">Crear otro WOD</a>
           </aside>

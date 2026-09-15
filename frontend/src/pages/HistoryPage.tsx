@@ -53,11 +53,11 @@ export function HistoryPage() {
         <dl className="history-summary" aria-label="Resumen del historial">
           <div>
             <dt>Resultados WOD</dt>
-            <dd><data value={history.wodResults.totalElements}>{history.wodResults.totalElements}</data></dd>
+            <dd><data className="metric-value metric-value--summary" value={history.wodResults.totalElements}>{history.wodResults.totalElements}</data></dd>
           </div>
           <div>
             <dt>Marcas de ejercicios</dt>
-            <dd><data value={history.exerciseResults.totalElements}>{history.exerciseResults.totalElements}</data></dd>
+            <dd><data className="metric-value metric-value--summary" value={history.exerciseResults.totalElements}>{history.exerciseResults.totalElements}</data></dd>
           </div>
         </dl>
       </header>
@@ -154,7 +154,7 @@ function HistoryColumn({ title, description, empty, total, emptyAction, items }:
           <p className="section-description">{description}</p>
         </div>
         <span className="history-column__total" aria-label={`${total} registros`}>
-          <data value={total}>{total}</data>
+          <data className="metric-value metric-value--compact" value={total}>{total}</data>
         </span>
       </header>
       {items.length === 0 ? <StateMessage kind="empty" title={empty} action={emptyAction} /> : (
@@ -171,7 +171,7 @@ function HistoryColumn({ title, description, empty, total, emptyAction, items }:
                   </span>
                 </span>
                 <span className="history-row__value">
-                  <b>{item.value}</b>
+                  <b className="metric-value metric-value--row">{item.value}</b>
                   {item.unit && <small className="history-row__unit">{item.unit}</small>}
                   <small>Ver detalle</small>
                 </span>

@@ -133,7 +133,7 @@ export function MyWodsPage({ deletionFeedback = false }: { deletionFeedback?: bo
                     </span>
                     <span className="my-wod-row__meta">
                       <small>{wod.level ? WOD_LEVEL_LABELS[wod.level] : "Todos los niveles"}</small>
-                      <b>{exerciseCount} {exerciseCount === 1 ? "ejercicio" : "ejercicios"}</b>
+                      <b className="metric-value metric-value--compact">{exerciseCount} {exerciseCount === 1 ? "ejercicio" : "ejercicios"}</b>
                       <time dateTime={wod.createdAt}>{dateFormatter.format(new Date(wod.createdAt))}</time>
                     </span>
                     <span className="row-arrow" aria-hidden="true">-&gt;</span>

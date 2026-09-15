@@ -71,7 +71,7 @@ export function StatisticsPage() {
             <p className="section-description">Tus mejores referencias, enlazadas al detalle de cada movimiento o WOD.</p>
           </div>
           <span className="statistics-page__records-total" aria-label={`${statistics.wodPersonalRecords.length + statistics.exercisePersonalRecords.length} marcas`}>
-            <data value={statistics.wodPersonalRecords.length + statistics.exercisePersonalRecords.length}>{statistics.wodPersonalRecords.length + statistics.exercisePersonalRecords.length}</data>
+            <data className="metric-value metric-value--compact" value={statistics.wodPersonalRecords.length + statistics.exercisePersonalRecords.length}>{statistics.wodPersonalRecords.length + statistics.exercisePersonalRecords.length}</data>
           </span>
         </header>
         <div className="stats-columns">
@@ -116,7 +116,7 @@ export function StatisticsPage() {
             <p className="section-description">Una secuencia temporal de tus intentos. El detalle completo aparece en cada fila.</p>
           </div>
           <span className="statistics-page__evolution-total">
-            <data value={evolution.wodResults.length + evolution.exerciseResults.length}>{evolution.wodResults.length + evolution.exerciseResults.length}</data> intentos
+            <data className="metric-value metric-value--compact" value={evolution.wodResults.length + evolution.exerciseResults.length}>{evolution.wodResults.length + evolution.exerciseResults.length}</data> intentos
           </span>
         </header>
         <div className="evolution-grid">
@@ -155,7 +155,7 @@ export function StatisticsPage() {
 }
 
 function StatValue({ value, label }: { value: number; label: string }) {
-  return <div className="stat-value"><strong><data value={value}>{value}</data></strong><span>{label}</span></div>;
+  return <div className="stat-value"><strong className="metric-value metric-value--summary"><data value={value}>{value}</data></strong><span>{label}</span></div>;
 }
 
 interface RecordColumnProps { title: string; empty: string; emptyAction: { label: string; href: string }; items: Array<{ id: number; title: string; type: string; value: string; unit?: string; meta: string; date: string; href: string; ariaLabel: string }>; }
@@ -168,7 +168,7 @@ function RecordColumn({ title, empty, emptyAction, items }: RecordColumnProps) {
       <header className="section-heading">
         <h3 id={headingId}>{title}</h3>
         <span className="record-column__total" aria-label={`${items.length} registros`}>
-          <data value={items.length}>{items.length}</data>
+          <data className="metric-value metric-value--compact" value={items.length}>{items.length}</data>
         </span>
       </header>
       {items.length === 0 ? <StateMessage kind="empty" title={empty} action={emptyAction} /> : (
@@ -185,7 +185,7 @@ function RecordColumn({ title, empty, emptyAction, items }: RecordColumnProps) {
                   </span>
                 </span>
                 <span className="record-row__value">
-                  <b>{item.value}</b>
+                  <b className="metric-value metric-value--row">{item.value}</b>
                   {item.unit && <small className="record-row__unit">{item.unit}</small>}
                   <small>Ver detalle</small>
                 </span>
@@ -223,7 +223,7 @@ function EvolutionColumn({ title, emptyAction, items }: { title: string; emptyAc
                     <small>{item.meta}</small>
                   </span>
                   <span className="evolution-row__value">
-                    <b>{item.value}</b>
+                    <b className="metric-value metric-value--row">{item.value}</b>
                     {item.unit && <small className="evolution-row__unit">{item.unit}</small>}
                   </span>
                 </a>
