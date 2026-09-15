@@ -6631,3 +6631,338 @@ h2 {
     font-size: 20px;
   }
 }
+
+/* 084: estadisticas como panel de analisis */
+.statistics-page {
+  min-width: 0;
+}
+
+.statistics-page .page-heading {
+  margin-bottom: 24px;
+}
+
+.statistics-page .heading-support,
+.statistics-page .section-description {
+  overflow-wrap: anywhere;
+}
+
+.statistics-page .stats-overview {
+  background: var(--surface);
+  border-top: 3px solid var(--orange);
+  margin-bottom: 48px;
+  padding: clamp(20px, 4vw, 34px);
+}
+
+.statistics-page .stats-overview .section-heading {
+  border-bottom-color: var(--border-strong);
+}
+
+.statistics-page .stats-overview .section-heading h2 {
+  font-size: clamp(24px, 3vw, 32px);
+  text-wrap: balance;
+}
+
+.statistics-page .stats-overview .section-description {
+  color: var(--text-secondary);
+}
+
+.statistics-page .stat-strip {
+  background: var(--line);
+  border: 0;
+  gap: 1px;
+  grid-template-columns: minmax(0, 1.35fr) repeat(2, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.statistics-page .stats-overview .stat-value {
+  background: var(--surface);
+  border: 0;
+  min-width: 0;
+  padding: 18px;
+}
+
+.statistics-page .stats-overview .stat-value--primary {
+  background: var(--surface-raised);
+  padding: 24px 22px;
+}
+
+.statistics-page .stats-overview .stat-value strong {
+  font-size: clamp(30px, 4vw, 46px);
+}
+
+.statistics-page .stats-overview .stat-value--primary strong {
+  color: var(--orange);
+  font-size: clamp(42px, 6vw, 64px);
+}
+
+.statistics-page .stats-overview .stat-value span {
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.statistics-page .stats-overview .stat-value--primary span {
+  color: var(--orange);
+}
+
+.statistics-page .statistics-page__records,
+.statistics-page .statistics-page__evolution {
+  border-top: 3px solid var(--orange);
+  padding-top: 24px;
+}
+
+.statistics-page .statistics-page__records {
+  margin-bottom: 48px;
+}
+
+.statistics-page .statistics-page__records .section-heading,
+.statistics-page .statistics-page__evolution > .section-heading {
+  align-items: end;
+  border-bottom-color: var(--line);
+  margin-bottom: 18px;
+}
+
+.statistics-page .statistics-page__records .section-heading h2,
+.statistics-page .statistics-page__evolution > .section-heading h2 {
+  font-size: clamp(24px, 3vw, 32px);
+  text-wrap: balance;
+}
+
+.statistics-page .statistics-page__records .stats-columns {
+  gap: 32px;
+}
+
+.statistics-page .statistics-page__records .record-column {
+  border-top: 1px solid var(--line);
+}
+
+.statistics-page .statistics-page__records .record-column + .record-column {
+  border-left: 1px solid var(--line);
+  padding-left: 32px;
+}
+
+.statistics-page .statistics-page__records .record-column .section-heading {
+  border-bottom-color: var(--border-strong);
+  margin-bottom: 0;
+  padding: 15px 0 12px;
+}
+
+.statistics-page .statistics-page__records .record-column h3 {
+  font-size: 18px;
+  text-wrap: balance;
+}
+
+.statistics-page .statistics-page__records .record-row {
+  align-items: stretch;
+  background: var(--surface);
+  gap: 22px;
+  grid-template-columns: minmax(145px, 0.45fr) minmax(0, 1fr);
+  padding: 18px;
+}
+
+.statistics-page .statistics-page__records .record-row:hover,
+.statistics-page .statistics-page__records .record-row:focus-visible {
+  background: var(--surface-hover);
+}
+
+.statistics-page .statistics-page__records .record-row__value {
+  align-items: start;
+  border-right: 1px solid var(--line);
+  gap: 6px;
+  justify-self: stretch;
+  padding-right: 22px;
+  text-align: left;
+}
+
+.statistics-page .statistics-page__records .record-row__value b {
+  font-size: clamp(26px, 3vw, 38px);
+  line-height: 0.95;
+}
+
+.statistics-page .statistics-page__records .record-row__unit {
+  color: var(--orange);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.statistics-page .statistics-page__records .record-row__link-label {
+  color: var(--text-muted);
+  font-size: 10px;
+  margin-top: 5px;
+}
+
+.statistics-page .statistics-page__records .record-row__content {
+  align-self: center;
+  gap: 6px;
+}
+
+.statistics-page .statistics-page__records .record-row__type {
+  color: var(--orange);
+}
+
+.statistics-page .statistics-page__records .record-row--exercise .record-row__type {
+  color: var(--text-secondary);
+}
+
+.statistics-page .statistics-page__records .record-row strong {
+  font-size: clamp(17px, 2vw, 22px);
+  font-weight: 750;
+  text-wrap: balance;
+}
+
+.statistics-page .statistics-page__evolution .evolution-grid {
+  gap: 32px;
+  padding-top: 0;
+}
+
+.statistics-page .statistics-page__evolution .evolution-column {
+  border-top: 1px solid var(--line);
+}
+
+.statistics-page .statistics-page__evolution .evolution-column__heading {
+  border-bottom-color: var(--border-strong);
+  padding: 15px 0 12px;
+}
+
+.statistics-page .statistics-page__evolution .evolution-column__heading h3 {
+  color: var(--ink);
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  text-transform: none;
+}
+
+.statistics-page .statistics-page__evolution .evolution-band {
+  background: var(--surface-raised);
+  height: 32px;
+  margin: 16px 0 8px;
+  padding: 8px;
+}
+
+.statistics-page .statistics-page__evolution .evolution-band__segment {
+  height: 10px;
+}
+
+.statistics-page .statistics-page__evolution .evolution-band__segment:nth-child(even) {
+  background: var(--orange);
+  height: 16px;
+}
+
+.statistics-page .statistics-page__evolution .evolution-row__link {
+  align-items: stretch;
+  background: var(--surface);
+  gap: 18px;
+  grid-template-columns: minmax(120px, 0.42fr) minmax(0, 1fr) minmax(92px, 0.3fr);
+  padding: 17px 18px;
+}
+
+.statistics-page .statistics-page__evolution .evolution-row__link:hover,
+.statistics-page .statistics-page__evolution .evolution-row__link:focus-visible {
+  background: var(--surface-hover);
+}
+
+.statistics-page .statistics-page__evolution .evolution-row__value {
+  align-items: start;
+  border-right: 1px solid var(--line);
+  gap: 6px;
+  justify-self: stretch;
+  padding-right: 18px;
+  text-align: left;
+}
+
+.statistics-page .statistics-page__evolution .evolution-row__value b {
+  color: var(--ink);
+  font-size: clamp(22px, 3vw, 34px);
+  line-height: 0.95;
+}
+
+.statistics-page .statistics-page__evolution .evolution-row__unit {
+  color: var(--orange);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.statistics-page .statistics-page__evolution .evolution-row__content {
+  align-self: center;
+  gap: 5px;
+}
+
+.statistics-page .statistics-page__evolution .evolution-row strong {
+  font-size: 16px;
+  font-weight: 750;
+  text-wrap: balance;
+}
+
+.statistics-page .statistics-page__evolution .evolution-row__link time {
+  align-self: center;
+  color: var(--text-muted);
+  font-size: 11px;
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
+@media (max-width: 760px) {
+  .statistics-page .stat-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .statistics-page .stats-overview .stat-value,
+  .statistics-page .stats-overview .stat-value--primary {
+    border-bottom: 1px solid var(--line);
+    padding: 18px;
+  }
+
+  .statistics-page .stats-overview .stat-value:last-child {
+    border-bottom: 0;
+  }
+
+  .statistics-page .statistics-page__records .stats-columns,
+  .statistics-page .statistics-page__evolution .evolution-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .statistics-page .statistics-page__records .record-column + .record-column {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    margin-top: 16px;
+    padding-left: 0;
+    padding-top: 16px;
+  }
+
+  .statistics-page .statistics-page__records .record-row,
+  .statistics-page .statistics-page__evolution .evolution-row__link {
+    gap: 14px;
+    grid-template-columns: 1fr;
+    padding: 16px 12px;
+  }
+
+  .statistics-page .statistics-page__records .record-row__value,
+  .statistics-page .statistics-page__evolution .evolution-row__value {
+    border-bottom: 1px solid var(--line);
+    border-right: 0;
+    padding: 0 0 12px;
+  }
+
+  .statistics-page .statistics-page__records .record-row__content,
+  .statistics-page .statistics-page__evolution .evolution-row__content {
+    align-self: start;
+  }
+
+  .statistics-page .statistics-page__evolution .evolution-row__link time {
+    text-align: left;
+  }
+}
+
+@media (max-width: 420px) {
+  .statistics-page .stats-overview,
+  .statistics-page .statistics-page__records .record-row,
+  .statistics-page .statistics-page__evolution .evolution-row__link {
+    padding-inline: 10px;
+  }
+
+  .statistics-page .statistics-page__records .record-row__value b,
+  .statistics-page .statistics-page__evolution .evolution-row__value b {
+    font-size: 28px;
+  }
+}

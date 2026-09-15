@@ -90,7 +90,12 @@ describe("StatisticsPage", () => {
     const { container } = renderWithAuth(<StatisticsPage />, { token: "token" });
 
     await waitFor(() => expect(screen.getAllByText("Fran")).toHaveLength(2));
+    expect(getStatistics).toHaveBeenCalledWith("token");
+    expect(getEvolution).toHaveBeenCalledWith("token");
     expect(screen.getAllByText("Back Squat")).toHaveLength(2);
+    expect(container.querySelectorAll(".stat-value--primary data")).toHaveLength(1);
+    expect(container.querySelector(".statistics-page__records .record-row")?.firstElementChild?.classList.contains("record-row__value")).toBe(true);
+    expect(container.querySelector(".statistics-page__evolution .evolution-row__link")?.firstElementChild?.classList.contains("evolution-row__value")).toBe(true);
     expect(container.querySelectorAll('.stat-value data[value="2"]')).toHaveLength(2);
     expect(container.querySelectorAll(".stat-value data")).toHaveLength(3);
     expect(container.querySelectorAll("time")).toHaveLength(4);

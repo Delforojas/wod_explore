@@ -48,7 +48,7 @@ export function StatisticsPage() {
       <header className="page-heading statistics-page__heading">
         <div>
           <h1 id="statistics-title">Estadísticas</h1>
-          <p className="heading-support">Una lectura de tus sesiones, no una predicción.</p>
+          <p className="heading-support">Tu actividad, tus marcas y tu evolución.</p>
         </div>
       </header>
       <section className="stats-overview statistics-page__overview" aria-labelledby="activity-title">
@@ -59,7 +59,7 @@ export function StatisticsPage() {
           </div>
         </header>
         <div className="stat-strip" aria-label="Resumen de actividad">
-          <StatValue value={statistics.wodPersonalRecords.length + statistics.exercisePersonalRecords.length} label="Marcas personales" />
+          <StatValue value={statistics.wodPersonalRecords.length + statistics.exercisePersonalRecords.length} label="Marcas personales" emphasis />
           <StatValue value={statistics.wodResultsCount} label="Resultados WOD" />
           <StatValue value={statistics.exerciseResultsCount} label="Marcas de ejercicios" />
         </div>
@@ -81,6 +81,7 @@ export function StatisticsPage() {
             emptyAction={{ label: "Explorar WODs", href: "#/wods" }}
             items={statistics.wodPersonalRecords.map((record) => ({
               id: record.resultId,
+              kind: "wod" as const,
               title: record.wodName,
               type: "Marca WOD",
               value: record.timeSeconds !== null ? `${record.timeSeconds}` : `${record.rounds ?? 0} rondas + ${record.reps ?? 0} repeticiones`,
@@ -97,6 +98,7 @@ export function StatisticsPage() {
             emptyAction={{ label: "Explorar ejercicios", href: "#/exercises" }}
             items={statistics.exercisePersonalRecords.map((record) => ({
               id: record.resultId,
+              kind: "exercise" as const,
               title: record.exerciseName,
               type: "Marca de ejercicio",
               value: `${record.value}`,
@@ -125,6 +127,7 @@ export function StatisticsPage() {
             emptyAction={{ label: "Explorar WODs", href: "#/wods" }}
             items={evolution.wodResults.map((point) => ({
               id: point.resultId,
+              kind: "wod" as const,
               date: point.completedAt,
               title: point.wodName,
               value: point.timeSeconds !== null ? `${point.timeSeconds}` : `${point.rounds ?? 0} rondas + ${point.reps ?? 0} repeticiones`,
@@ -139,6 +142,7 @@ export function StatisticsPage() {
             emptyAction={{ label: "Explorar ejercicios", href: "#/exercises" }}
             items={evolution.exerciseResults.map((point) => ({
               id: point.resultId,
+              kind: "exercise" as const,
               date: point.performedAt,
               title: point.exerciseName,
               value: `${point.value}`,
@@ -154,11 +158,13 @@ export function StatisticsPage() {
   );
 }
 
-function StatValue({ value, label }: { value: number; label: string }) {
-  return <div className="stat-value"><strong className="metric-value metric-value--summary"><data value={value}>{value}</data></strong><span>{label}</span></div>;
+function StatValue({ value, label, emphasis = false }: { value: number; label: string; emphasis?: boolean }) {
+  return <div className={`stat-value${emphasis ? " stat-value--primary" : ""}`}><strong className={`metric-value ${emphasis ? "metric-value--hero" : "metric-value--summary"}`}><data value={value}>{value}</data></strong><span>{label}</span></div>;
 }
 
-interface RecordColumnProps { title: string; empty: string; emptyAction: { label: string; href: string }; items: Array<{ id: number; title: string; type: string; value: string; unit?: string; meta: string; date: string; href: string; ariaLabel: string }>; }
+type RecordItemKind = "wod" | "exercise";
+
+interface RecordColumnProps { title: string; empty: string; emptyAction: { label: string; href: string }; items: Array<{ id: number; kind: RecordItemKind; title: string; type: string; value: string; unit?: string; meta: string; date: string; href: string; ariaLabel: string }>; }
 
 function RecordColumn({ title, empty, emptyAction, items }: RecordColumnProps) {
   const headingId = `records-${title.replace(/\s+/g, "-").toLowerCase()}`;
@@ -175,7 +181,12 @@ function RecordColumn({ title, empty, emptyAction, items }: RecordColumnProps) {
         <ol className="record-list">
           {items.map((item) => (
             <li key={item.id}>
-              <a className="record-row" href={item.href} aria-label={item.ariaLabel}>
+              <a className={`record-row record-row--${item.kind}`} href={item.href} aria-label={item.ariaLabel}>
+                <span className="record-row__value">
+                  <b className="metric-value metric-value--row"><data value={item.value}>{item.value}</data></b>
+                  {item.unit && <small className="record-row__unit">{item.unit}</small>}
+                  <small className="record-row__link-label">Ver detalle</small>
+                </span>
                 <span className="record-row__content">
                   <small className="record-row__type">{item.type}</small>
                   <strong>{item.title}</strong>
@@ -183,11 +194,6 @@ function RecordColumn({ title, empty, emptyAction, items }: RecordColumnProps) {
                     <small>{item.meta}</small>
                     <time dateTime={item.date}>{dateFormatter.format(new Date(item.date))}</time>
                   </span>
-                </span>
-                <span className="record-row__value">
-                  <b className="metric-value metric-value--row">{item.value}</b>
-                  {item.unit && <small className="record-row__unit">{item.unit}</small>}
-                  <small>Ver detalle</small>
                 </span>
               </a>
             </li>
@@ -198,7 +204,7 @@ function RecordColumn({ title, empty, emptyAction, items }: RecordColumnProps) {
   );
 }
 
-function EvolutionColumn({ title, emptyAction, items }: { title: string; emptyAction: { label: string; href: string }; items: Array<{ id: number; date: string; title: string; value: string; unit?: string; meta: string; href: string; ariaLabel: string }> }) {
+function EvolutionColumn({ title, emptyAction, items }: { title: string; emptyAction: { label: string; href: string }; items: Array<{ id: number; kind: RecordItemKind; date: string; title: string; value: string; unit?: string; meta: string; href: string; ariaLabel: string }> }) {
   const headingId = `evolution-${title.toLowerCase()}`;
 
   return (
@@ -216,16 +222,16 @@ function EvolutionColumn({ title, emptyAction, items }: { title: string; emptyAc
           <ol className="evolution-list">
             {items.map((item) => (
               <li className="evolution-row" key={item.id}>
-                <a className="evolution-row__link" href={item.href} aria-label={item.ariaLabel}>
-                  <time dateTime={item.date}>{dateFormatter.format(new Date(item.date))}</time>
+                <a className={`evolution-row__link evolution-row__link--${item.kind}`} href={item.href} aria-label={item.ariaLabel}>
+                  <span className="evolution-row__value">
+                    <b className="metric-value metric-value--row"><data value={item.value}>{item.value}</data></b>
+                    {item.unit && <small className="evolution-row__unit">{item.unit}</small>}
+                  </span>
                   <span className="evolution-row__content">
                     <strong>{item.title}</strong>
                     <small>{item.meta}</small>
                   </span>
-                  <span className="evolution-row__value">
-                    <b className="metric-value metric-value--row">{item.value}</b>
-                    {item.unit && <small className="evolution-row__unit">{item.unit}</small>}
-                  </span>
+                  <time dateTime={item.date}>{dateFormatter.format(new Date(item.date))}</time>
                 </a>
               </li>
             ))}
