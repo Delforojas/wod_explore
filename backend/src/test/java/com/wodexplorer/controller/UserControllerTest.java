@@ -5,6 +5,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,12 +29,14 @@ import java.util.List;
 import com.wodexplorer.dto.UserHistoryResponse;
 import com.wodexplorer.dto.PageResponse;
 import com.wodexplorer.dto.UserResponse;
+import com.wodexplorer.dto.FavoriteWodResponse;
 import com.wodexplorer.exception.EmailAlreadyExistsException;
 import com.wodexplorer.exception.GlobalExceptionHandler;
 import com.wodexplorer.security.AdminAuthorizationService;
 import com.wodexplorer.service.JwtService;
 import com.wodexplorer.service.UserHistoryService;
 import com.wodexplorer.service.UserService;
+import com.wodexplorer.service.WodFavoriteService;
 
 @WebMvcTest(UserController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -48,6 +52,9 @@ class UserControllerTest {
 
     @MockitoBean
     private UserHistoryService userHistoryService;
+
+    @MockitoBean
+    private WodFavoriteService wodFavoriteService;
 
     @MockitoBean
     private JwtService jwtService;
@@ -201,6 +208,41 @@ class UserControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("VALIDATION_ERROR"))
                 .andExpect(jsonPath("$.details.page").exists());
+    }
+
+    @Test
+    void currentUserFavorites_ReturnsPublicFavoritesWithoutUserId() throws Exception {
+        given(wodFavoriteService.findOwnFavorites("athlete@example.com"))
+                .willReturn(List.of(new FavoriteWodResponse(
+                        18, LocalDateTime.of(2026, 9, 13, 10, 30))));
+
+        mockMvc.perform(get("/api/users/me/favorites")
+                        .principal(authenticatedUser()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].wodId").value(18))
+                .andExpect(jsonPath("$[0].favoritedAt").exists())
+                .andExpect(jsonPath("$[0].userId").doesNotExist());
+    }
+
+    @Test
+    void addFavorite_ReturnsNoContentWithoutAcceptingUserIdentity() throws Exception {
+        mockMvc.perform(put("/api/users/me/favorites/18")
+                        .principal(authenticatedUser())
+                        .queryParam("userId", "999"))
+                .andExpect(status().isNoContent());
+
+        then(wodFavoriteService).should()
+                .addFavorite(18, "athlete@example.com");
+    }
+
+    @Test
+    void removeFavorite_ReturnsNoContent() throws Exception {
+        mockMvc.perform(delete("/api/users/me/favorites/18")
+                        .principal(authenticatedUser()))
+                .andExpect(status().isNoContent());
+
+        then(wodFavoriteService).should()
+                .removeFavorite(18, "athlete@example.com");
     }
 
     private UserHistoryResponse emptyHistory() {

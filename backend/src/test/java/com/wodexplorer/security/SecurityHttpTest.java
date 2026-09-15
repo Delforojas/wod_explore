@@ -67,6 +67,8 @@ import com.wodexplorer.service.UserStatisticsService;
 import com.wodexplorer.service.WodService;
 import com.wodexplorer.service.UserWodService;
 import com.wodexplorer.service.WodResultService;
+import com.wodexplorer.service.WodFavoriteService;
+import com.wodexplorer.dto.FavoriteWodResponse;
 
 import io.jsonwebtoken.Jwts;
 
@@ -128,6 +130,9 @@ class SecurityHttpTest {
 
     @MockitoBean
     private WodResultService wodResultService;
+
+    @MockitoBean
+    private WodFavoriteService wodFavoriteService;
 
     @BeforeEach
     void setUp() {
@@ -479,6 +484,44 @@ class SecurityHttpTest {
                 .andExpect(jsonPath("$.exerciseResults.items").isEmpty());
 
         then(userHistoryService).should().findOwnHistory(TEST_EMAIL, 0, 20);
+    }
+
+    @Test
+    void favorites_WithoutJwt_ReturnsJsonUnauthorized() throws Exception {
+        mockMvc.perform(get("/api/users/me/favorites"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.error").value("UNAUTHORIZED"));
+
+        then(wodFavoriteService).shouldHaveNoInteractions();
+    }
+
+    @Test
+    void favorites_WithValidJwt_UsesJwtSubject() throws Exception {
+        given(wodFavoriteService.findOwnFavorites(TEST_EMAIL)).willReturn(
+                List.of(new FavoriteWodResponse(18, null)));
+        String token = jwtService.generateToken(TEST_EMAIL);
+
+        mockMvc.perform(get("/api/users/me/favorites")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].wodId").value(18));
+
+        then(wodFavoriteService).should().findOwnFavorites(TEST_EMAIL);
+    }
+
+    @Test
+    void favoriteMutations_WithValidJwt_UseJwtSubjectAndReturnNoContent() throws Exception {
+        String token = jwtService.generateToken(TEST_EMAIL);
+
+        mockMvc.perform(put("/api/users/me/favorites/18")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isNoContent());
+        mockMvc.perform(delete("/api/users/me/favorites/18")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isNoContent());
+
+        then(wodFavoriteService).should().addFavorite(18, TEST_EMAIL);
+        then(wodFavoriteService).should().removeFavorite(18, TEST_EMAIL);
     }
 
     @Test
