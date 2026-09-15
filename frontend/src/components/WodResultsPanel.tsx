@@ -177,13 +177,13 @@ export function WodResultsPanel({ wodId, wodType, token }: WodResultsPanelProps)
       <section className="result-list" aria-labelledby={`wod-results-title-${wodId}`}>
         <div className="section-heading">
           <h2 id={`wod-results-title-${wodId}`}>Tus intentos</h2>
-          <span>{results.length}</span>
+          <span className="metric-value metric-value--compact">{results.length}</span>
         </div>
         {results.length === 0 ? <StateMessage kind="empty" title="Todavía no tienes resultados para este WOD." /> : (
           <ul className="result-items">
             {results.map((result) => (
               <li className="result-row" key={result.id}>
-                <strong>{formatResultValue(result)}</strong>
+                <strong className="metric-value metric-value--row">{formatResultValue(result)}</strong>
                 <span>{WOD_LEVEL_LABELS[result.level]}</span>
                 <small>{dateFormatter.format(new Date(result.completedAt))}</small>
               </li>

@@ -14,7 +14,7 @@ describe("App navigation", () => {
     const user = userEvent.setup();
     renderWithAuth(<App />);
 
-    expect(screen.getByRole("heading", { name: "Tu archivo de WODs empieza aquí." })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Entrena con contexto." })).toBeTruthy();
     expect(screen.getByRole("link", { name: /Movimiento.*Ejercicios/ }).getAttribute("href")).toBe("#/exercises");
     expect(screen.getByRole("link", { name: /Tu rendimiento.*Evolución/ }).getAttribute("href")).toBe("#/statistics");
     expect(screen.getByRole("link", { name: /Lo que ya hiciste.*Historial/ }).getAttribute("href")).toBe("#/history");
