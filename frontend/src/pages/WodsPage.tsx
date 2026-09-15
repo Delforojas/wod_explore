@@ -29,6 +29,17 @@ function formatWodLevel(level: string) {
   return level === "BEGINNER" ? "Principiante" : level === "INTERMEDIATE" ? "Intermedio" : level;
 }
 
+function formatDuration(timeLimit: number | null) {
+  if (timeLimit === null) return "Sin límite";
+  const minutes = Math.floor(timeLimit / 60);
+  const seconds = timeLimit % 60;
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
+function formatRounds(rounds: number | null) {
+  return rounds === null ? "Variable" : String(rounds);
+}
+
 function formatWodCount(total: number) {
   return `${total} ${total === 1 ? "sesión disponible" : "sesiones disponibles"}`;
 }
@@ -94,14 +105,14 @@ export function WodsPage() {
     : [];
 
   return (
-    <section className="catalog-page catalog-page--wods">
-      <header className="page-heading">
-        <div className="page-heading__body">
+    <section className="catalog-page wod-catalog-page">
+      <header className="wod-catalog-header">
+        <div className="wod-catalog-header__body">
           <h1>WODs</h1>
-          <p className="heading-support">Entrenamientos listos para encontrar, consultar y repetir.</p>
+          <p>Entrenamientos listos para encontrar, consultar y repetir.</p>
         </div>
-        <div className="page-heading__actions">
-          <p className="heading-note" aria-live="polite">
+        <div className="wod-catalog-header__actions">
+          <p aria-live="polite">
             {catalog
               ? formatWodCount(favoritesOnly ? visibleItems.length : catalog.totalElements)
               : "Busca tu próximo entrenamiento"}
@@ -109,13 +120,15 @@ export function WodsPage() {
           <a className="button button--accent" href="#/create-wod">Crear WOD</a>
         </div>
       </header>
-      <form className="filter-strip" onSubmit={handleSubmit} aria-label="Filtrar WODs">
-        <label>Nombre<input name="name" autoComplete="off" value={name} onChange={(event) => setName(event.target.value)} placeholder="Ej. Fran…" /></label>
-        <label>Tipo<select name="type" autoComplete="off" value={type} onChange={(event) => setType(event.target.value)}><option value="">Todos</option><option value="FOR_TIME">FOR TIME</option><option value="AMRAP">AMRAP</option><option value="EMOM">EMOM</option></select></label>
-        <label>Nivel<select name="level" autoComplete="off" value={level} onChange={(event) => setLevel(event.target.value)}><option value="">Todos</option><option value="BEGINNER">Principiante</option><option value="INTERMEDIATE">Intermedio</option><option value="RX">RX</option></select></label>
+      <form className="wod-filter-panel" onSubmit={handleSubmit} aria-label="Filtrar WODs">
+        <div className="wod-filter-panel__fields">
+          <label htmlFor="wod-name-filter">Nombre<input id="wod-name-filter" name="name" autoComplete="off" value={name} onChange={(event) => setName(event.target.value)} placeholder="Ej. Fran…" /></label>
+          <label htmlFor="wod-type-filter">Tipo<select id="wod-type-filter" name="type" autoComplete="off" value={type} onChange={(event) => setType(event.target.value)}><option value="">Todos</option><option value="FOR_TIME">FOR TIME</option><option value="AMRAP">AMRAP</option><option value="EMOM">EMOM</option></select></label>
+          <label htmlFor="wod-level-filter">Nivel<select id="wod-level-filter" name="level" autoComplete="off" value={level} onChange={(event) => setLevel(event.target.value)}><option value="">Todos</option><option value="BEGINNER">Principiante</option><option value="INTERMEDIATE">Intermedio</option><option value="RX">RX</option></select></label>
+        </div>
         <button className="button button--accent" type="submit">Aplicar filtros</button>
       </form>
-      <div className="favorites-filter" aria-label="Filtrar por favoritos">
+      <div className="wod-favorites-filter" aria-label="Filtrar por favoritos">
         <button
           className="button button--secondary"
           type="button"
@@ -129,16 +142,19 @@ export function WodsPage() {
           {favoritesOnly ? "El catálogo muestra únicamente tus favoritos." : "También puedes consultar únicamente tus favoritos."}
         </p>
       </div>
-      <p className="catalog-hint">Combina nombre, tipo y nivel para acotar el archivo.</p>
+      <p className="wod-catalog-hint">Combina nombre, tipo y nivel para acotar el archivo.</p>
       {activeFilters.length > 0 && (
-        <p className="active-filters" aria-live="polite">
+        <p className="wod-active-filters" aria-live="polite">
           <strong>Filtros activos:</strong> {activeFilters.join(" · ")}
         </p>
       )}
-      <section className="catalog-results" aria-labelledby="wod-results-title">
-        <div className="catalog-results-heading">
-          <h2 id="wod-results-title">Resultados de WODs</h2>
-          <p className="catalog-results-heading__status" aria-live="polite">
+      <section className="wod-results" aria-labelledby="wod-results-title">
+        <div className="wod-results-heading">
+          <div>
+            <h2 id="wod-results-title">Sesiones disponibles</h2>
+            <p>Escanea los datos deportivos y abre el entrenamiento que encaja contigo.</p>
+          </div>
+          <p aria-live="polite">
             {catalog ? (activeFilters.length > 0 ? "Mostrando los filtros aplicados" : "Todos los entrenamientos") : "Los resultados aparecerán aquí"}
           </p>
         </div>
@@ -156,21 +172,37 @@ export function WodsPage() {
           />
         )}
         {token && !isLoading && !error && catalog && visibleItems.length > 0 && (
-          <ul className="catalog-list">
+          <>
+            <div className="wod-list-heading" aria-hidden="true">
+              <span>Sesión</span>
+              <span>Datos deportivos</span>
+              <span>Acción</span>
+            </div>
+            <ul className="wod-catalog-list">
             {visibleItems.map((wod) => (
-              <li className="catalog-list__item" key={wod.id}>
-                <div className="catalog-row catalog-row--wod">
-                  <span className="row-number">{String(wod.id).padStart(3, "0")}</span>
-                  <a className="catalog-row__link" href={`#/wods/${wod.id}`} aria-label={`${wod.name}. Ver detalle del WOD`}>
-                    <span className="row-main"><strong>{wod.name}</strong><small className="row-main__type"><span>Formato</span>{WOD_TYPE_LABELS[wod.type]}</small></span>
-                    <span className="row-meta"><small>Nivel</small>{wod.level ? WOD_LEVEL_LABELS[wod.level] : "Todos"}</span>
-                    <span className="row-arrow" aria-hidden="true">-&gt;</span>
+              <li className="wod-catalog-list__item" key={wod.id}>
+                <div className="wod-catalog-row">
+                  <span className="wod-row-number" aria-hidden="true">{String(wod.id).padStart(3, "0")}</span>
+                  <a
+                    className="wod-row-link"
+                    href={`#/wods/${wod.id}`}
+                    aria-label={`${wod.name}. ${WOD_TYPE_LABELS[wod.type]}. Duración ${formatDuration(wod.timeLimit)}. Rondas ${formatRounds(wod.rounds)}. Nivel ${wod.level ? WOD_LEVEL_LABELS[wod.level] : "Todos"}. Ver detalle del WOD`}
+                  >
+                    <span className="wod-row-name"><strong>{wod.name}</strong><small>WOD #{wod.id}</small></span>
+                    <span className="wod-row-metrics">
+                      <span className="wod-row-metric"><small>Tipo</small><strong>{WOD_TYPE_LABELS[wod.type]}</strong></span>
+                      <span className="wod-row-metric"><small>Duración</small><strong>{formatDuration(wod.timeLimit)}</strong></span>
+                      <span className="wod-row-metric"><small>Rondas</small><strong>{formatRounds(wod.rounds)}</strong></span>
+                      <span className="wod-row-metric"><small>Nivel</small><strong>{wod.level ? WOD_LEVEL_LABELS[wod.level] : "Todos"}</strong></span>
+                    </span>
+                    <span className="wod-row-arrow" aria-hidden="true">-&gt;</span>
                   </a>
                   <WodFavoriteButton wodId={wod.id} wodName={wod.name} />
                 </div>
               </li>
             ))}
-          </ul>
+            </ul>
+          </>
         )}
         {token && !isLoading && !error && catalog && (
           <PaginationControls

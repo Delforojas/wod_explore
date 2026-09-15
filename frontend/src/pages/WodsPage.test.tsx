@@ -25,7 +25,7 @@ const populatedPage: WodPage = {
     id: 1,
     name: "Fran",
     type: "FOR_TIME",
-    timeLimit: null,
+    timeLimit: 222,
     rounds: 3,
     level: "RX",
   }],
@@ -77,9 +77,12 @@ describe("WodsPage", () => {
     renderWithAuth(<WodsPage />, { token: "token" });
 
     expect(await screen.findByRole("link", { name: /Fran/ })).toBeTruthy();
-    expect(screen.getByRole("heading", { name: "Resultados de WODs" })).toBeTruthy();
-    expect(screen.getByText("For time")).toBeTruthy();
-    expect(screen.getByText("RX", { selector: ".row-meta" })).toBeTruthy();
+    expect(screen.getByRole("link", { name: /Fran/ }).getAttribute("href")).toBe("#/wods/1");
+    expect(screen.getByRole("heading", { name: "Sesiones disponibles" })).toBeTruthy();
+    expect(screen.getByText("For time", { selector: ".wod-row-metric strong" })).toBeTruthy();
+    expect(screen.getByText("03:42", { selector: ".wod-row-metric strong" })).toBeTruthy();
+    expect(screen.getByText("3", { selector: ".wod-row-metric strong" })).toBeTruthy();
+    expect(screen.getByText("RX", { selector: ".wod-row-metric strong" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Anterior" }).hasAttribute("disabled")).toBe(true);
     expect(screen.getByRole("button", { name: "Siguiente" }).hasAttribute("disabled")).toBe(false);
 
@@ -122,6 +125,8 @@ describe("WodsPage", () => {
 
     expect(await screen.findByRole("link", { name: /Fran/ })).toBeTruthy();
     expect(screen.getByRole("link", { name: /Helen/ })).toBeTruthy();
+    expect(screen.getByText("10:00", { selector: ".wod-row-metric strong" })).toBeTruthy();
+    expect(screen.getByText("Variable", { selector: ".wod-row-metric strong" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Quitar Fran de favoritos" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Añadir Helen a favoritos" }).textContent).toBe("Añadir a favoritos");
 
