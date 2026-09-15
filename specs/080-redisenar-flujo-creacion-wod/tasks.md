@@ -40,11 +40,13 @@
 
 ## Entrega
 
-- [ ] Revisar staging y crear un commit propio de #80 sin incluir untracked
+- [x] Revisar staging y crear un commit propio de #80 (`e051577`) sin incluir untracked
       ajenos.
-- [ ] Ejecutar `git log -1 --oneline` y `git status` despues del commit.
-- [ ] Documentar la Issue #80 con archivos, verificaciones, hash, mensaje y rama;
+- [x] Ejecutar `git log -1 --oneline` y `git status` despues del commit.
+- [x] Documentar la Issue #80 con archivos, verificaciones, hash, mensaje y rama;
       mantenerla abierta y sin push.
+
+Comentario de entrega: https://github.com/Delforojas/wod_explore/issues/80#issuecomment-5681266780
 
 ## Validaciones manuales pendientes
 
