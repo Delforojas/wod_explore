@@ -23,6 +23,13 @@ public interface WodRepository extends JpaRepository<Wod, Integer> {
 
     @Query("""
             select w from Wod w
+            where w.id = :id
+              and (w.owner is null or w.owner.id = :userId)
+            """)
+    Optional<Wod> findAccessibleById(@Param("id") Integer id, @Param("userId") Integer userId);
+
+    @Query("""
+            select w from Wod w
             where w.owner is null
               and (:name is null or lower(w.name) like lower(concat('%', :name, '%')))
               and (:type is null or w.type = :type)
