@@ -5,6 +5,7 @@ import { useAuth } from "../auth/useAuth";
 import { LoadingMessage, StateMessage } from "../components/StateMessage";
 import { getErrorStateKind } from "../components/stateMessageUtils";
 import { WodResultsPanel } from "../components/WodResultsPanel";
+import { WodFavoriteButton } from "../components/WodFavoriteButton";
 import type { MeasurementType, WodDetail, WodType } from "../api/schemas";
 
 const WOD_TYPE_LABELS: Record<WodType, string> = {
@@ -64,7 +65,7 @@ export function WodDetailPage({ id }: { id: number }) {
   if (error || !wod) return <StateMessage kind={errorKind} title={errorKind === "network-error" ? "No hay conexión con este WOD" : "No pudimos abrir este WOD"} message={error ?? "El WOD no existe."} action={{ label: "Volver al catálogo", href: "#/wods" }} />;
 
   return (
-     <section className="detail-page detail-page--wod">
+    <section className="detail-page detail-page--wod">
       <a className="back-link" href="#/wods">Volver a WODs</a>
       <header className="detail-heading">
         <div className="detail-heading__body">
@@ -72,6 +73,7 @@ export function WodDetailPage({ id }: { id: number }) {
           <p className="detail-summary">{WOD_TYPE_LABELS[wod.type]} · {wod.level ? WOD_LEVEL_LABELS[wod.level] : "Todos los niveles"}</p>
         </div>
         <div className="detail-heading__meta">
+          <WodFavoriteButton wodId={wod.id} wodName={wod.name} />
           <span className="tag tag--accent">{WOD_TYPE_LABELS[wod.type]}</span>
           <span className="detail-reference">WOD #{wod.id}</span>
         </div>

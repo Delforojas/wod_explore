@@ -103,6 +103,54 @@ describe("WodsPage", () => {
     ));
   });
 
+  it("combines the favorites filter with the catalog filters", async () => {
+    vi.mocked(getWods).mockResolvedValue({
+      ...populatedPage,
+      items: [
+        ...populatedPage.items,
+        { id: 2, name: "Helen", type: "AMRAP", timeLimit: 600, rounds: null, level: "BEGINNER" },
+      ],
+    });
+    const toggleFavorite = vi.fn().mockResolvedValue(undefined);
+    const user = userEvent.setup();
+    renderWithAuth(<WodsPage />, {
+      token: "token",
+      favoriteWodIds: new Set([1]),
+      favoritesStatus: "ready",
+      toggleFavorite,
+    });
+
+    expect(await screen.findByRole("link", { name: /Fran/ })).toBeTruthy();
+    expect(screen.getByRole("link", { name: /Helen/ })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Quitar Fran de favoritos" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Añadir Helen a favoritos" }).textContent).toBe("Añadir a favoritos");
+
+    await user.click(screen.getByRole("button", { name: "Solo favoritos" }));
+
+    expect(screen.getByRole("link", { name: /Fran/ })).toBeTruthy();
+    expect(screen.queryByRole("link", { name: /Helen/ })).toBeNull();
+    expect(screen.getByRole("button", { name: "Quitar Fran de favoritos" }).textContent).toBe("Quitar de favoritos");
+
+    await user.click(screen.getByRole("button", { name: "Quitar Fran de favoritos" }));
+    expect(toggleFavorite).toHaveBeenCalledWith(1);
+  });
+
+  it("distinguishes an empty favorites collection from unmatched filters", async () => {
+    vi.mocked(getWods).mockResolvedValue(populatedPage);
+    const user = userEvent.setup();
+    renderWithAuth(<WodsPage />, {
+      token: "token",
+      favoriteWodIds: new Set(),
+      favoritesStatus: "ready",
+    });
+
+    await screen.findByRole("link", { name: /Fran/ });
+    await user.click(screen.getByRole("button", { name: "Solo favoritos" }));
+
+    expect(screen.getByText("Aún no tienes favoritos")).toBeTruthy();
+    expect(screen.getByText("Marca un WOD como favorito y aparecerá aquí.")).toBeTruthy();
+  });
+
   it("invites an anonymous visitor to log in", () => {
     renderWithAuth(<WodsPage />);
 

@@ -11,9 +11,16 @@ export function createAuthValue(overrides: Partial<AuthContextValue> = {}): Auth
     token: null,
     isLoading: false,
     sessionExpired: false,
+    favoriteWodIds: new Set<number>(),
+    favoritesStatus: "idle",
+    favoritesError: null,
+    favoritesErrorKind: null,
+    pendingFavoriteIds: new Set<number>(),
     login: async () => undefined,
     register: async () => undefined,
     logout: () => undefined,
+    retryFavorites: () => undefined,
+    toggleFavorite: async () => undefined,
     ...overrides,
   };
 }

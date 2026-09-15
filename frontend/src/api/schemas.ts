@@ -79,6 +79,11 @@ export const wodDetailSchema = wodSummarySchema.extend({
   exercises: z.array(wodExerciseSchema),
 });
 
+export const favoriteWodSchema = z.object({
+  wodId: z.number().int().positive(),
+  favoritedAt: dateTimeSchema,
+});
+
 const userWodPrescriptionSchema = z.object({
   value: z.number().positive(),
   unit: wodExercisePrescriptionUnitSchema,
@@ -242,6 +247,7 @@ export type Exercise = z.infer<typeof exerciseSchema>;
 export type WodSummary = z.infer<typeof wodSummarySchema>;
 export type WodExercise = z.infer<typeof wodExerciseSchema>;
 export type WodDetail = z.infer<typeof wodDetailSchema>;
+export type FavoriteWod = z.infer<typeof favoriteWodSchema>;
 export type UserWodSummary = z.infer<typeof userWodSummarySchema>;
 export type UserWodDetail = z.infer<typeof userWodDetailSchema>;
 export type WodResult = z.infer<typeof wodResultSchema>;
