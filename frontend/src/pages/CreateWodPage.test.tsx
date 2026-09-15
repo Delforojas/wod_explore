@@ -68,6 +68,17 @@ describe("CreateWodPage", () => {
     expect(getExercises).not.toHaveBeenCalled();
   });
 
+  it("presents creation as a clear sequence with a live review", () => {
+    renderPage();
+
+    expect(screen.getByRole("heading", { name: "Crear WOD" })).toBeTruthy();
+    expect(screen.getByText("Define la sesión")).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Añade los movimientos" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Guarda tu sesión" })).toBeTruthy();
+    expect(screen.getByRole("complementary", { name: "Revisión del diseño" })).toBeTruthy();
+    expect(screen.getByText("Falta la secuencia")).toBeTruthy();
+  });
+
   it("adds several catalog exercises and keeps their measurement fields", async () => {
     const user = userEvent.setup();
     renderPage();

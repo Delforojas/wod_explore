@@ -393,66 +393,70 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
       </header>
 
       <div className="create-wod-layout">
-        <form className="form-panel create-wod-form" onSubmit={handleSubmit} noValidate aria-busy={isSaving}>
-          <div className="form-heading">
-            <span>{mode === "edit" ? "Edición en curso" : "Nuevo entrenamiento"}</span>
-            <strong>{mode === "edit" ? "La ficha sigue siendo tuya" : "La ficha empieza aquí"}</strong>
-            <p>{mode === "edit" ? "Actualiza la estructura y los movimientos que quieres repetir." : "Completa la estructura y añade los movimientos que quieres repetir."}</p>
+        <form className="form-panel create-wod-form" onSubmit={handleSubmit} noValidate aria-labelledby="create-wod-form-title" aria-busy={isSaving}>
+          <div className="form-heading create-wod-step-heading">
+            <span>{mode === "edit" ? "Edición en curso · paso 01" : "Flujo de creación · paso 01"}</span>
+            <h2 id="create-wod-form-title">{mode === "edit" ? "Ajusta la sesión" : "Define la sesión"}</h2>
+            <p>{mode === "edit" ? "Revisa los datos generales antes de ajustar sus movimientos." : "Empieza por los datos que definen cómo se entrena este WOD."}</p>
           </div>
 
-          <div className="create-wod-fields">
-            <div className="form-field create-wod-field--wide">
-              <label htmlFor="wod-name">Nombre del WOD</label>
-              <input id="wod-name" name="name" type="text" maxLength={100} value={name} onChange={(event) => setName(event.target.value)} aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "wod-name-error" : undefined} />
-              {errors.name && <p className="field-error" id="wod-name-error">{errors.name}</p>}
-            </div>
-            <div className="form-field">
-              <label htmlFor="wod-type">Estructura</label>
-              <select id="wod-type" name="type" value={type} onChange={(event) => {
-                const nextType = event.target.value;
-                if (nextType === "FOR_TIME" || nextType === "AMRAP" || nextType === "EMOM") setType(nextType);
-              }} aria-invalid={Boolean(errors.type)} aria-describedby={errors.type ? "wod-type-error" : undefined}>
-                <option value="FOR_TIME">Por tiempo</option>
-                <option value="AMRAP">AMRAP</option>
-                <option value="EMOM">EMOM</option>
-              </select>
-              {errors.type && <p className="field-error" id="wod-type-error">{errors.type}</p>}
-            </div>
-            <div className="form-field">
-              <label htmlFor="wod-level">Nivel</label>
-              <select id="wod-level" name="level" value={level} onChange={(event) => {
-                const nextLevel = event.target.value;
-                if (nextLevel === "BEGINNER" || nextLevel === "INTERMEDIATE" || nextLevel === "RX") setLevel(nextLevel);
-              }} aria-invalid={Boolean(errors.level)} aria-describedby={errors.level ? "wod-level-error" : undefined}>
-                <option value="BEGINNER">Principiante</option>
-                <option value="INTERMEDIATE">Intermedio</option>
-                <option value="RX">RX</option>
-              </select>
-              {errors.level && <p className="field-error" id="wod-level-error">{errors.level}</p>}
-            </div>
-            {(type === "AMRAP" || type === "EMOM" || type === "FOR_TIME") && (
-              <div className="form-field">
-                <label htmlFor="wod-time-limit">Time cap <span className="field-unit">segundos{type === "FOR_TIME" ? " · opcional" : " · obligatorio"}</span></label>
-                <input id="wod-time-limit" name="timeLimit" type="number" min="1" step="1" inputMode="numeric" value={timeLimit} onChange={(event) => setTimeLimit(event.target.value)} aria-invalid={Boolean(errors.timeLimit)} aria-describedby={errors.timeLimit ? "wod-time-limit-error" : undefined} required={type !== "FOR_TIME"} />
-                {errors.timeLimit && <p className="field-error" id="wod-time-limit-error">{errors.timeLimit}</p>}
+          <fieldset className="create-wod-config">
+            <legend>Datos generales</legend>
+            <div className="create-wod-fields">
+              <div className="form-field create-wod-field--wide">
+                <label htmlFor="wod-name">Nombre del WOD</label>
+                <input id="wod-name" name="name" type="text" maxLength={100} value={name} onChange={(event) => setName(event.target.value)} aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "wod-name-error" : undefined} />
+                {errors.name && <p className="field-error" id="wod-name-error">{errors.name}</p>}
               </div>
-            )}
-            {(type === "FOR_TIME" || type === "EMOM") && (
               <div className="form-field">
-                <label htmlFor="wod-rounds">Rondas <span className="field-unit">{type === "FOR_TIME" ? "opcional" : "opcional · intervalos"}</span></label>
-                <input id="wod-rounds" name="rounds" type="number" min="1" step="1" inputMode="numeric" value={rounds} onChange={(event) => setRounds(event.target.value)} aria-invalid={Boolean(errors.rounds)} aria-describedby={errors.rounds ? "wod-rounds-error" : undefined} />
-                {errors.rounds && <p className="field-error" id="wod-rounds-error">{errors.rounds}</p>}
+                <label htmlFor="wod-type">Estructura</label>
+                <select id="wod-type" name="type" autoComplete="off" value={type} onChange={(event) => {
+                  const nextType = event.target.value;
+                  if (nextType === "FOR_TIME" || nextType === "AMRAP" || nextType === "EMOM") setType(nextType);
+                }} aria-invalid={Boolean(errors.type)} aria-describedby={errors.type ? "wod-type-error" : undefined}>
+                  <option value="FOR_TIME">Por tiempo</option>
+                  <option value="AMRAP">AMRAP</option>
+                  <option value="EMOM">EMOM</option>
+                </select>
+                {errors.type && <p className="field-error" id="wod-type-error">{errors.type}</p>}
               </div>
-            )}
-          </div>
+              <div className="form-field">
+                <label htmlFor="wod-level">Nivel</label>
+                <select id="wod-level" name="level" autoComplete="off" value={level} onChange={(event) => {
+                  const nextLevel = event.target.value;
+                  if (nextLevel === "BEGINNER" || nextLevel === "INTERMEDIATE" || nextLevel === "RX") setLevel(nextLevel);
+                }} aria-invalid={Boolean(errors.level)} aria-describedby={errors.level ? "wod-level-error" : undefined}>
+                  <option value="BEGINNER">Principiante</option>
+                  <option value="INTERMEDIATE">Intermedio</option>
+                  <option value="RX">RX</option>
+                </select>
+                {errors.level && <p className="field-error" id="wod-level-error">{errors.level}</p>}
+              </div>
+              {(type === "AMRAP" || type === "EMOM" || type === "FOR_TIME") && (
+                <div className="form-field">
+                  <label htmlFor="wod-time-limit">Time cap <span className="field-unit">segundos{type === "FOR_TIME" ? " · opcional" : " · obligatorio"}</span></label>
+                  <input id="wod-time-limit" name="timeLimit" type="number" min="1" step="1" inputMode="numeric" value={timeLimit} onChange={(event) => setTimeLimit(event.target.value)} aria-invalid={Boolean(errors.timeLimit)} aria-describedby={errors.timeLimit ? "wod-time-limit-error" : undefined} required={type !== "FOR_TIME"} />
+                  {errors.timeLimit && <p className="field-error" id="wod-time-limit-error">{errors.timeLimit}</p>}
+                </div>
+              )}
+              {(type === "FOR_TIME" || type === "EMOM") && (
+                <div className="form-field">
+                  <label htmlFor="wod-rounds">Rondas <span className="field-unit">{type === "FOR_TIME" ? "opcional" : "opcional · intervalos"}</span></label>
+                  <input id="wod-rounds" name="rounds" type="number" min="1" step="1" inputMode="numeric" value={rounds} onChange={(event) => setRounds(event.target.value)} aria-invalid={Boolean(errors.rounds)} aria-describedby={errors.rounds ? "wod-rounds-error" : undefined} />
+                  {errors.rounds && <p className="field-error" id="wod-rounds-error">{errors.rounds}</p>}
+                </div>
+              )}
+            </div>
+          </fieldset>
 
           <section className="create-wod-exercises" aria-labelledby="selected-exercises-title">
             <div className="section-heading create-wod-section-heading">
               <div>
-                <h2 id="selected-exercises-title">Movimientos</h2>
-                <p className="section-description">Añade varios movimientos y ajusta sus medidas antes de guardar.</p>
+                <span className="create-wod-step-label">02 · Secuencia</span>
+                <h2 id="selected-exercises-title">Añade los movimientos</h2>
+                <p className="section-description">Construye el orden de trabajo y completa las medidas de cada ejercicio.</p>
               </div>
-              <span>{selectedExercises.length}</span>
+              <span aria-label={`${selectedExercises.length} movimientos seleccionados`}>{String(selectedExercises.length).padStart(2, "0")}</span>
             </div>
             <button className="button button--secondary add-exercise-button" id="exercisePickerTrigger" type="button" onClick={openPicker} aria-describedby={errors.exercisePickerTrigger ? "exercise-picker-error" : undefined}>
               Añadir ejercicio
@@ -491,14 +495,14 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
                           <div className="prescription-field" key={prescription.unit}>
                             <label htmlFor={fieldId}>{UNIT_LABELS[prescription.unit]}</label>
                             <div className="prescription-input-wrap">
-                              <input id={fieldId} type="number" min="0.01" step={integerOnly ? "1" : "0.01"} inputMode={integerOnly ? "numeric" : "decimal"} value={prescription.value} onChange={(event) => updatePrescription(draft.key, prescriptionIndex, "value", event.target.value)} aria-invalid={Boolean(fieldError)} aria-describedby={[fieldError ? errorId : "", prescription.unit === "OTHER" && unitLabelError ? unitLabelErrorId : ""].filter(Boolean).join(" ") || undefined} />
+                              <input id={fieldId} name={`prescription-${draft.key}-${prescription.unit}`} autoComplete="off" type="number" min="0.01" step={integerOnly ? "1" : "0.01"} inputMode={integerOnly ? "numeric" : "decimal"} value={prescription.value} onChange={(event) => updatePrescription(draft.key, prescriptionIndex, "value", event.target.value)} aria-invalid={Boolean(fieldError)} aria-describedby={[fieldError ? errorId : "", prescription.unit === "OTHER" && unitLabelError ? unitLabelErrorId : ""].filter(Boolean).join(" ") || undefined} />
                               <span aria-hidden="true">{prescription.unit === "OTHER" ? "otra" : prescription.unit.toLowerCase()}</span>
                             </div>
                             {fieldError && <p className="field-error" id={errorId}>{fieldError}</p>}
                             {prescription.unit === "OTHER" && (
                               <>
                                 <label className="visually-related-label" htmlFor={`${fieldId}-unit-label`}>Nombre de la unidad</label>
-                                <input id={`${fieldId}-unit-label`} type="text" maxLength={100} placeholder="Ej. calorías" value={prescription.unitLabel} onChange={(event) => updatePrescription(draft.key, prescriptionIndex, "unitLabel", event.target.value)} aria-invalid={Boolean(unitLabelError)} aria-describedby={unitLabelError ? unitLabelErrorId : undefined} />
+                                <input id={`${fieldId}-unit-label`} name={`prescription-${draft.key}-${prescription.unit}-label`} autoComplete="off" type="text" maxLength={100} placeholder="Ej. calorías" value={prescription.unitLabel} onChange={(event) => updatePrescription(draft.key, prescriptionIndex, "unitLabel", event.target.value)} aria-invalid={Boolean(unitLabelError)} aria-describedby={unitLabelError ? unitLabelErrorId : undefined} />
                                 {unitLabelError && <p className="field-error" id={unitLabelErrorId}>{unitLabelError}</p>}
                               </>
                             )}
@@ -522,13 +526,32 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
               ? { label: "Ver WOD actualizado", href: `#/my-wods/${savedWod.id}` }
               : { label: "Crear otro WOD", onClick: resetForm }}
           />}
-          <button className="button button--accent button--wide create-wod-submit" type="submit" disabled={isSaving}>{isSaving ? "Guardando…" : mode === "edit" ? "Guardar cambios" : "Guardar WOD"}</button>
+          <div className="create-wod-save-step">
+            <div>
+              <span className="create-wod-step-label">03 · Revisión</span>
+              <h2>Guarda tu sesión</h2>
+              <p>{selectedExercises.length === 0 ? "Añade al menos un movimiento para poder guardar." : "Comprueba la secuencia y guarda cuando la sesión esté lista."}</p>
+            </div>
+            <button className="button button--accent create-wod-submit" type="submit" disabled={isSaving}>{isSaving ? "Guardando…" : mode === "edit" ? "Guardar cambios" : "Guardar WOD"}</button>
+          </div>
         </form>
 
-        <aside className="create-wod-aside" aria-label="Resumen del diseño">
-          <p className="create-wod-aside__label">Diseño en curso</p>
-          <strong className="create-wod-aside__count metric-value metric-value--hero">{String(selectedExercises.length).padStart(2, "0")}</strong>
+        <aside className="create-wod-aside" aria-label="Revisión del diseño">
+          <div className="create-wod-aside__header">
+            <div>
+              <p className="create-wod-aside__label">Revisión</p>
+              <h2>Tu sesión</h2>
+            </div>
+            <strong className="create-wod-aside__count metric-value">{String(selectedExercises.length).padStart(2, "0")}</strong>
+          </div>
           <p className="create-wod-aside__count-label">{selectedExercises.length === 1 ? "movimiento seleccionado" : "movimientos seleccionados"}</p>
+          <div className={`create-wod-review-status ${selectedExercises.length > 0 ? "create-wod-review-status--ready" : ""}`} aria-live="polite">
+            <span className="create-wod-review-status__marker" aria-hidden="true" />
+            <div>
+              <strong>{selectedExercises.length > 0 ? "Secuencia en curso" : "Falta la secuencia"}</strong>
+              <p>{selectedExercises.length > 0 ? "Las medidas aparecerán en el orden que guardes." : "Añade un movimiento para empezar a configurar la sesión."}</p>
+            </div>
+          </div>
           <dl className="create-wod-summary">
             <div><dt>Estructura</dt><dd>{WOD_TYPE_LABELS[type]}</dd></div>
             <div><dt>Nivel</dt><dd>{WOD_LEVEL_LABELS[level]}</dd></div>
@@ -550,7 +573,7 @@ export function UserWodForm({ mode, initialWod }: UserWodFormProps) {
         <form className="exercise-picker__search" onSubmit={handlePickerSearch}>
           <label htmlFor="exercise-picker-search">Buscar ejercicios</label>
           <div>
-            <input id="exercise-picker-search" type="search" value={pickerQuery} onChange={(event) => setPickerQuery(event.target.value)} placeholder="Ej. Back Squat" autoComplete="off" autoFocus />
+            <input id="exercise-picker-search" name="exerciseSearch" type="search" value={pickerQuery} onChange={(event) => setPickerQuery(event.target.value)} placeholder="Ej. Back Squat" autoComplete="off" autoFocus />
             <button className="button button--accent" type="submit">Buscar</button>
           </div>
         </form>
