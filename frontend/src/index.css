@@ -2608,10 +2608,14 @@ h2 {
 .exercise-picker__footer {
   align-items: center;
   border-top: 1px solid var(--line);
+  background: var(--paper);
   display: flex;
   gap: 16px;
   justify-content: space-between;
   padding: 14px 24px;
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
 }
 .exercise-picker__selection-status {
   color: var(--ink-soft);

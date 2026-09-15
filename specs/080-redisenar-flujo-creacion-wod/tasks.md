@@ -66,6 +66,13 @@ Comentario de entrega: https://github.com/Delforojas/wod_explore/issues/80#issue
 - [x] Cubrir la confirmacion multiple y ejecutar tests, lint, build y
       `git diff --check`.
 
+## Revision feedback: accion de confirmacion accesible
+
+- [x] Mantener `Anadir seleccionados` accesible al desplazarse por el dialogo,
+      especialmente en viewport movil.
+- [x] Cubrir que la accion se habilita al seleccionar y permanece bloqueada sin
+      seleccion.
+
 ## Validaciones manuales pendientes
 
 - [ ] Abrir `#/create-wod` autenticado y confirmar que la secuencia de trabajo se

@@ -87,7 +87,10 @@ describe("CreateWodPage", () => {
     await user.click(screen.getByRole("button", { name: "Añadir movimientos" }));
     const dialog = await screen.findByRole("dialog");
     const selectButtons = within(dialog).getAllByRole("button", { name: /Seleccionar/ });
+    const addSelectedButton = within(dialog).getByRole("button", { name: "Añadir seleccionados" });
+    expect(addSelectedButton.hasAttribute("disabled")).toBe(true);
     await user.click(selectButtons[0]!);
+    expect(addSelectedButton.hasAttribute("disabled")).toBe(false);
     await user.click(selectButtons[1]!);
     expect(screen.queryByRole("list", { name: "Ejercicios añadidos" })).toBeNull();
     expect(within(dialog).getByText("2 movimientos seleccionados")).toBeTruthy();
