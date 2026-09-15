@@ -50,21 +50,21 @@
 - [x] Crear un commit selectivo de #84 con mensaje que incluya `(#84)`.
 - [x] Ejecutar `git log -1 --oneline` y `git status` despues del commit.
 - [x] Documentar la Issue #84 con archivos, verificaciones, hash, mensaje y
-      rama; mantenerla abierta y sin push.
+      rama; cerrarla tras la aprobacion manual y sin push.
 
-## Validaciones manuales pendientes
+## Validaciones manuales aprobadas
 
-- [ ] Abrir `#/statistics` autenticado y confirmar que la primera lectura
+- [x] Abrir `#/statistics` autenticado y confirmar que la primera lectura
       distingue la metrica principal y los dos contadores de actividad.
-- [ ] Confirmar que cada marca personal muestra primero el valor y unidad o
+- [x] Confirmar que cada marca personal muestra primero el valor y unidad o
       formato, seguido de recurso, estado deportivo, fecha y enlace correcto.
-- [ ] Verificar que la evolucion conserva las bandas decorativas y que la lista
+- [x] Verificar que la evolucion conserva las bandas decorativas y que la lista
       textual contiene fecha, nombre, metadatos, valor y unidad.
-- [ ] Probar estado privado sin autenticacion, carga, vacio, error y reintento.
-- [ ] Confirmar que WOD y ejercicios mantienen sus enlaces hash y nombres
+- [x] Probar estado privado sin autenticacion, carga, vacio, error y reintento.
+- [x] Confirmar que WOD y ejercicios mantienen sus enlaces hash y nombres
       accesibles.
-- [ ] Verificar 320 px, movil, tablet y escritorio sin overflow, con nombres
+- [x] Verificar 320 px, movil, tablet y escritorio sin overflow, con nombres
       largos, zoom y navegacion por teclado.
 
-El siguiente paso, despues de aprobar estas comprobaciones, es
-`/finish-issue 84`.
+Las comprobaciones manuales fueron aprobadas. La Issue puede cerrarse como
+completada.
