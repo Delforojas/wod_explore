@@ -43,7 +43,7 @@ const historyWithData: UserHistory = {
       value: 100,
       unit: "KG",
       recordType: "1RM",
-      performedAt: "2026-09-12T10:00:00",
+      performedAt: "2026-09-14T10:00:00",
     }],
     totalElements: 1,
   },
@@ -81,16 +81,57 @@ describe("HistoryPage", () => {
     const view = renderWithAuth(<HistoryPage />, { token: "token" });
 
     await waitFor(() => expect(screen.getByText("Fran")).toBeTruthy());
+    expect(getHistory).toHaveBeenCalledWith("token", { page: 0, size: 20 });
     expect(view.container.querySelectorAll(".history-summary data")).toHaveLength(2);
-    expect(view.container.querySelector("time")?.getAttribute("dateTime")).toBe("2026-09-13T10:00:00");
+    const rows = view.container.querySelectorAll(".history-list__item");
+    expect(rows).toHaveLength(2);
+    expect(rows[0]?.textContent).toContain("Back Squat");
+    expect(rows[1]?.textContent).toContain("Fran");
+    expect(rows[0]?.querySelector(".history-row")?.firstElementChild?.classList.contains("history-row__value")).toBe(true);
+    expect(view.container.querySelector("time")?.getAttribute("dateTime")).toBe("2026-09-14T10:00:00");
     expect(screen.getByText("segundos")).toBeTruthy();
     expect(screen.getByText("kg")).toBeTruthy();
-    expect(screen.getByRole("heading", { name: "Resultados WOD" })).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Actividad registrada" })).toBeTruthy();
     expect(screen.getByText("Resultado WOD")).toBeTruthy();
-    expect(screen.getByRole("heading", { name: "Marcas de ejercicios" })).toBeTruthy();
+    expect(screen.getByText("Marca de ejercicio")).toBeTruthy();
     expect(screen.getByText("Back Squat")).toBeTruthy();
     expect(screen.getByRole("link", { name: /Ver detalle del WOD/ }).getAttribute("href")).toBe("#/wods/1");
     expect(screen.getByRole("link", { name: /Ver detalle del ejercicio/ }).getAttribute("href")).toBe("#/exercises/2");
+  });
+
+  it("keeps WOD formats and translates exercise record types", async () => {
+    vi.mocked(getHistory).mockResolvedValue({
+      ...historyWithData,
+      wodResults: {
+        ...historyWithData.wodResults,
+        items: [{ ...historyWithData.wodResults.items[0], timeSeconds: null, rounds: 5, reps: 4 }],
+      },
+      exerciseResults: {
+        ...historyWithData.exerciseResults,
+        items: [{ ...historyWithData.exerciseResults.items[0], unit: "REPS", recordType: "MAX_REPS" }],
+      },
+    });
+    renderWithAuth(<HistoryPage />, { token: "token" });
+
+    expect(await screen.findByText("5 rondas + 4 repeticiones")).toBeTruthy();
+    expect(screen.getByText("Máximo de repeticiones")).toBeTruthy();
+  });
+
+  it("keeps a stable order when results share a date", async () => {
+    vi.mocked(getHistory).mockResolvedValue({
+      ...historyWithData,
+      wodResults: {
+        ...historyWithData.wodResults,
+        items: [{ ...historyWithData.wodResults.items[0], completedAt: "2026-09-14T10:00:00" }],
+      },
+    });
+    const view = renderWithAuth(<HistoryPage />, { token: "token" });
+
+    await screen.findByText("Fran");
+
+    const rows = view.container.querySelectorAll(".history-list__item");
+    expect(rows[0]?.textContent).toContain("Fran");
+    expect(rows[1]?.textContent).toContain("Back Squat");
   });
 
   it("uses the technical fallback when a related name is unavailable", async () => {
