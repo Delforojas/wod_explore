@@ -165,6 +165,14 @@ export const exerciseResultSchema = z.object({
   performedAt: dateTimeSchema,
 });
 
+export const historyWodResultSchema = wodResultSchema.extend({
+  wodName: z.string().nullable(),
+});
+
+export const historyExerciseResultSchema = exerciseResultSchema.extend({
+  exerciseName: z.string().nullable(),
+});
+
 const pageMetadataSchema = z.object({
   page: z.number().int().nonnegative(),
   size: z.number().int().positive().max(100),
@@ -184,8 +192,8 @@ export const wodResultPageSchema = paginatedSchema(wodResultSchema);
 export const exerciseResultPageSchema = paginatedSchema(exerciseResultSchema);
 
 export const historySchema = z.object({
-  wodResults: wodResultPageSchema,
-  exerciseResults: exerciseResultPageSchema,
+  wodResults: paginatedSchema(historyWodResultSchema),
+  exerciseResults: paginatedSchema(historyExerciseResultSchema),
 });
 
 export const wodPersonalRecordSchema = z.object({
@@ -252,6 +260,8 @@ export type UserWodSummary = z.infer<typeof userWodSummarySchema>;
 export type UserWodDetail = z.infer<typeof userWodDetailSchema>;
 export type WodResult = z.infer<typeof wodResultSchema>;
 export type ExerciseResult = z.infer<typeof exerciseResultSchema>;
+export type HistoryWodResult = z.infer<typeof historyWodResultSchema>;
+export type HistoryExerciseResult = z.infer<typeof historyExerciseResultSchema>;
 export type ExercisePage = z.infer<typeof exercisePageSchema>;
 export type WodPage = z.infer<typeof wodPageSchema>;
 export type UserWodPage = z.infer<typeof userWodPageSchema>;

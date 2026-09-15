@@ -69,17 +69,27 @@ export function HistoryPage() {
             empty="No hay resultados WOD."
             total={history.wodResults.totalElements}
             emptyAction={{ label: "Explorar WODs", href: "#/wods" }}
-            items={history.wodResults.items.map((result) => ({
-              id: result.id,
-              title: `WOD #${result.wodId}`,
-              type: "Resultado WOD",
-              value: result.timeSeconds !== null ? `${result.timeSeconds}` : `${result.rounds ?? 0} rondas + ${result.reps ?? 0} repeticiones`,
-              unit: result.timeSeconds !== null ? "segundos" : undefined,
-              meta: formatLevel(result.level),
-              dateTime: result.completedAt,
-              href: `#/wods/${result.wodId}`,
-              ariaLabel: `WOD #${result.wodId}, ${result.timeSeconds !== null ? `${result.timeSeconds} segundos` : `${result.rounds ?? 0} rondas y ${result.reps ?? 0} repeticiones`}. Ver detalle del WOD`,
-            }))}
+            items={history.wodResults.items.map((result) => {
+              const title = formatResourceName(result.wodName, "WOD", result.wodId);
+              const value = result.timeSeconds !== null
+                ? `${result.timeSeconds}`
+                : `${result.rounds ?? 0} rondas + ${result.reps ?? 0} repeticiones`;
+              const accessibleValue = result.timeSeconds !== null
+                ? `${result.timeSeconds} segundos`
+                : `${result.rounds ?? 0} rondas y ${result.reps ?? 0} repeticiones`;
+
+              return {
+                id: result.id,
+                title,
+                type: "Resultado WOD",
+                value,
+                unit: result.timeSeconds !== null ? "segundos" : undefined,
+                meta: formatLevel(result.level),
+                dateTime: result.completedAt,
+                href: `#/wods/${result.wodId}`,
+                ariaLabel: `${title}, ${accessibleValue}. Ver detalle del WOD`,
+              };
+            })}
           />
           <HistoryColumn
             title="Marcas de ejercicios"
@@ -87,17 +97,22 @@ export function HistoryPage() {
             empty="No hay marcas de ejercicios."
             total={history.exerciseResults.totalElements}
             emptyAction={{ label: "Explorar ejercicios", href: "#/exercises" }}
-            items={history.exerciseResults.items.map((result) => ({
-              id: result.id,
-              title: `Ejercicio #${result.exerciseId}`,
-              type: "Marca de ejercicio",
-              value: `${result.value}`,
-              unit: formatUnit(result.unit),
-              meta: result.recordType,
-              dateTime: result.performedAt,
-              href: `#/exercises/${result.exerciseId}`,
-              ariaLabel: `Ejercicio #${result.exerciseId}, ${result.value} ${formatUnit(result.unit)}. Ver detalle del ejercicio`,
-            }))}
+            items={history.exerciseResults.items.map((result) => {
+              const title = formatResourceName(result.exerciseName, "Ejercicio", result.exerciseId);
+              const unit = formatUnit(result.unit);
+
+              return {
+                id: result.id,
+                title,
+                type: "Marca de ejercicio",
+                value: `${result.value}`,
+                unit,
+                meta: result.recordType,
+                dateTime: result.performedAt,
+                href: `#/exercises/${result.exerciseId}`,
+                ariaLabel: `${title}, ${result.value} ${unit}. Ver detalle del ejercicio`,
+              };
+            })}
           />
         </div>
       )}
@@ -112,6 +127,11 @@ function formatLevel(level: "BEGINNER" | "INTERMEDIATE" | "RX") {
 
 function formatUnit(unit: "KG" | "REPS" | "SECONDS" | "METERS") {
   return { KG: "kg", REPS: "repeticiones", SECONDS: "segundos", METERS: "metros" }[unit];
+}
+
+function formatResourceName(name: string | null, resourceLabel: "WOD" | "Ejercicio", id: number) {
+  const normalizedName = name?.trim();
+  return normalizedName || `${resourceLabel} #${id}`;
 }
 
 interface HistoryColumnProps {

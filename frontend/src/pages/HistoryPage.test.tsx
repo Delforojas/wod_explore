@@ -25,6 +25,7 @@ const historyWithData: UserHistory = {
     items: [{
       id: 4,
       wodId: 1,
+      wodName: "Fran",
       timeSeconds: 180,
       rounds: null,
       reps: null,
@@ -38,6 +39,7 @@ const historyWithData: UserHistory = {
     items: [{
       id: 5,
       exerciseId: 2,
+      exerciseName: "Back Squat",
       value: 100,
       unit: "KG",
       recordType: "1RM",
@@ -78,7 +80,7 @@ describe("HistoryPage", () => {
     vi.mocked(getHistory).mockResolvedValue(historyWithData);
     const view = renderWithAuth(<HistoryPage />, { token: "token" });
 
-    await waitFor(() => expect(screen.getByText("WOD #1")).toBeTruthy());
+    await waitFor(() => expect(screen.getByText("Fran")).toBeTruthy());
     expect(view.container.querySelectorAll(".history-summary data")).toHaveLength(2);
     expect(view.container.querySelector("time")?.getAttribute("dateTime")).toBe("2026-09-13T10:00:00");
     expect(screen.getByText("segundos")).toBeTruthy();
@@ -86,9 +88,27 @@ describe("HistoryPage", () => {
     expect(screen.getByRole("heading", { name: "Resultados WOD" })).toBeTruthy();
     expect(screen.getByText("Resultado WOD")).toBeTruthy();
     expect(screen.getByRole("heading", { name: "Marcas de ejercicios" })).toBeTruthy();
-    expect(screen.getByText("Ejercicio #2")).toBeTruthy();
+    expect(screen.getByText("Back Squat")).toBeTruthy();
     expect(screen.getByRole("link", { name: /Ver detalle del WOD/ }).getAttribute("href")).toBe("#/wods/1");
     expect(screen.getByRole("link", { name: /Ver detalle del ejercicio/ }).getAttribute("href")).toBe("#/exercises/2");
+  });
+
+  it("uses the technical fallback when a related name is unavailable", async () => {
+    vi.mocked(getHistory).mockResolvedValue({
+      ...historyWithData,
+      wodResults: {
+        ...historyWithData.wodResults,
+        items: [{ ...historyWithData.wodResults.items[0], wodName: null }],
+      },
+      exerciseResults: {
+        ...historyWithData.exerciseResults,
+        items: [{ ...historyWithData.exerciseResults.items[0], exerciseName: "" }],
+      },
+    });
+    renderWithAuth(<HistoryPage />, { token: "token" });
+
+    expect(await screen.findByText("WOD #1")).toBeTruthy();
+    expect(screen.getByText("Ejercicio #2")).toBeTruthy();
   });
 
   it("shows a network error with retry feedback", async () => {

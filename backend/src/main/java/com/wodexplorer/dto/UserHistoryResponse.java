@@ -1,7 +1,7 @@
 package com.wodexplorer.dto;
 
 public record UserHistoryResponse(
-        PageResponse<WodResultResponse> wodResults,
-        PageResponse<ExerciseResultResponse> exerciseResults
+        PageResponse<HistoryWodResultResponse> wodResults,
+        PageResponse<HistoryExerciseResultResponse> exerciseResults
 ) {
 }
