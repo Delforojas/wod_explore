@@ -1,0 +1,232 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "WOD Explorer: governed agentic development lifecycle",
+    "animation": "none",
+    "quality_profile": "standard",
+    "output": "archify-wod-explorer-agentic-workflow.html"
+  },
+  "lanes": [
+    { "id": "governance", "label": "Governance and Specialized Knowledge" },
+    { "id": "tooling", "label": "Controlled External Capabilities" },
+    { "id": "lifecycle", "label": "Development Lifecycle and Release" }
+  ],
+  "phases": [
+    { "id": "plan", "label": "Plan", "fromCol": 0, "toCol": 1 },
+    { "id": "build", "label": "Specify and build", "fromCol": 2, "toCol": 3, "variant": "emphasis" },
+    { "id": "prove", "label": "Validate and release", "fromCol": 4, "toCol": 5, "variant": "emphasis" }
+  ],
+  "groups": [
+    { "id": "persistent_governance", "label": "Persistent constraints", "lane": "governance", "fromCol": 0, "toCol": 5, "variant": "security" },
+    { "id": "available_skills", "label": "Guidance, not workflow steps", "lane": "governance", "fromCol": 2, "toCol": 4, "variant": "dashed" },
+    { "id": "mcp_boundaries", "label": "Controlled access to real system state", "lane": "tooling", "fromCol": 0, "toCol": 5, "variant": "security" },
+    { "id": "implementation_loop", "label": "Task loop", "lane": "lifecycle", "fromCol": 3, "toCol": 4, "variant": "emphasis" },
+    { "id": "future_boundary", "label": "FUTURE - NOT CURRENT WORKFLOW", "lane": "governance", "fromCol": 4, "toCol": 5, "variant": "dashed" }
+  ],
+  "mainPath": [
+    "roadmap",
+    "github_issue",
+    "issue_command",
+    "sdd",
+    "feature_branch",
+    "implementation",
+    "automated_validation",
+    "manual_validation",
+    "finish_issue",
+    "github_actions",
+    "merge_close"
+  ],
+  "semanticChecks": {
+    "allowedRoots": ["roadmap", "project_governance", "database_state", "github_mcp", "future_cd"],
+    "allowedTerminals": ["github_mcp", "skills", "database_mcp", "future_cd"],
+    "requiredPaths": [
+      { "from": "roadmap", "to": "github_issue" },
+      { "from": "github_issue", "to": "issue_command" },
+      { "from": "issue_command", "to": "sdd" },
+      { "from": "sdd", "to": "feature_branch" },
+      { "from": "feature_branch", "to": "implementation" },
+      { "from": "implementation", "to": "automated_validation" },
+      { "from": "automated_validation", "to": "manual_validation" },
+      { "from": "manual_validation", "to": "finish_issue" },
+      { "from": "finish_issue", "to": "github_actions" },
+      { "from": "github_actions", "to": "merge_close" },
+      { "from": "merge_close", "to": "roadmap" }
+    ]
+  },
+  "nodes": [
+    {
+      "id": "roadmap",
+      "lane": "lifecycle",
+      "col": 0,
+      "type": "external",
+      "label": "/roadmap",
+      "sublabel": "GitHub + DB -> next Issue",
+      "width": 140
+    },
+    {
+      "id": "github_issue",
+      "lane": "lifecycle",
+      "col": 1,
+      "type": "external",
+      "label": "GitHub Issue",
+      "sublabel": "scope + acceptance",
+      "width": 135
+    },
+    {
+      "id": "issue_command",
+      "lane": "lifecycle",
+      "col": 1,
+      "yOffset": 70,
+      "type": "security",
+      "label": "/issue",
+      "sublabel": "read -> work",
+      "width": 110
+    },
+    {
+      "id": "sdd",
+      "lane": "lifecycle",
+      "col": 2,
+      "type": "security",
+      "label": "SDD",
+      "sublabel": "spec | plan | tasks",
+      "width": 125
+    },
+    {
+      "id": "feature_branch",
+      "lane": "lifecycle",
+      "col": 3,
+      "type": "frontend",
+      "label": "Feature Branch",
+      "sublabel": "isolated context",
+      "width": 135
+    },
+    {
+      "id": "implementation",
+      "lane": "lifecycle",
+      "col": 3,
+      "yOffset": 70,
+      "type": "backend",
+      "label": "Implementation",
+      "sublabel": "JPA / backend / frontend",
+      "width": 155
+    },
+    {
+      "id": "automated_validation",
+      "lane": "lifecycle",
+      "col": 4,
+      "type": "security",
+      "label": "Automated Validation",
+      "sublabel": "backend + frontend + DB checks",
+      "width": 175
+    },
+    {
+      "id": "manual_validation",
+      "lane": "lifecycle",
+      "col": 4,
+      "yOffset": 70,
+      "type": "external",
+      "label": "Manual Validation",
+      "sublabel": "API + auth + edge cases | fail -> impl",
+      "width": 180
+    },
+    {
+      "id": "finish_issue",
+      "lane": "lifecycle",
+      "col": 5,
+      "type": "security",
+      "label": "/finish-issue",
+      "sublabel": "evidence + CI + diff",
+      "width": 145
+    },
+    {
+      "id": "github_actions",
+      "lane": "tooling",
+      "col": 5,
+      "type": "cloud",
+      "label": "GitHub Actions CI",
+      "sublabel": "Push / PR + checks | fail -> impl",
+      "width": 175
+    },
+    {
+      "id": "merge_close",
+      "lane": "tooling",
+      "col": 5,
+      "yOffset": 70,
+      "type": "external",
+      "label": "Merge / Close Issue",
+      "sublabel": "merge + close | next -> /roadmap",
+      "width": 170
+    },
+    {
+      "id": "project_governance",
+      "lane": "governance",
+      "col": 2,
+      "type": "security",
+      "label": "Project Governance",
+      "sublabel": "AGENTS.md -> area rules",
+      "width": 150
+    },
+    {
+      "id": "skills",
+      "lane": "governance",
+      "col": 3,
+      "type": "external",
+      "label": "Skills",
+      "sublabel": "Java | MySQL | React | TS",
+      "width": 150
+    },
+    {
+      "id": "github_mcp",
+      "lane": "tooling",
+      "col": 1,
+      "type": "external",
+      "label": "GitHub MCP",
+      "sublabel": "Issues | PRs | repo state",
+      "width": 145
+    },
+    {
+      "id": "database_state",
+      "lane": "tooling",
+      "col": 0,
+      "type": "database",
+      "label": "MySQL real state",
+      "sublabel": "schema | tables | PK/FK | data",
+      "width": 155
+    },
+    {
+      "id": "database_mcp",
+      "lane": "tooling",
+      "col": 2,
+      "type": "database",
+      "label": "Database MCP",
+      "sublabel": "controlled DB access",
+      "width": 160
+    },
+    {
+      "id": "future_cd",
+      "lane": "governance",
+      "col": 5,
+      "type": "cloud",
+      "label": "FUTURE - NOT CURRENT WORKFLOW",
+      "sublabel": "CI -> CD -> production",
+      "width": 205
+    }
+  ],
+  "edges": [
+    { "id": "roadmap-issue", "from": "roadmap", "to": "github_issue", "label": "create next Issue", "role": "main", "variant": "emphasis", "route": "auto" },
+    { "id": "issue-command", "from": "github_issue", "to": "issue_command", "label": "start", "role": "main", "route": "auto" },
+    { "id": "command-sdd", "from": "issue_command", "to": "sdd", "label": "specify", "role": "main", "variant": "emphasis", "route": "auto" },
+    { "id": "sdd-branch", "from": "sdd", "to": "feature_branch", "label": "implement", "role": "main", "variant": "emphasis", "route": "auto" },
+    { "id": "branch-implementation", "from": "feature_branch", "to": "implementation", "label": "task loop", "role": "main", "route": "auto" },
+    { "id": "implementation-automated", "from": "implementation", "to": "automated_validation", "label": "local checks", "role": "main", "variant": "emphasis", "route": "auto" },
+    { "id": "automated-fail", "from": "automated_validation", "to": "implementation", "label": "NO -> return to implementation", "role": "error", "variant": "security", "route": "auto" },
+    { "id": "automated-pass", "from": "automated_validation", "to": "manual_validation", "label": "YES", "role": "main", "variant": "emphasis", "route": "auto" },
+    { "id": "manual-pass", "from": "manual_validation", "to": "finish_issue", "label": "YES", "role": "main", "variant": "emphasis", "route": "auto" },
+    { "id": "finish-actions", "from": "finish_issue", "to": "github_actions", "label": "push / PR", "role": "main", "variant": "emphasis", "route": "auto" },
+    { "id": "actions-merge", "from": "github_actions", "to": "merge_close", "label": "CI success", "role": "main", "variant": "emphasis", "route": "auto" },
+    { "id": "merge-roadmap", "from": "merge_close", "to": "roadmap", "label": "close + next Issue -> /roadmap", "role": "return", "variant": "dashed", "route": "auto" },
+    { "id": "governance-skills", "from": "project_governance", "to": "skills", "label": "sets applicable guidance", "variant": "security", "route": "auto" },
+    { "id": "mysql-mcp", "from": "database_state", "to": "database_mcp", "label": "real state", "variant": "dashed", "route": "auto" }
+  ]
+}
